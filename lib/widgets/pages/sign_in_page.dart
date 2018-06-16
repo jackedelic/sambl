@@ -47,7 +47,7 @@ class _SignInPageState extends State<SignInPage> {
                 child: new Image(   
                   colorBlendMode: BlendMode.darken,
                   color: Colors.black38,       
-                  image: AssetImage('assets/background/SignInBg.jpg'),
+                  image: AssetImage('assets/images/sign_in_page_background.jpg'),
                   fit: BoxFit.fitHeight,
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height,

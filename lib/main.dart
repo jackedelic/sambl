@@ -13,13 +13,13 @@ import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
 
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/reducer/app_reducer.dart';
+import 'package:sambl/reducer/primary_reducer.dart';
 
 
 
 void main() {
   final Store<AppState> store = new Store<AppState>(
-    appReducer, /* Function defined in the reducers file */
+    primaryReducer, /* Function defined in the reducers file */
     initialState: AppState.initial(),
     middleware: [thunkMiddleware],
   );
