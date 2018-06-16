@@ -38,8 +38,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/images/sign_in_page_background.jpg
+    - assets/images/home_page_background.jpg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -67,3 +68,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
+
+  
+  fonts: 
+    - family: Arual
+      fonts:
+        - asset: assets/fonts/Arual.ttf
+    - family: Indie Flower
+      fonts:
+        - asset: assets/fonts/IndieFlower.ttf
