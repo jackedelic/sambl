@@ -9,16 +9,12 @@ class LogoutAction extends AuthenticationAction {
 
 }
 
-class SignUpAction extends AuthenticationAction {
-
-}
-
-class AuthenticateWithGoogleAction extends AuthenticationAction {
+class RequestSignUpAction {
   
 }
 
 class LoginAction extends AuthenticationAction {
-  final FirebaseUser user;
+  final User user;
 
   LoginAction(this.user);
 
@@ -30,6 +26,12 @@ class LoginAction extends AuthenticationAction {
 class LoginWhileOrderingAction extends LoginAction {
   final Order order;
 
-  LoginWhileOrderingAction(FirebaseUser usr, Order order) : this.order = order, super(usr);
+  LoginWhileOrderingAction(User user, Order order) : this.order = order, super(user);
 
+}
+
+class LoginWhileDeliveringAction extends LoginAction {
+  final DeliveryList deliveryList;
+
+  LoginWhileDeliveringAction(User user, DeliveryList deliveryList) : this.deliveryList = deliveryList, super(user);
 }

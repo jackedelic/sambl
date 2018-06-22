@@ -1,5 +1,6 @@
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
+import 'package:redux_thunk/redux_thunk.dart';
 
 import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/action/deliver_action.dart';

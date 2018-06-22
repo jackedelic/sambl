@@ -15,12 +15,10 @@ import 'package:sambl/widgets/pages/start_page.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
 
-
-
 void main() {
   final Store<AppState> store = new Store<AppState>(
     primaryReducer, /* Function defined in the reducers file */
-    initialState: AppState.initial(),
+    initialState: new AppState.unauthenticated(),
     middleware: [thunkMiddleware],
   );
 
@@ -34,7 +32,7 @@ Widget defaultPage(AppStatusFlags flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
     case AppStatusFlags.authenticated:
-      return new HomePage();
+      return new SignInPage();
   }
 }
 
