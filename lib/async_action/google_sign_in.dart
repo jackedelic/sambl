@@ -10,6 +10,7 @@ import 'package:sambl/async_action/google_sign_in.dart';
 import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
 
+
   final authenticateWithGoogle = (Store<AppState> store) async {
     try {
       LoginAction login = new LoginAction(await _handleGoogleSignIn());

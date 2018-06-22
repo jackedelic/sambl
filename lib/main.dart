@@ -15,14 +15,15 @@ import 'package:sambl/widgets/pages/start_page.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
 
-
+// store is made global since there is only one store in our entire app. We can thus access this
+// store by importing this main.dart file.
+final Store<AppState> store = new Store<AppState>(
+  primaryReducer, /* Function defined in the reducers file */
+  initialState: AppState.initial(),
+  middleware: [thunkMiddleware],
+);
 
 void main() {
-  final Store<AppState> store = new Store<AppState>(
-    primaryReducer, /* Function defined in the reducers file */
-    initialState: AppState.initial(),
-    middleware: [thunkMiddleware],
-  );
 
   runApp(new MyApp(
     store: store,
@@ -30,6 +31,7 @@ void main() {
 }
 
 Widget defaultPage(AppStatusFlags flag) {
+  return new HomePage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();

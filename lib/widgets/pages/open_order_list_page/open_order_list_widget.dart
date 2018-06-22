@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sambl/model/order_detail.dart';
-
+import 'package:sambl/model/order.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
 class JioEntryWidget extends StatefulWidget {

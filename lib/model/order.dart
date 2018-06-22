@@ -3,24 +3,41 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/utility/geo_point.dart';
 
 class Dish {
-  final bool isPriceSpecified;
+  bool isPriceSpecified;
   final double price;
   final String name;
+
+  //Constructor
+  Dish({this.name, this.price}) {
+    isPriceSpecified = this.price == null ? false : true;
+  }
+
 }
 
+/// Construct a stall that consists primarily of a list of [dishes] sold at this stall.
+/// A stall also has a [name].
 class Stall {
   static const double deliveryFeePerExtraStall = 0.6;
   static const double deliveryFeePerExtraDish = 0.3;
 
-  final List<Dish> dishList;
+  /// The list of dishes associated with this particular stall.
+  final List<Dish> dishes;
+
+  /// The name of the stall.
+  /// e.g Cool Spot (snack stall in Terrace)
+  final String name;
+
+  // constructor
+  Stall({this.name, this.dishes});
+
 
   double getDeliveryfee() {
-    return deliveryFeePerExtraStall + deliveryFeePerExtraDish * (dishList.length - 1);
+    return deliveryFeePerExtraStall + deliveryFeePerExtraDish * (dishes.length - 1);
   }
 
   double getPrice() {
-    if (dishList.every((dish) => dish.isPriceSpecified)) {
-      return dishList.fold<double>(0.0,(sum,current) => sum + current.price);
+    if (dishes.every((dish) => dish.isPriceSpecified)) {
+      return dishes.fold<double>(0.0,(sum,current) => sum + current.price);
     } else {
       throw new Exception('priceUnspecifiedException');
     }
@@ -31,21 +48,21 @@ class Order {
   static const double baseDeliveryfee = 1.0;
   static const double deliveryFeePerExtraStall = 0.6;
 
-  final List<Stall> stallList;
+  final List<Stall> stalls;
   OrderDetail orderDetail;
   
 
-  Order();
+  Order({this.stalls, this.orderDetail});
   //Order._internal({}); 
 
   
   double getDeliveryfee() {
-    return baseDeliveryfee + stallList.fold<double>(0.0,(sum,current) => current.getDeliveryfee()) - deliveryFeePerExtraStall;
+    return baseDeliveryfee + stalls.fold<double>(0.0,(sum,current) => current.getDeliveryfee()) - deliveryFeePerExtraStall;
   }
 
   double getPrice() {
     try {
-      return stallList.fold<double>(0.0,(sum,current) => current.getPrice());
+      return stalls.fold<double>(0.0,(sum,current) => current.getPrice());
     } catch(error) {
       print('error');
       return 0.0;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'delivering_from_layout.dart';
 import 'order_layout.dart';
 
+
 /*
 * This is the first page a signed in user sees when opening the app.
 * It has two big buttons, 1) letting user to choose whether to deliver food for others
@@ -144,7 +145,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           child: new FlatButton(
                             onPressed: (){
                               if (_orderButtonColor == new Color(0xFFDF1B01)) {
-                                Navigator.pushNamed(context, "/JioListPage");
+                                Navigator.pushNamed(context, "/OpenOrderListPage");
                               } else if (_deliverButtonColor == new Color(0xFFDF1B01)) {
 
                               }
