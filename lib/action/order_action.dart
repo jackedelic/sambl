@@ -1,9 +1,10 @@
 import 'package:meta/meta.dart';
+import 'package:quiver/core.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
 
 class OrderAction {
-  final Order order;
+  final Optional<Order> order;
   OrderAction({this.order});
 }
 

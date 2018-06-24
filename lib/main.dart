@@ -11,20 +11,21 @@ import 'package:sambl/widgets/pages/place_order_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
 import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
-
+import 'package:sambl/widgets/pages/deliver_page/deliver_page.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
+import 'package:sambl/widgets/shared/my_color.dart';
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.
+
 final Store<AppState> store = new Store<AppState>(
   primaryReducer, /* Function defined in the reducers file */
-  initialState: AppState.initial(),
+  initialState: new AppState.unauthenticated(),
   middleware: [thunkMiddleware],
 );
 
 void main() {
-
   runApp(new MyApp(
     store: store,
   ));
@@ -36,7 +37,7 @@ Widget defaultPage(AppStatusFlags flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
     case AppStatusFlags.authenticated:
-      return new HomePage();
+      return new SignInPage();
   }
 }
 
@@ -53,7 +54,11 @@ class MyApp extends StatelessWidget {
       child: new MaterialApp(
         title: 'Flutter Demo',
         theme: new ThemeData(
-          primarySwatch: Colors.green,
+          primaryColor: MyColors.mainRed,
+          primarySwatch: MyColors.mainRedSwatches, // When ExpansionTile expands, the text turns this color
+          inputDecorationTheme: new InputDecorationTheme( // TextField deco color (baseline, labelText etc)
+            fillColor: MyColors.mainRed,
+          )
         ),
         home: new StartPage(),
         routes: <String, WidgetBuilder> {
@@ -63,6 +68,7 @@ class MyApp extends StatelessWidget {
           "/PlaceOrderPage" : (BuildContext context) => new PlaceOrderPage(),
           "/SignInPage" : (BuildContext context) => new SignInPage(),
           "/SignUpPage" : (BuildContext context) => new SignUpPage(),
+          "/DeliverPage": (BuildContext context) => new DeliverPage(),
         },
       )
     );

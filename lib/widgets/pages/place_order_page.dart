@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:quiver/core.dart';
 import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
@@ -49,7 +49,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
               child: new Text("Cancel")),
             new FlatButton(
               onPressed: () {
-                Stall stall = new Stall(name: textEditingController.text);
+                Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text));
                 Navigator.of(context).pop(stall);
               },
               child: new Text("Add")),
@@ -110,14 +110,14 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
             new StoreConnector<AppState, Store<AppState>>(
               converter: (store) => store,
               builder: (_, store){
-                return new Expanded(
+                return new Flexible(
                     child: new ListView.builder(
                         itemCount: 10,
                         itemBuilder: (BuildContext context, int n) {
                           return new AddStallCard(
                               new Stall(
-                                  name: "Wakanda stall",
-                                  dishes: <Dish>[
+                                  identifier: new HawkerCenterStall(name: "Wakanda stall"),
+                                  dishList: <Dish>[
                                     new Dish(name: "High Calorie yummy food"),
                                     new Dish(name: "Low Calorie not so yummy food"),
                                     new Dish(name: "African meat"),
@@ -163,7 +163,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                           // The reducer will add this newly created stall and add it to our existing list
                           // of stalls. The reducer shd create a new state w new Order obj w new list of stalls.
                           store.dispatch(new AddStallAction(stall: stall));
-                          print("stall added: " + stall.name);
+                          print("stall added: " + stall.identifier.name);
                         },
                         child: new Text("+ Add stall",
                           style: new TextStyle(
@@ -195,7 +195,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                       padding: new EdgeInsets.all(10.0),
                       onPressed: (){
                         //TRIGGER SubmitOrderAction.
-                        Order newOrder = store.state.currentOrder;
+                        Optional<Order> newOrder = store.state.currentOrder;
                         // The reducer shd create a new state w new Order. Then inform Firebase (async).
                         store.dispatch(new OrderAction(order: newOrder));
 
@@ -295,7 +295,7 @@ class _AddStallCardState extends State<AddStallCard> {
               padding: new EdgeInsets.all(15.0),
               child: new Row(
                 children: <Widget>[
-                  new Text(widget.stall.name,
+                  new Text(widget.stall.identifier.name,
                     // The grey part of the card
                     style: new TextStyle(
                         color: Colors.white,
@@ -316,7 +316,7 @@ class _AddStallCardState extends State<AddStallCard> {
                   new Container(
                     height: 150.0,
                     child: new ListView.builder(
-                        itemCount: widget.stall.dishes.length,
+                        itemCount: widget.stall.dishList.length,
                         itemBuilder: (BuildContext context, int index) {
                           // A column consists of the string for stall name and a divider.
                           return new Column(
@@ -326,7 +326,7 @@ class _AddStallCardState extends State<AddStallCard> {
                                   new Expanded(
                                     child: new Container(
                                       padding: new EdgeInsets.all(10.0) ,
-                                      child: new Text(widget.stall.dishes[index].name,
+                                      child: new Text(widget.stall.dishList[index].name,
                                         style: new TextStyle(fontSize: 20.0,),
                                       ),
                                     ),

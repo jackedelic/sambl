@@ -4,37 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
-import 'package:sambl/async_action/google_sign_in.dart';
+import 'package:sambl/async_action/google_authentication.dart';
+import 'package:sambl/async_action/sign_out.dart';
 import 'package:sambl/main.dart';
 import 'package:sambl/state/app_state.dart';
 
-/**
- * This class creates sign up page.
- */
+import 'package:sambl/utility/firebase_reader.dart';
 
-class SignInPage extends StatefulWidget {
-  @override
-  _SignInPageState createState() => new _SignInPageState();
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class _SignInPageState extends State<SignInPage> {
-
+class SignInPage extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
-
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
 
   @override
   Widget build(BuildContext context) => StoreConnector<AppState,AppStatusFlags> (
     converter: (store) => store.state.currentAppStatus,
     builder: (context,status) {
-      if (status != AppStatusFlags.unauthenticated) {
+      if (false ) {
         Navigator.of(context).popUntil(ModalRoute.withName('/'));
         return defaultPage(status);
       } else {
@@ -51,7 +38,7 @@ class _SignInPageState extends State<SignInPage> {
                   fit: BoxFit.fitHeight,
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height,
-                  alignment: new FractionalOffset(0.5, 0.0),
+                  alignment: new FractionalOffset(0.0, 0.0),
                 ),
               ),
               new Container (
@@ -68,9 +55,8 @@ class _SignInPageState extends State<SignInPage> {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         new StoreConnector<AppState,VoidCallback>(
-                          converter: (store) => () async {
-                            await store.dispatch(authenticateWithGoogle(store));
-                            print(store.state.currentAppStatus);
+                          converter: (store) => () {
+                            orderReader(Firestore.instance.collection('orders').document('dq5exJKI75fJJuIyPYt3'));
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(
@@ -93,4 +79,5 @@ class _SignInPageState extends State<SignInPage> {
       }
     }
   );
+
 }

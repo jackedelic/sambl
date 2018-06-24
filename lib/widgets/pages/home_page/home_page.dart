@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'delivering_from_layout.dart';
 import 'order_layout.dart';
-
+import 'package:sambl/widgets/shared/my_color.dart';
 
 /*
 * This is the first page a signed in user sees when opening the app.
@@ -25,7 +25,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _orderButtonColor = new Color(0xFFDF1B01); // Red
+    _orderButtonColor = MyColors.mainRed; // Red
     _deliverButtonColor = Colors.white;
 
     _centerLayout = new OrderLayout();
@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: new Color(0xFFEBEBEB),
+      backgroundColor: MyColors.mainBackground,
       body: new Center(
               child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -57,11 +57,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         new Padding(
                           padding: new EdgeInsets.only(bottom: 70.0),
                           child: new Text(
-                            'Hawker Jio',
+                            'Sambl',
                             style: new TextStyle(
-                              fontSize: 50.0,
+                              fontSize: 60.0,
                               fontFamily: "Indie Flower", // Just a dummy fontfamily
-                              color: new Color(0xFFDF1B01),
+                              color: MyColors.mainRed,
                             ),
 
                           ),
@@ -87,8 +87,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               ),
                               onPressed: (){
                                 setState(() {
-                                  if (_orderButtonColor == new Color(0xFFDF1B01)) return; // prevent the following lines from executing
-                                  _orderButtonColor = new Color(0xFFDF1B01);
+                                  if (_orderButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
+                                  _orderButtonColor = MyColors.mainRed;
                                   _deliverButtonColor = Colors.white;
                                   _centerLayout = new OrderLayout();
                                   _toggleFontColor();
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               if (_orderButtonColor == new Color(0xFFDF1B01)) {
                                 Navigator.pushNamed(context, "/OpenOrderListPage");
                               } else if (_deliverButtonColor == new Color(0xFFDF1B01)) {
-
+                                Navigator.pushNamed(context, "/DeliverPage");
                               }
                             },
                             child: new Icon(Icons.arrow_forward_ios, color: new Color(0xFFDF1B01),),

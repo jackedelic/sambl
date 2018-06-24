@@ -1,14 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:quiver/core.dart';
+
 /// Encapsulates all necessary information about a user of the application.
 class User {
+  Optional<FirebaseUser> onlineUser;
 
-  String _name;
-  String _uid;
-  String _email;
-  
-  /// default constructior for the AppUser class, resets all flags to false 
-  /// and all else to 'null'
-  User(this._name,this._email,this._uid);
+  User(FirebaseUser user): this.onlineUser = Optional.of(user);
 
-  factory User.initial() => User(null,null,null);
-
+  User.initial(): this.onlineUser = Optional<FirebaseUser>.absent();
 }
