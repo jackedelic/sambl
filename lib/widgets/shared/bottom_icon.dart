@@ -21,6 +21,7 @@ class BottomIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: new EdgeInsets.symmetric(vertical: 0.0),
       child: new Row(
         children: <Widget>[
           //1st circle

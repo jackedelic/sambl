@@ -5,13 +5,14 @@ import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
+import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_remark_layout.dart';
+import 'package:sambl/widgets/pages/create_open_order_page_deprecated/create_open_order_page.dart';
 import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_page.dart';
-import 'package:sambl/widgets/pages/place_order_page.dart';
+import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
 import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
-import 'package:sambl/widgets/pages/deliver_page/deliver_page.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
@@ -62,13 +63,13 @@ class MyApp extends StatelessWidget {
         ),
         home: new StartPage(),
         routes: <String, WidgetBuilder> {
-          "/CreateOpenOrderPage" : (BuildContext context) => new CreateOpenOrderPage(),
+          "/CreateOpenOrderPageDeprecated" : (BuildContext context) => new CreateOpenOrderPageDeprecated(),
           "/HomePage" : (BuildContext context) => new HomePage(),
           "/OpenOrderListPage" : (BuildContext context) => new OpenOrderListPage(),
           "/PlaceOrderPage" : (BuildContext context) => new PlaceOrderPage(),
           "/SignInPage" : (BuildContext context) => new SignInPage(),
           "/SignUpPage" : (BuildContext context) => new SignUpPage(),
-          "/DeliverPage": (BuildContext context) => new DeliverPage(),
+          "/CreateOpenOrderPage": (BuildContext context) => new CreateOpenOrderPage(),
         },
       )
     );

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'delivering_from_layout.dart';
 import 'order_layout.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
-
+import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
 /*
 * This is the first page a signed in user sees when opening the app.
 * It has two big buttons, 1) letting user to choose whether to deliver food for others
@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               if (_orderButtonColor == new Color(0xFFDF1B01)) {
                                 Navigator.pushNamed(context, "/OpenOrderListPage");
                               } else if (_deliverButtonColor == new Color(0xFFDF1B01)) {
-                                Navigator.pushNamed(context, "/DeliverPage");
+                                Navigator.pushNamed(context, "/CreateOpenOrderPage");
                               }
                             },
                             child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,),
