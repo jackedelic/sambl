@@ -150,7 +150,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 Navigator.pushNamed(context, "/DeliverPage");
                               }
                             },
-                            child: new Icon(Icons.arrow_forward_ios, color: new Color(0xFFDF1B01),),
+                            child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,),
 
                           ),
                           decoration: new BoxDecoration(

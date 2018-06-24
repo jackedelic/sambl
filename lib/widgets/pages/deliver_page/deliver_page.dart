@@ -11,6 +11,7 @@ import 'package:sambl/main.dart'; // To access our store (which contains our cur
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:sambl/widgets/shared/ensure_visible_when_focus.dart';
+import 'package:sambl/widgets/shared/bottom_icon.dart';
 /*
 * TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
 * TODO: from The Terrace'.
@@ -63,7 +64,7 @@ class _DeliverPageState extends State<DeliverPage> {
 
             // textField to input location of pickup point
             new Container(
-              padding: new EdgeInsets.all(10.0),
+              padding: new EdgeInsets.only(bottom: 10.0,  right: 10.0),
               margin: new EdgeInsets.symmetric(horizontal: 20.0),
               width: MediaQuery.of(context).size.width,
               decoration: new BoxDecoration(
@@ -72,8 +73,9 @@ class _DeliverPageState extends State<DeliverPage> {
               ),
               child: new Row(
                 children: <Widget>[
+                  // The 'place' icon
+                  new Padding(padding: new EdgeInsets.symmetric(horizontal: 6.0),child: new Icon(Icons.place,size: 28.0,)),
 
-                  new Icon(Icons.place),
                   // This is the pickup pt textfield. May change to TextFormField for validation purposes.
                   new Expanded(
                       child: new EnsureVisibleWhenFocused(
@@ -105,7 +107,7 @@ class _DeliverPageState extends State<DeliverPage> {
                   new Flexible(
                       flex: 2,
                       child: new Container(
-                        padding: new EdgeInsets.all(10.0),
+                        padding: new EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
                         decoration: new BoxDecoration(
                             border: new Border.all(color: MyColors.borderGrey ,width: 1.8),
                             borderRadius: new BorderRadius.all(new Radius.circular(15.0))
@@ -130,7 +132,7 @@ class _DeliverPageState extends State<DeliverPage> {
                   new Flexible(
                       flex: 1,
                       child: new Container(
-                        padding: new EdgeInsets.all(10.0),
+                        padding: new EdgeInsets.only(bottom: 10.0, left: 10.0, right: 10.0),
                           decoration: new BoxDecoration(
                               border: new Border.all(color: MyColors.borderGrey ,width: 1.8),
                               borderRadius: new BorderRadius.all(new Radius.circular(15.0))
@@ -154,7 +156,7 @@ class _DeliverPageState extends State<DeliverPage> {
 
             // Just some space btwn the thw rows
             new Padding(
-              padding: new EdgeInsets.symmetric(vertical: 20.0),
+              padding: new EdgeInsets.symmetric(vertical: 10.0),
             ),
             // The list of nearby places
             new Container(
@@ -177,7 +179,40 @@ class _DeliverPageState extends State<DeliverPage> {
                     );
                 },
               ),
+            ),
+
+            // Some space in between the list of 'nearby places' above and the arrow button
+            // This Padding widget may have diff padding value than the next 'delivery_remark_page'
+            // for the purpose of fixing the arrow button and icons at the bottom to the same
+            // position in the two pages.
+            new Padding(padding: new EdgeInsets.all(0.0),),
+
+            // The Arrow button to navigate to 'delivery_remark_page' when pressed.
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new FlatButton(
+                    onPressed: (){
+
+                    },
+                    child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,))
+              ],
+            ),
+
+            // some space btwn 'arrow button' and 'bottom icon'
+            new Padding(
+              padding: new EdgeInsets.all(10.0),
+            ),
+
+            // The bottom icons
+            new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new BottomIcon(pageNum: 2),
+              ],
             )
+
+
           ],
         )
       ),
