@@ -13,6 +13,7 @@ class DeliveryList {
     @required detail
   }): this.deliveryDetail = Optional<OrderDetail>.of(detail);
 
-  DeliveryList.absent(): this.deliveryDetail = Optional<OrderDetail>.absent(), this.orders = Map<String,Order>();
+  DeliveryList.absent(): this.deliveryDetail = Optional<OrderDetail>.absent(), 
+    this.orders = Map<String,Order>();
 
 }

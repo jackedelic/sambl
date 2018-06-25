@@ -14,12 +14,13 @@ import 'package:sambl/widgets/pages/start_page.dart';
 
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
+import 'package:sambl/middleware/firebase_auth_middleware.dart';
 
 void main() {
   final Store<AppState> store = new Store<AppState>(
     primaryReducer, /* Function defined in the reducers file */
     initialState: new AppState.unauthenticated(),
-    middleware: [thunkMiddleware],
+    middleware: [thunkMiddleware,firebaseAuthMiddleware],
   );
 
   runApp(new MyApp(

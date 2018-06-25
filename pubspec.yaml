@@ -22,7 +22,11 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
+  # The following adds the quiver library to the project
   quiver: '>=0.29.0 <0.30.0'
+
+  # The following adds the haversine formula to the project, it allows calculation of distance between 2 points on a sphere
+  haversine: "^1.0.2"
 
 dev_dependencies:
   flutter_test:

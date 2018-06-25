@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:sambl/model/hawker_center.dart';
@@ -15,18 +17,22 @@ class Dish {
     return this.name == other.name;
   }
 
-  Dish.withPrice(String name, double price): this.name = name, this.price = price, this.isPriceSpecified = true;
+  Dish.withPrice(String name, double price): 
+    this.name = name, this.price = price, this.isPriceSpecified = true;
 
-  Dish.withOutPrice(String name): this.name = name, this.price = 0.0, this.isPriceSpecified = false;
+  Dish.withOutPrice(String name): 
+    this.name = name, this.price = 0.0, this.isPriceSpecified = false;
 
   @override
   String toString() {
-    if (!isPriceSpecified) {
-      return 'dish: ' + name;
-    } else {
-      return 'dish: ' + name + ' ' + price.toString();
-    }   
+    return this.toJson().toString();
   }
+
+  Map<String, dynamic> toJson() => {
+    'name': this.name,
+    'price': this.price,
+    'isPriceSpecified': this.isPriceSpecified
+  };
 
 }
 
@@ -37,9 +43,11 @@ class Stall {
   final HawkerCenterStall identifier;
   final List<Dish> dishList;
 
-  Stall(HawkerCenterStall identifier, List<Dish> dishList): this.identifier = identifier, this.dishList = dishList;
+  Stall(HawkerCenterStall identifier, List<Dish> dishList): 
+    this.identifier = identifier, this.dishList = dishList;
 
-  Stall.one(HawkerCenterStall identifier, Dish dish): this.identifier = identifier, this.dishList = [dish];
+  Stall.one(HawkerCenterStall identifier, Dish dish): 
+    this.identifier = identifier, this.dishList = [dish];
 
   Stall addDish(Dish dish) {
     return new Stall(this.identifier, this.dishList + [dish]);
@@ -65,22 +73,20 @@ class Stall {
     }
   }
 
+  Map<String,dynamic> toJson() => {
+    'identifier': identifier.toJson(),
+    'dishes' : dishList.map<Map<String,dynamic>>((dish) => dish.toJson()).toList()
+  };
+
   @override
   String toString() {
-    String res = '(';
-    res += identifier.toString();
-    res += ' : [';
-    dishList.forEach((dish) => res += (dish.toString() + ', '));
-    res += '])';
-    return res;
+    return this.toJson().toString();
   }
 }
 
 class Order {
   static const double baseDeliveryfee = 1.0;
   static const double deliveryFeePerExtraStall = 0.6;
-
-  
 
   final List<Stall> stallList;
   final OrderDetail orderDetail;
@@ -118,11 +124,17 @@ class Order {
     }
   }
 
+  Map<String,dynamic> toJson() => {
+    'stalls': stallList.map((stall) => stall.toJson()).toList(),
+    'detail': this.orderDetail.toJson()
+  };
+
   @override
   String toString() {
-    String res = orderDetail.toString() + ' : ';
-    stallList.forEach((stall) => res = res + (stall.toString()) + ', ');
-    return res;
+    print(json.encode(this.toJson()));
+    return this.toJson().toString();
   }
 
+  
 }
+
