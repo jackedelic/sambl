@@ -117,7 +117,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                           return new AddStallCard(
                               new Stall(
                                   identifier: new HawkerCenterStall(name: "Wakanda stall"),
-                                  dishList: <Dish>[
+                                  dishes: <Dish>[
                                     new Dish(name: "High Calorie yummy food"),
                                     new Dish(name: "Low Calorie not so yummy food"),
                                     new Dish(name: "African meat"),
@@ -316,7 +316,7 @@ class _AddStallCardState extends State<AddStallCard> {
                   new Container(
                     height: 150.0,
                     child: new ListView.builder(
-                        itemCount: widget.stall.dishList.length,
+                        itemCount: widget.stall.dishes.length,
                         itemBuilder: (BuildContext context, int index) {
                           // A column consists of the string for stall name and a divider.
                           return new Column(
@@ -326,7 +326,7 @@ class _AddStallCardState extends State<AddStallCard> {
                                   new Expanded(
                                     child: new Container(
                                       padding: new EdgeInsets.all(10.0) ,
-                                      child: new Text(widget.stall.dishList[index].name,
+                                      child: new Text(widget.stall.dishes[index].name,
                                         style: new TextStyle(fontSize: 20.0,),
                                       ),
                                     ),

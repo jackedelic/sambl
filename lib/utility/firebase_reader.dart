@@ -12,7 +12,7 @@ Future<List<Stall>> stallListReader(List<dynamic> list) async {
   return new Stream.fromIterable(list).asyncMap<Stall>(
     (stall) async => new Stall(
       identifier: await hawkerCenterStallReader(stall['stallData']),
-      dishList: stall['dishes'].map<Dish>((dish) => (dish['isPriceSpecified']) ?
+      dishes: stall['dishes'].map<Dish>((dish) => (dish['isPriceSpecified']) ?
           new Dish.withPrice(dish['name'],dish['price'].toDouble()) : 
           new Dish.withOutPrice(dish['name']))
           .toList()

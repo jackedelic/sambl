@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:sambl/model/hawker_center.dart';
 
+import 'package:sambl/utility/geo_point_utilities.dart';
+
+
 class OrderDetail {
   final GeoPoint pickupPoint;
   final HawkerCenter hawkerCenter;
@@ -24,11 +27,19 @@ class OrderDetail {
     @required this.remainingNumberofDishes
   });
 
+  Map<String,dynamic> toJson() => {
+    'pickupPoint': geoPointToMap(this.pickupPoint),
+    'hawkerCenter': this.hawkerCenter.toJson(),
+    'delivererUid': this.delivererUid,
+    'closingTime': this.closingTime.toIso8601String(),
+    'eta': this.eta.toIso8601String(),
+    'remarks': this.remarks,
+    'maxNumberofDishes': this.maxNumberofDishes,
+    'remainingNumberofDishes': this.remainingNumberofDishes
+  };
+
   @override 
   String toString() {
-    return '(' +  this.pickupPoint.toString() + ', ' + this.hawkerCenter.toString() + ', ' 
-      + this.delivererUid + ', ' + this.closingTime.toString() + ', ' + this.eta.toString()
-      + ', ' + this.eta.toString() + ', ' + this.remarks + ', ' + this.maxNumberofDishes.toString() 
-      + ', ' + this.remainingNumberofDishes.toString() + ')';
+
   }
 }

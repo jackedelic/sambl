@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:sambl/model/hawker_center.dart';
@@ -20,18 +22,22 @@ class Dish {
     return this.name == other.name;
   }
 
-  Dish.withPrice(String name, double price): this.name = name, this.price = price, this.isPriceSpecified = true;
+  Dish.withPrice(String name, double price): 
+    this.name = name, this.price = price, this.isPriceSpecified = true;
 
-  Dish.withOutPrice(String name): this.name = name, this.price = 0.0, this.isPriceSpecified = false;
+  Dish.withOutPrice(String name): 
+    this.name = name, this.price = 0.0, this.isPriceSpecified = false;
 
   @override
   String toString() {
-    if (!isPriceSpecified) {
-      return 'dish: ' + name;
-    } else {
-      return 'dish: ' + name + ' ' + price.toString();
-    }
+    return this.toJson().toString();
   }
+
+  Map<String, dynamic> toJson() => {
+    'name': this.name,
+    'price': this.price,
+    'isPriceSpecified': this.isPriceSpecified
+  };
 
 }
 
@@ -43,46 +49,47 @@ class Stall {
 
   final HawkerCenterStall identifier;
   /// The list of dishes associated with this particular stall.
-  final List<Dish> dishList;
+  final List<Dish> dishes;
+
 
   /// [identifier] is the HawkerCenterStall obj. dishList is a list of Dish objs.
-  Stall({this.identifier, this.dishList });
+  Stall({this.identifier, this.dishes});
 
   /// Construct a stall whose dishList consists of one dish.
-  Stall.one({this.identifier, dish}) : this.dishList = [dish];
+  Stall.one({this.identifier, dish}) : this.dishes = [dish];
 
   Stall addDish(Dish dish) {
-    return new Stall(identifier: this.identifier, dishList: this.dishList + [dish]);
+    return new Stall(identifier: this.identifier, dishes: this.dishes + [dish]);
   }
 
   Stall removeDish(Dish dish) {
-    return new Stall(identifier: this.identifier, dishList: this.dishList.where((currentDish) => !currentDish.equals(dish)));
+    return new Stall(identifier: this.identifier, dishes: this.dishes.where((currentDish) => !currentDish.equals(dish)));
   }
 
   bool notEmpty() {
-    return this.dishList.isNotEmpty;
+    return this.dishes.isNotEmpty;
   }
 
   double getDeliveryfee() {
-    return deliveryFeePerExtraStall + deliveryFeePerExtraDish * (dishList.length - 1);
+    return deliveryFeePerExtraStall + deliveryFeePerExtraDish * (dishes.length - 1);
   }
 
   double getPrice() {
-    if (dishList.every((dish) => dish.isPriceSpecified)) {
-      return dishList.fold<double>(0.0,(sum,current) => sum + current.price);
+    if (dishes.every((dish) => dish.isPriceSpecified)) {
+      return dishes.fold<double>(0.0,(sum,current) => sum + current.price);
     } else {
       throw new Exception('priceUnspecifiedException');
     }
   }
 
+  Map<String,dynamic> toJson() => {
+    'identifier': identifier.toJson(),
+    'dishes' : dishes.map<Map<String,dynamic>>((dish) => dish.toJson()).toList()
+  };
+
   @override
   String toString() {
-    String res = '(';
-    res += identifier.toString();
-    res += ' : [';
-    dishList.forEach((dish) => res += (dish.toString() + ', '));
-    res += '])';
-    return res;
+    return this.toJson().toString();
   }
 }
 
@@ -90,49 +97,53 @@ class Order {
   static const double baseDeliveryfee = 1.0;
   static const double deliveryFeePerExtraStall = 0.6;
 
-
-
-  final List<Stall> stallList;
+  final List<Stall> stalls;
   final OrderDetail orderDetail;
-  Order(List<Stall> list, OrderDetail detail): this.stallList = list, this.orderDetail = detail;
+  Order(List<Stall> list, OrderDetail detail): this.stalls = list, this.orderDetail = detail;
   
-  Order.empty(OrderDetail detail): this.orderDetail = detail, this.stallList = new List<Stall>();
+  Order.empty(OrderDetail detail): this.orderDetail = detail, this.stalls = new List<Stall>();
 
 
   Order addDish(Dish dish, HawkerCenterStall stallIdentifier) {
-    if (stallList.map((stall) => stall.identifier).any((identifier) => identifier.equals(stallIdentifier))) {
-      return new Order(this.stallList.map<Stall>((stall){
+    if (stalls.map((stall) => stall.identifier).any((identifier) => identifier.equals(stallIdentifier))) {
+      return new Order(this.stalls.map<Stall>((stall){
         return ((stall.identifier.equals(stallIdentifier)) ? stall.addDish(dish) : stall);
       }), this.orderDetail);
     } else {
-      return new Order(this.stallList + [new Stall.one(identifier: stallIdentifier, dish: dish)], this.orderDetail);
+      return new Order(this.stalls + [new Stall.one(identifier: stallIdentifier, dish: dish)], this.orderDetail);
     }
   }
 
   Order removeDish(Dish dish, HawkerCenterStall stallIdentifier) {
-    return new Order(this.stallList.map<Stall>((stall){
+    return new Order(this.stalls.map<Stall>((stall){
       return ((stall.identifier.equals(stallIdentifier)) ? stall.removeDish(dish) : stall);
     }).where((stall) => stall.notEmpty()), this.orderDetail);
   }
   
   double getDeliveryfee() {
-    return baseDeliveryfee + stallList.fold<double>(0.0,(sum,current) => current.getDeliveryfee()) - deliveryFeePerExtraStall;
+    return baseDeliveryfee + stalls.fold<double>(0.0,(sum,current) => current.getDeliveryfee()) - deliveryFeePerExtraStall;
   }
 
   double getPrice() {
     try {
-      return stallList.fold<double>(0.0,(sum,current) => current.getPrice());
+      return stalls.fold<double>(0.0,(sum,current) => current.getPrice());
     } catch(error) {
       print('error');
       return 0.0;
     }
   }
 
+  Map<String,dynamic> toJson() => {
+    'stalls': stalls.map((stall) => stall.toJson()).toList(),
+    'detail': this.orderDetail.toJson()
+  };
+
   @override
   String toString() {
-    String res = orderDetail.toString() + ' : ';
-    stallList.forEach((stall) => res = res + (stall.toString()) + ', ');
-    return res;
+    print(json.encode(this.toJson()));
+    return this.toJson().toString();
   }
 
+  
 }
+

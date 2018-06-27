@@ -10,7 +10,9 @@ class LogoutAction extends AuthenticationAction {
 }
 
 class RequestSignUpAction {
-  
+  final FirebaseUser user;
+
+  RequestSignUpAction(FirebaseUser user): this.user = user;
 }
 
 class LoginAction extends AuthenticationAction {
@@ -18,9 +20,6 @@ class LoginAction extends AuthenticationAction {
 
   LoginAction(this.user);
 
-  bool isSuccessful() {
-    return user != null;
-  }
 }
 
 class LoginWhileOrderingAction extends LoginAction {
