@@ -14,6 +14,14 @@ class CreateOpenOrderRemarkLayout extends StatefulWidget {
 }
 
 class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayout> {
+  int _numOfDishes;
+
+  @override
+  void initState() {
+    _numOfDishes = 3;
+  } // number of dishes to deliver
+
+
   @override
   Widget build(BuildContext context) {
     return new ListView(
@@ -52,14 +60,19 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                           flex: 5,
                           child: new IconButton(
                             icon: new Icon(Icons.add),
-                            onPressed: (){},
+                            onPressed: (){
+                              //REDUXIFY
+                              setState(() {
+                                _numOfDishes++;
+                              });
+                            },
                           ),
                         ),
 
                         // The number representing the number of dishes to deliver.
                         new Expanded(
                           flex: 3,
-                          child: new Text("3",
+                          child: new Text("$_numOfDishes",
                             style: new TextStyle(
                               fontSize: 16.0
                             ),
@@ -72,7 +85,13 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                           flex: 5,
                           child: new IconButton(
                             icon: new Icon(Icons.remove),
-                            onPressed: (){},
+                            onPressed: (){
+                              //REDUXIFY
+                              setState(() {
+                                _numOfDishes = _numOfDishes > 0 ? _numOfDishes - 1 : _numOfDishes;
+                              });
+
+                            },
                           ),
                         ),
                       ],

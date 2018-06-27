@@ -110,7 +110,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
             new StoreConnector<AppState, Store<AppState>>(
               converter: (store) => store,
               builder: (_, store){
-                return new Flexible(
+                return new Expanded(
                     child: new ListView.builder(
                         itemCount: 10,
                         itemBuilder: (BuildContext context, int n) {

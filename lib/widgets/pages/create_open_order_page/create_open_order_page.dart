@@ -27,11 +27,9 @@ TabController _tabController;
 void initState() {
   _tabController = new TabController(length: 2, vsync: this);
   _tabController.addListener(() {
-
       setState(() {
 
       });
-
 
   });
 }
@@ -98,7 +96,7 @@ void initState() {
                 children: <Widget>[
                   new FlatButton(
                       onPressed: (){
-                        Navigator.pushNamed(context, "/CreateOpenOrderRemarkPage");
+                        _tabController.animateTo((_tabController.index + 1) % 2);
                       },
                       child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,))
                 ],
