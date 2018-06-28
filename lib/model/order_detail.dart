@@ -5,6 +5,7 @@ import 'package:sambl/model/hawker_center.dart';
 
 import 'package:sambl/utility/geo_point_utilities.dart';
 
+/// This class constructs open order created by the user.
 
 class OrderDetail {
   final GeoPoint pickupPoint;

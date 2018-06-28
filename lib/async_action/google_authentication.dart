@@ -10,6 +10,7 @@ import 'package:redux_thunk/redux_thunk.dart';
 import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
 
+
   final ThunkAction<AppState> signInWithGoogleAction = (Store<AppState> store) async {
     await _handleGoogleSignIn()
       .then((user) => store.dispatch(new LoginAction(User(user))))

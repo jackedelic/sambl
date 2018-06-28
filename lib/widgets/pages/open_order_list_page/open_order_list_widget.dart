@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sambl/model/order_detail.dart';
-
+import 'package:sambl/model/order.dart';
+import 'package:sambl/widgets/shared/my_color.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
 class JioEntryWidget extends StatefulWidget {
@@ -99,7 +100,7 @@ class PlaceOrderButton extends StatelessWidget {
         child: new Container(
           padding: new EdgeInsets.all(8.0),
           decoration: new BoxDecoration(
-              border: new Border.all(color: new Color(0xFFEBEBEB),width: 1.8),
+              border: new Border.all(color: MyColors.borderGrey ,width: 1.8),
               borderRadius: new BorderRadius.all(new Radius.circular(10.0))
           ),
           child: new Text("Place order"),
