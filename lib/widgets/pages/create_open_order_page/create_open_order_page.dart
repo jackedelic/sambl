@@ -13,8 +13,25 @@ import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'create_open_order_main_layout.dart';
 import 'create_open_order_remark_layout.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
-
-///This page represents the page a user navigates to when he select 'deliver' button in the home page
+import 'create_open_order_confirm_layout.dart';
+/*
+* TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
+* TODO: from The Terrace'.
+* */
+/// This page represents the page a user navigates to when he select 'deliver' button in the home page
+/// This page does not use redux/store to deal with the OpenOrder obj created. Instead, new OpenOrder
+/// obj is created when user navigates to a new layout(tab) based on the prev Open Order obj in the prev tab.
+/// This means OpenOrder obj has to be passed to the new layout, and new Open Order obj is created
+/// based on that old OpenOrder. This ensures that the state of the OpenOrder is handled in a purely
+/// functional manner without going thru the store.
+/// The reason we don't use redux is because we're creating an OpenOrder obj bit by bit, e.g create
+/// Open Order obj with only pickup pt, eta, and closing time known, then only when we navigate to new
+/// tab do we know the rest of the info such as num of dishes to deliver and remarks. If we are to
+/// use redux, we have to create different actions corresponding to different creation phase of
+/// OpenOrder obj. In other words, we don't want to use redux becus we don't want to create
+/// those actions which correspond to diff creation phase of OpenOrder. We only want one CreateOpenOrderAction
+/// and DeliverAction when using redux.
+/// In the last layout/tab, the OpenOrder obj is dispatched with a DeliverAction using ofcourse redux.
 class CreateOpenOrderPage extends StatefulWidget {
   @override
   _CreateOpenOrderPageState createState() => _CreateOpenOrderPageState();
@@ -25,7 +42,7 @@ TabController _tabController;
 
 @override
 void initState() {
-  _tabController = new TabController(length: 2, vsync: this);
+  _tabController = new TabController(length: 3, vsync: this);
   _tabController.addListener(() {
       setState(() {
 
@@ -76,9 +93,12 @@ void initState() {
                       // The layout that asks deliverer to input pickup pt, closing time and eta.
                       new CreateOpenOrderMainLayout(),
 
-                      // The layout that ases deliverer to specify number of dishes to deliver
+                      // The layout that asks deliverer to specify number of dishes to deliver
                       // and any additional remarks.
                       new CreateOpenOrderRemarkLayout(),
+
+                      // The last 'confirmation' layout which shows a summary of the openOrder details
+                      new CreateOpenOrderConfirmLayout(),
                     ]
                 ),
               ),
@@ -96,7 +116,7 @@ void initState() {
                 children: <Widget>[
                   new FlatButton(
                       onPressed: (){
-                        _tabController.animateTo((_tabController.index + 1) % 2);
+                        _tabController.animateTo((_tabController.index + 1) % 3);
                       },
                       child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,))
                 ],

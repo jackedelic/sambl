@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/ensure_visible_when_focus.dart';
-
-
+import 'package:quiver/core.dart';
+import 'package:redux/redux.dart';
+import 'package:sambl/model/order.dart';
+import 'package:sambl/model/order_detail.dart';
+import 'package:sambl/state/app_state.dart';
+import 'package:sambl/action/order_action.dart';
+import 'package:sambl/main.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 /*
 * TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
 * TODO: from The Terrace'.
@@ -13,6 +19,12 @@ import 'package:sambl/widgets/shared/ensure_visible_when_focus.dart';
 /// This is the layout that first appear when the user pressed 'Deliver' button on the
 /// home page.
 class CreateOpenOrderMainLayout extends StatefulWidget {
+
+  /// Constructor that receives the OpenOrder obj.
+  CreateOpenOrderMainLayout() {
+
+  }
+
   @override
   _CreateOpenOrderMainLayoutState createState() =>
       _CreateOpenOrderMainLayoutState();
@@ -20,8 +32,7 @@ class CreateOpenOrderMainLayout extends StatefulWidget {
 
 class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
   FocusNode _focusNode1 = new FocusNode(); // for 'pick up pt' TextField widgets
-  FocusNode _focusNode2 =
-      new FocusNode(); // for 'closing time' TextField widgets
+  FocusNode _focusNode2 = new FocusNode(); // for 'closing time' TextField widgets
   FocusNode _focusNode3 = new FocusNode(); // for 'ETA' TextField widgets
 
   @override

@@ -2,13 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
 import 'package:sambl/widgets/shared/my_app_bar.dart';
-
+import 'package:quiver/core.dart';
+import 'package:redux/redux.dart';
+import 'package:sambl/model/order.dart';
+import 'package:sambl/model/order_detail.dart';
+import 'package:sambl/state/app_state.dart';
+import 'package:sambl/action/order_action.dart';
+import 'package:sambl/main.dart';
 /// This is the layout shown when the user (deliverer) has filled the 'Pick Up point', 'Order Closing
 /// Time' and 'ETA' on the prev layout (create_open_order_main_layout).
 /// This page requires the deliverer to do two things - 1. specify the number of dishes to deliver and
 /// 2. additional remarks about the delivery.
 
 class CreateOpenOrderRemarkLayout extends StatefulWidget {
+
+  /// Constructor that receives the OpenOrder.
+  CreateOpenOrderRemarkLayout() {
+
+  }
+
   @override
   _CreateOpenOrderRemarkLayoutState createState() => _CreateOpenOrderRemarkLayoutState();
 }
