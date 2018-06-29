@@ -81,7 +81,7 @@ Future<DeliveryList> deliveryListReader(DocumentReference reference, DeliveryLis
       return new DeliveryList(orders: new Map.fromEntries(
         await Stream.fromIterable(orderList)
           .asyncMap<MapEntry<String,Order>>((order) async => 
-            new MapEntry(await ordererUidReader(order['reference']), 
+            new MapEntry(order.documentID, 
             await orderReader(order['reference'])))
           .toList()),
         detail: await orderDetailReader(await reference.get()

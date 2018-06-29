@@ -15,6 +15,7 @@ import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
+import 'package:sambl/middleware/firebase_auth_middleware.dart';
 
 import 'package:sambl/widgets/shared/my_color.dart';
 
@@ -25,7 +26,7 @@ import 'package:sambl/widgets/shared/my_color.dart';
 final Store<AppState> store = new Store<AppState>(
   primaryReducer, /* Function defined in the reducers file */
   initialState: new AppState.unauthenticated(),
-  middleware: [thunkMiddleware],
+  middleware: [thunkMiddleware,firebaseAuthMiddleware],
 );
 
 void main() {

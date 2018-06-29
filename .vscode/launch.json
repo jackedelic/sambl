@@ -8,10 +8,7 @@
             "type": "dart",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${file}",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
+            "program": "lib/main.dart",
         }
     ]
 }
