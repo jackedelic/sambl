@@ -78,6 +78,10 @@ class Stall {
     'dishes' : dishList.map<Map<String,dynamic>>((dish) => dish.toJson()).toList()
   };
 
+  int count() {
+    return dishList.length;
+  }
+
   @override
   String toString() {
     return this.toJson().toString();
@@ -112,26 +116,30 @@ class Order {
   }
   
   double getDeliveryfee() {
-    return baseDeliveryfee + stallList.fold<double>(0.0,(sum,current) => current.getDeliveryfee()) - deliveryFeePerExtraStall;
+    return baseDeliveryfee + stallList.fold<double>(0.0,(sum,current) => sum + current.getDeliveryfee()) - deliveryFeePerExtraStall;
   }
 
   double getPrice() {
     try {
-      return stallList.fold<double>(0.0,(sum,current) => current.getPrice());
+      return stallList.fold<double>(0.0,(sum,current) => sum + current.getPrice());
     } catch(error) {
       print('error');
       return 0.0;
     }
   }
 
+  int count() {
+    return stallList.fold<int>(0,(sum,current) => sum + current.count());
+  }
+
   Map<String,dynamic> toJson() => {
     'stalls': stallList.map((stall) => stall.toJson()).toList(),
-    'detail': this.orderDetail.toJson()
+    'detail': this.orderDetail.toJson(),
+    'dishCount': this.count()
   };
 
   @override
   String toString() {
-    print(json.encode(this.toJson()));
     return this.toJson().toString();
   }
 

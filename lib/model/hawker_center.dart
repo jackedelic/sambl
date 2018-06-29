@@ -7,6 +7,7 @@ import 'package:sambl/utility/geo_point_utilities.dart';
 class HawkerCenterStall {
   String name;
 
+
   bool equals(HawkerCenterStall other) => (this.name == other.name);
 
   HawkerCenterStall(String stallName): this.name = stallName;
@@ -20,17 +21,18 @@ class HawkerCenterStall {
       // TODO: implement toString
       return this.name;
   }
-
+  
 }
 
 class HawkerCenter {
-  GeoPoint location;
-  String name;
-  List<HawkerCenterStall> stallList;
+  final GeoPoint location;
+  final String name;
+  final String uid;
+  final List<HawkerCenterStall> stallList;
   
   HawkerCenter(GeoPoint location, String hawkerCenterName, 
-    List<HawkerCenterStall> stallList): this.location = location,
-    this.name = hawkerCenterName, this.stallList = stallList;
+    List<HawkerCenterStall> stallList, String uid): this.location = location,
+    this.name = hawkerCenterName, this.stallList = stallList, this.uid = uid;
   
   Map<String,dynamic> toJson() => {
     'name': this.name,

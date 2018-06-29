@@ -20,7 +20,7 @@ void main() {
   final Store<AppState> store = new Store<AppState>(
     primaryReducer, /* Function defined in the reducers file */
     initialState: new AppState.unauthenticated(),
-    middleware: [thunkMiddleware,firebaseAuthMiddleware],
+    middleware: [thunkMiddleware],
   );
 
   runApp(new MyApp(

@@ -7,7 +7,6 @@ import 'package:sambl/state/app_state.dart';
 final Reducer<AppState> authenticationReducer = combineReducers([
   TypedReducer<AppState,LoginAction> (loginReducer),
   TypedReducer<AppState,LogoutAction> ((state,action) {
-    print('reducing signout');
     return new AppState.unauthenticated();
   })
 ]);

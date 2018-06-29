@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 
+import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/async_action/google_authentication.dart';
 import 'package:sambl/async_action/sign_out.dart';
 import 'package:sambl/main.dart';
@@ -12,6 +13,11 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/utility/firebase_reader.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:sambl/async_action/get_available_hawker_center_action.dart';
+
+import 'package:cloud_functions/cloud_functions.dart';
+import 'dart:convert';
 
 class SignInPage extends StatelessWidget {
 
@@ -56,7 +62,14 @@ class SignInPage extends StatelessWidget {
                       children: <Widget>[
                         new StoreConnector<AppState,VoidCallback>(
                           converter: (store) => () {
-                            orderReader(Firestore.instance.collection('orders').document('dq5exJKI75fJJuIyPYt3'));
+                            // orderReader(Firestore.instance.collection('orders').document('dq5exJKI75fJJuIyPYt3'))
+                            //   .then((order) {
+                            //     print(order.toJson());
+                            //     CloudFunctions.instance.call(functionName: "placeOrder",parameters: order.toJson()).then(
+                            //       (value) => print(value)
+                            //     );
+                            //   });
+                            CloudFunctions.instance.call(functionName: "approveOrder",parameters: {'id' : '17ZlYtz80nJKB2oShUnD'});
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(
