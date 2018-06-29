@@ -10,7 +10,7 @@ class HawkerCenterStall {
 
   bool equals(HawkerCenterStall other) => (this.name == other.name);
 
-  HawkerCenterStall(String stallName): this.name = stallName;
+  HawkerCenterStall({this.name});
 
   Map<String,dynamic> toJson() => {
     'name': this.name

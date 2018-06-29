@@ -9,10 +9,15 @@ export 'package:sambl/model/hawker_center.dart';
 
 
 class Dish {
-  final bool isPriceSpecified;
+  bool isPriceSpecified;
   final double price;
   final String name;
 
+
+  //Constructor
+  Dish({this.name, this.price}) {
+    isPriceSpecified = this.price == null ? false : true;
+  }
   bool equals(Dish other) {
     return this.name == other.name;
   }
@@ -36,38 +41,42 @@ class Dish {
 
 }
 
+/// Construct a stall that consists primarily of a list of [dishes] sold at this stall.
+/// A stall also has a [name].
 class Stall {
   static const double deliveryFeePerExtraStall = 0.6;
   static const double deliveryFeePerExtraDish = 0.3;
 
   final HawkerCenterStall identifier;
-  final List<Dish> dishList;
+  /// The list of dishes associated with this particular stall.
+  final List<Dish> dishes;
 
-  Stall(HawkerCenterStall identifier, List<Dish> dishList): 
-    this.identifier = identifier, this.dishList = dishList;
 
-  Stall.one(HawkerCenterStall identifier, Dish dish): 
-    this.identifier = identifier, this.dishList = [dish];
+  /// [identifier] is the HawkerCenterStall obj. dishList is a list of Dish objs.
+  Stall({this.identifier, this.dishes});
+
+  /// Construct a stall whose dishList consists of one dish.
+  Stall.one({this.identifier, dish}) : this.dishes = [dish];
 
   Stall addDish(Dish dish) {
-    return new Stall(this.identifier, this.dishList + [dish]);
+    return new Stall(identifier: this.identifier, dishes: this.dishes + [dish]);
   }
 
   Stall removeDish(Dish dish) {
-    return new Stall(this.identifier, this.dishList.where((currentDish) => !currentDish.equals(dish)));
+    return new Stall(identifier: this.identifier, dishes: this.dishes.where((currentDish) => !currentDish.equals(dish)));
   }
 
   bool notEmpty() {
-    return this.dishList.isNotEmpty;
+    return this.dishes.isNotEmpty;
   }
 
   double getDeliveryfee() {
-    return deliveryFeePerExtraStall + deliveryFeePerExtraDish * (dishList.length - 1);
+    return deliveryFeePerExtraStall + deliveryFeePerExtraDish * (dishes.length - 1);
   }
 
   double getPrice() {
-    if (dishList.every((dish) => dish.isPriceSpecified)) {
-      return dishList.fold<double>(0.0,(sum,current) => sum + current.price);
+    if (dishes.every((dish) => dish.isPriceSpecified)) {
+      return dishes.fold<double>(0.0,(sum,current) => sum + current.price);
     } else {
       throw new Exception('priceUnspecifiedException');
     }
@@ -75,11 +84,11 @@ class Stall {
 
   Map<String,dynamic> toJson() => {
     'identifier': identifier.toJson(),
-    'dishes' : dishList.map<Map<String,dynamic>>((dish) => dish.toJson()).toList()
+    'dishes' : dishes.map<Map<String,dynamic>>((dish) => dish.toJson()).toList()
   };
 
   int count() {
-    return dishList.length;
+    return dishes.length;
   }
 
   @override
@@ -92,36 +101,36 @@ class Order {
   static const double baseDeliveryfee = 1.0;
   static const double deliveryFeePerExtraStall = 0.6;
 
-  final List<Stall> stallList;
+  final List<Stall> stalls;
   final OrderDetail orderDetail;
+  Order(List<Stall> list, OrderDetail detail): this.stalls = list, this.orderDetail = detail;
   
-  Order(List<Stall> list, OrderDetail detail): this.stallList = list, this.orderDetail = detail;
-  
-  Order.empty(OrderDetail detail): this.orderDetail = detail, this.stallList = new List<Stall>();
+  Order.empty(OrderDetail detail): this.orderDetail = detail, this.stalls = new List<Stall>();
+
 
   Order addDish(Dish dish, HawkerCenterStall stallIdentifier) {
-    if (stallList.map((stall) => stall.identifier).any((identifier) => identifier.equals(stallIdentifier))) {
-      return new Order(this.stallList.map<Stall>((stall){
+    if (stalls.map((stall) => stall.identifier).any((identifier) => identifier.equals(stallIdentifier))) {
+      return new Order(this.stalls.map<Stall>((stall){
         return ((stall.identifier.equals(stallIdentifier)) ? stall.addDish(dish) : stall);
       }), this.orderDetail);
     } else {
-      return new Order(this.stallList + [new Stall.one(stallIdentifier,dish)], this.orderDetail);
+      return new Order(this.stalls + [new Stall.one(identifier: stallIdentifier, dish: dish)], this.orderDetail);
     }
   }
 
   Order removeDish(Dish dish, HawkerCenterStall stallIdentifier) {
-    return new Order(this.stallList.map<Stall>((stall){
+    return new Order(this.stalls.map<Stall>((stall){
       return ((stall.identifier.equals(stallIdentifier)) ? stall.removeDish(dish) : stall);
     }).where((stall) => stall.notEmpty()), this.orderDetail);
   }
   
   double getDeliveryfee() {
-    return baseDeliveryfee + stallList.fold<double>(0.0,(sum,current) => sum + current.getDeliveryfee()) - deliveryFeePerExtraStall;
+    return baseDeliveryfee + stalls.fold<double>(0.0,(sum,current) => sum + current.getDeliveryfee()) - deliveryFeePerExtraStall;
   }
 
   double getPrice() {
     try {
-      return stallList.fold<double>(0.0,(sum,current) => sum + current.getPrice());
+      return stalls.fold<double>(0.0,(sum,current) => sum + current.getPrice());
     } catch(error) {
       print('error');
       return 0.0;
@@ -129,11 +138,11 @@ class Order {
   }
 
   int count() {
-    return stallList.fold<int>(0,(sum,current) => sum + current.count());
+    return stalls.fold<int>(0,(sum,current) => sum + current.count());
   }
 
   Map<String,dynamic> toJson() => {
-    'stalls': stallList.map((stall) => stall.toJson()).toList(),
+    'stalls': stalls.map((stall) => stall.toJson()).toList(),
     'detail': this.orderDetail.toJson(),
     'dishCount': this.count()
   };

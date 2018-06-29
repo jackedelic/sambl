@@ -11,8 +11,8 @@ import 'package:sambl/model/delivery_list.dart';
 Future<List<Stall>> stallListReader(List<dynamic> list) async {
   return new Stream.fromIterable(list).asyncMap<Stall>(
     (stall) async => new Stall(
-      new HawkerCenterStall(stall['identifier']['name']),
-      stall['dishes'].map<Dish>((dish) => (dish['isPriceSpecified']) ? 
+      identifier: new HawkerCenterStall(name: stall['identifier']['name']),
+      dishes: stall['dishes'].map<Dish>((dish) => (dish['isPriceSpecified']) ?
           new Dish.withPrice(dish['name'],dish['price'].toDouble()) : 
           new Dish.withOutPrice(dish['name']))
           .toList()
@@ -22,7 +22,7 @@ Future<List<Stall>> stallListReader(List<dynamic> list) async {
 
 Future<HawkerCenterStall> hawkerCenterStallReader(DocumentReference reference) async {
   return reference.get()
-    .then((snapshot) => new HawkerCenterStall(snapshot['name']));
+    .then((snapshot) => new HawkerCenterStall(name: snapshot['name']));
 }
 
 Future<HawkerCenter> hawkerCenterReader(DocumentReference reference) async {

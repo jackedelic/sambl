@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_widget.dart';
-
+import 'package:sambl/widgets/shared/my_app_bar.dart';
+import 'package:sambl/widgets/shared/my_color.dart';
 /*
-This is the page directed when the user wants to see any available food delivery services.
+This is the page directed when the user wants to see any available food delivery services
+(when he pressed 'order' button in the home page).
 */
 
 class OpenOrderListPage extends StatefulWidget {
@@ -17,23 +18,8 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Container(
-            padding: new EdgeInsets.only(left: 75.0),
-            child: new Text('HawkerJio',
-              style: new TextStyle(
-                color: new Color(0xFFDF1B01),
-                fontFamily: 'Indie Flower',
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-        ),
-        backgroundColor: Colors.white,
-        leading: new Icon(Icons.menu, color: new Color(0xFFDF1B01),),
-        elevation: 0.0,
-      ),
-      backgroundColor: new Color(0xFFEBEBEB),
+      appBar: new MyAppBar().build(context),
+      backgroundColor: MyColors.mainBackground,
       body: new Container(
         child: new Column(
           children: <Widget>[
