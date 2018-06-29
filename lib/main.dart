@@ -26,7 +26,7 @@ import 'package:sambl/widgets/shared/my_color.dart';
 final Store<AppState> store = new Store<AppState>(
   primaryReducer, /* Function defined in the reducers file */
   initialState: new AppState.unauthenticated(),
-  middleware: [thunkMiddleware,firebaseAuthMiddleware],
+  middleware: [thunkMiddleware,firebaseMiddleware],
 );
 
 void main() {

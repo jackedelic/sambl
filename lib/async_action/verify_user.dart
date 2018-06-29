@@ -30,8 +30,9 @@ class VerifyUserAction implements FirebaseUserAction {
         } else if (data['isdelivering']) {
             store.dispatch(new LoginWhileDeliveringAction(new User(this.user), 
               new CombinedDeliveryList(
-                approved: await deliveryListReader(data['currentPendingDelivery'],DeliveryListType.pending),
-                pending: await deliveryListReader(data['currentApprovedDelivery'],DeliveryListType.approved))));
+                approved: await deliveryListReader(data['currentDelivery'],DeliveryListType.pending),
+                pending: await deliveryListReader(data['currentDelivery'],DeliveryListType.approved),
+                detail: await data['currentDelivery'].get().then((delivery) => delivery.data['detail']))));
         } else {
           store.dispatch(new LoginAction(new User(this.user)));
         }

@@ -19,7 +19,3 @@ import 'package:sambl/state/app_state.dart';
         store.dispatch(new LogoutAction());
       });
   };
-
-  void _googleSignout() {
-
-  }
