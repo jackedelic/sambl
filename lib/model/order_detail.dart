@@ -21,13 +21,13 @@ class OrderDetail {
   OrderDetail({
     @required this.pickupPoint,
     @required this.hawkerCenter,
-    @required this.delivererUid,
+    this.delivererUid = "",
     @required this.closingTime,
     @required this.eta,
-    @required this.remarks,
+    this.remarks = "",
     @required this.maxNumberofDishes,
-    @required this.remainingNumberofDishes,
-    @required this.openOrderUid
+    this.remainingNumberofDishes = 0,
+    this.openOrderUid = ""
   });
 
   Map<String,dynamic> toJson() => {
@@ -43,6 +43,6 @@ class OrderDetail {
 
   @override 
   String toString() {
-
+    return this.toJson().toString();
   }
 }

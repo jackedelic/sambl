@@ -9,11 +9,12 @@ import 'package:redux_thunk/redux_thunk.dart';
 
 import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
+import 'package:sambl/async_action/verify_user.dart';
 
 
   final ThunkAction<AppState> signInWithGoogleAction = (Store<AppState> store) async {
     await _handleGoogleSignIn()
-      .then((user) => store.dispatch(new LoginAction(User(user))))
+      .then((user) => store.dispatch(new VerifyUserAction(user)))
       .catchError((error) => print(error));
   };
 

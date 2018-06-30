@@ -1,7 +1,9 @@
 import 'package:redux/redux.dart';
 import 'package:sambl/state/app_state.dart';
+import 'package:sambl/action/reset_action.dart';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:sambl/action/write_action.dart';
 
 abstract class FirestoreWriteAction {
 
@@ -17,6 +19,7 @@ class PlaceOrderAction implements FirestoreWriteAction {
 
   void run(Store<AppState> store) {
     CloudFunctions.instance.call(functionName: "placeOrder",parameters: this.toWrite.toJson());
+    store.dispatch(new WriteCurrentOrderAction(toWrite));
   }
 }
 
@@ -26,7 +29,13 @@ class CreateOpenOrderAction implements FirestoreWriteAction {
   CreateOpenOrderAction(OrderDetail detail): toWrite = detail;
 
   void run(Store<AppState> store) {
-    CloudFunctions.instance.call(functionName: "placeOrder",parameters: this.toWrite.toJson());
+    CloudFunctions.instance.call(functionName: "createOpenOrder",parameters: this.toWrite.toJson());
+  }
+}
+
+class CloseOrderAction implements FirestoreWriteAction {
+  void run(Store<AppState> store) {
+    CloudFunctions.instance.call(functionName: "closeOrder");
   }
 }
 
@@ -47,5 +56,12 @@ class RejectOrderAction implements FirestoreWriteAction{
 
   void run(Store<AppState> store) {
     CloudFunctions.instance.call(functionName: "rejectOrder",parameters: {"id": toWrite});
+  }
+}
+
+class FinalizeDeliveryAction implements FirestoreWriteAction{
+  void run(Store<AppState> store) {
+    CloudFunctions.instance.call(functionName: "finalizeDelivery");
+    store.dispatch(new ResetAction());
   }
 }

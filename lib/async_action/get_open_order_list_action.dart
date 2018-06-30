@@ -10,10 +10,17 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/utility/firebase_reader.dart';
 
 final ThunkAction<AppState> getOpenOrderList = (Store<AppState> store) async {
-  Firestore.instance.collection('open_orders').getDocuments()
-    .then((collection) => collection.documents.where((document) => document.data['isOpen'] == true))
-    .then((documents) => Stream.fromIterable(documents).asyncMap<OrderDetail>(
-      (openOrder) async => await orderDetailReader(openOrder.reference)).toList())
+  print('test 2');
+  Firestore.instance.collection('hawker_centers')
+    .document(store.state.currentHawkerCenter.value.uid)
+    .collection('open_orders').getDocuments()
+    .then((collection) => 
+      collection.documents.map<String>((document) => document.documentID))
+    .then((documentIds) => Stream.fromIterable(documentIds).asyncMap<OrderDetail>(
+      (openOrderID) async {
+        print(openOrderID);
+        return await orderDetailReader(Firestore.instance.collection('open_orders').document(openOrderID));
+      }).toList())
     .then((openOrderList) => store.dispatch(
       new WriteAvailableOpenOrderAction(openOrderList)));
 };
