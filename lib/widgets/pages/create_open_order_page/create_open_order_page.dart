@@ -33,6 +33,7 @@ import 'create_open_order_confirm_layout.dart';
 /// and DeliverAction when using redux.
 /// In the last layout/tab, the OpenOrder obj is dispatched with a DeliverAction using ofcourse redux.
 class CreateOpenOrderPage extends StatefulWidget {
+
   @override
   _CreateOpenOrderPageState createState() => _CreateOpenOrderPageState();
 }
@@ -44,10 +45,7 @@ TabController _tabController;
 void initState() {
   _tabController = new TabController(length: 3, vsync: this);
   _tabController.addListener(() {
-      setState(() {
-
-      });
-
+      setState(() {}); // change the state of the icon button
   });
 }
 
