@@ -21,7 +21,7 @@ final ThunkAction<AppState> getAvailableHawkerCenterAction = (Store<AppState> st
     .then((documents) async => await Stream.fromIterable(documents).asyncMap<HawkerCenter>(
       (hawkerCenter) async => await hawkerCenterReader(hawkerCenter.reference)).toList())
     .then((hawkerCenterList) {
-      print(hawkerCenterList);
+      print("printing retreived info: " + hawkerCenterList.toString());
       store.dispatch(new WriteAvailableHawkerCenterAction(hawkerCenterList));
     })
     .catchError((error) => print(error));

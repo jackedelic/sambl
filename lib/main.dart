@@ -36,13 +36,13 @@ void main() {
 }
 
 Widget defaultPage(AppStatusFlags flag) {
-  return new HomePage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
     case AppStatusFlags.authenticated:
       return new SignInPage();
   }
+  return new HomePage();
 }
 
 class MyApp extends StatelessWidget {

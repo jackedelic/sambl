@@ -21,7 +21,8 @@ class VerifyUserAction implements FirebaseUserAction {
 
   @override
   void run(Store<AppState> store) async {
-    Firestore.instance.collection('user').document(user.uid).get()
+    print('verifying user');
+    Firestore.instance.collection('users').document(user.uid).get()
       .then((document) => document.data, onError: (error) => store.dispatch(new RequestSignUpAction(this.user)))
       .then((data) async {
         if (data['isOrdering']) {

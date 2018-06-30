@@ -112,7 +112,7 @@ class Order {
     if (stalls.map((stall) => stall.identifier).any((identifier) => identifier.equals(stallIdentifier))) {
       return new Order(this.stalls.map<Stall>((stall){
         return ((stall.identifier.equals(stallIdentifier)) ? stall.addDish(dish) : stall);
-      }), this.orderDetail);
+      }).toList(), this.orderDetail);
     } else {
       return new Order(this.stalls + [new Stall.one(identifier: stallIdentifier, dish: dish)], this.orderDetail);
     }
