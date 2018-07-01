@@ -18,6 +18,9 @@ import 'package:sambl/reducer/primary_reducer.dart';
 import 'package:sambl/middleware/firebase_auth_middleware.dart';
 
 import 'package:sambl/widgets/shared/my_color.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'package:sambl/message_handler/primary_handler.dart';
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.
@@ -42,6 +45,12 @@ Widget defaultPage(AppStatusFlags flag) {
       return new SignInPage();
     case AppStatusFlags.authenticated:
       return new SignInPage();
+    case AppStatusFlags.awaitingSignup:
+      return new SignInPage();
+    case AppStatusFlags.delivering:
+      return new SignInPage();
+    case AppStatusFlags.ordering:
+      return new SignInPage();
   }
   return new HomePage();
 }
@@ -54,6 +63,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+    _firebaseMessaging.requestNotificationPermissions();
+    _firebaseMessaging.configure(
+      onMessage: (message) => primaryMessageHandler(message,HandlerType.onMessage,store),
+      onLaunch: (message) => primaryMessageHandler(message,HandlerType.onLaunch,store),
+      onResume: (message) => primaryMessageHandler(message,HandlerType.onResume,store)
+    );
     return new StoreProvider<AppState>(
       store: store,
       child: new MaterialApp(
