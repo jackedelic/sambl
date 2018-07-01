@@ -36,6 +36,7 @@ void main() {
 }
 
 Widget defaultPage(AppStatusFlags flag) {
+  return new HomePage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
