@@ -41,13 +41,46 @@ class CreateOpenOrderPage extends StatefulWidget {
 class _CreateOpenOrderPageState extends State<CreateOpenOrderPage> with SingleTickerProviderStateMixin {
 TabController _tabController;
 
-@override
-void initState() {
-  _tabController = new TabController(length: 3, vsync: this);
-  _tabController.addListener(() {
-      setState(() {}); // change the state of the icon button
-  });
-}
+  @override
+  void initState() {
+    _tabController = new TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+        setState(() {}); // change the state of the icon button
+    });
+  }
+
+  /// button to navigate to the next tab. In the last tab (tab controller's index == 2), the button when pressed
+///  brings deliverer to 'delivery subscribers' page.
+  Widget _buildNextButton() {
+
+    return new Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        new FlatButton(
+                onPressed: (){
+                  _tabController.index != 2 ? _tabController.animateTo((_tabController.index + 1) % 3) :
+                      Navigator.popAndPushNamed(context, '/OrdererListPage');
+                  },
+                 child: _tabController.index != 2 ? new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,) :
+                    new Container(
+                      decoration: new BoxDecoration(
+                        border: new Border.all(width: 1.0, color: MyColors.mainRed),
+                        borderRadius: new BorderRadius.circular(8.0)
+
+                      ),
+                      padding: new EdgeInsets.all(6.0),
+                      child: new Text("Confirm",
+                        style: new TextStyle(
+                          color: MyColors.mainRed,
+                          fontSize: 17.0
+                        ),
+                      ),
+                    )
+                )
+              ],
+          );
+
+  }
 
 @override
   Widget build(BuildContext context) {
@@ -108,17 +141,11 @@ void initState() {
               // position in the two pages.
               new Padding(padding: new EdgeInsets.all(5.0),),
 
-              // The Arrow BUTTON to navigate to 'delivery_remark_page' when pressed.
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new FlatButton(
-                      onPressed: (){
-                        _tabController.animateTo((_tabController.index + 1) % 3);
-                      },
-                      child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,))
-                ],
-              ),
+              // The Arrow BUTTON to navigate to 'additional remark/confirmation page' when pressed.
+              // Arrow button becomes confirm button in confirmation page. At this point, when confirm button is pressed,
+              // deliverer will be navigated to 'subscribers page'.
+              _buildNextButton(),
+
 
               // some space btwn 'arrow button' and 'bottom icon'
               new Padding(

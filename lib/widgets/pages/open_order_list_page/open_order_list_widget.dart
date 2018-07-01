@@ -4,16 +4,16 @@ import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
-class JioEntryWidget extends StatefulWidget {
-  final OrderDetail jioentry;
+class OpenOrderListWidget extends StatefulWidget {
+  final OrderDetail orderDetail;
 
-  JioEntryWidget(this.jioentry);
+  OpenOrderListWidget(this.orderDetail);
 
   @override
-  _JioEntryWidgetState createState() => new _JioEntryWidgetState();
+  _OpenOrderListWidgetState createState() => new _OpenOrderListWidgetState();
 }
 
-class _JioEntryWidgetState extends State<JioEntryWidget> {
+class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -27,7 +27,7 @@ class _JioEntryWidgetState extends State<JioEntryWidget> {
               // This is the left item - the name of deliverer
               new Container(
                 width: 200.0,
-                child: new Text("Pakorn",
+                child: new Text("${widget.orderDetail.delivererUid}",
                   style: new TextStyle(
                       fontSize: 20.0,
                   ),
@@ -67,7 +67,7 @@ class _JioEntryWidgetState extends State<JioEntryWidget> {
         children: <Widget>[
           new Column(
             children: <Widget>[
-              new Text("Pick up location: Cafe Agora(Yale-Nus)"),
+              new Text("Pick up location: ${widget.orderDetail.pickupPoint}"),
 
               // This container holds only the place order button
               new Container(

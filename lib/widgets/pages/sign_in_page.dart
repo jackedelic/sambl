@@ -106,6 +106,18 @@ class SignInPage extends StatelessWidget {
                             // )));
 
                             store.dispatch(signInWithGoogleAction);
+                            if (store.state.currentAppStatus == AppStatusFlags.awaitingSignup) {
+                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
+                              Navigator.popAndPushNamed(context, '/SignUpPage');
+                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated) {
+                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
+                              Navigator.popAndPushNamed(context, '/HomePage');
+                            } else if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
+                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
+                              Navigator.popAndPushNamed(context, '/SignUpPage');
+                            } else {
+                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
+                            }
                             //store.dispatch();
                             //print(store.state.currentOrder.value.toJson());
                             

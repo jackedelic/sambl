@@ -13,8 +13,13 @@ import 'package:sambl/async_action/verify_user.dart';
 
 
   final ThunkAction<AppState> signInWithGoogleAction = (Store<AppState> store) async {
+    print("inside google_authentication.dart, gonna handle google sign in");
     await _handleGoogleSignIn()
-      .then((user) => store.dispatch(new VerifyUserAction(user)))
+      .then((user) {
+      print("gonna dispatch verify user");
+        store.dispatch(new VerifyUserAction(user));
+        print("finished dispatching");
+      })
       .catchError((error) => print(error));
   };
 

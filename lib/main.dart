@@ -10,6 +10,7 @@ import 'package:sambl/widgets/pages/create_open_order_page_deprecated/create_ope
 import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_page.dart';
 import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
+import 'package:sambl/widgets/pages/orderer_list_page/orderer_list_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
 import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
@@ -18,6 +19,7 @@ import 'package:sambl/reducer/primary_reducer.dart';
 import 'package:sambl/middleware/firebase_auth_middleware.dart';
 
 import 'package:sambl/widgets/shared/my_color.dart';
+
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.
@@ -36,7 +38,7 @@ void main() {
 }
 
 Widget defaultPage(AppStatusFlags flag) {
-  return new HomePage();
+//  return new HomePage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
@@ -73,7 +75,8 @@ class MyApp extends StatelessWidget {
           "/PlaceOrderPage" : (BuildContext context) => new PlaceOrderPage(),
           "/SignInPage" : (BuildContext context) => new SignInPage(),
           "/SignUpPage" : (BuildContext context) => new SignUpPage(),
-          "/CreateOpenOrderPage": (BuildContext context) => new CreateOpenOrderPage(),
+          "/CreateOpenOrderPage" : (BuildContext context) => new CreateOpenOrderPage(),
+          "/OrdererListPage" : (BuildContext context) => new OrdererListPage(),
         },
       )
     );

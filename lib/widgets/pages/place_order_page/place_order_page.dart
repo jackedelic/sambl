@@ -112,7 +112,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
               builder: (_, store){
                 return new Expanded(
                     child: new ListView.builder(
-                        itemCount: 10,
+                        itemCount: 1,
                         itemBuilder: (BuildContext context, int n) {
                           return new AddStallCard(
                               new Stall(
