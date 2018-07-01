@@ -16,31 +16,33 @@ class OrderDetail {
   final String remarks;
   final int maxNumberofDishes;
   final int remainingNumberofDishes;
+  final String openOrderUid;
 
   OrderDetail({
     @required this.pickupPoint,
     @required this.hawkerCenter,
-    @required this.delivererUid,
+    this.delivererUid = "",
     @required this.closingTime,
     @required this.eta,
-    @required this.remarks,
+    this.remarks = "",
     @required this.maxNumberofDishes,
-    @required this.remainingNumberofDishes
+    this.remainingNumberofDishes = 0,
+    this.openOrderUid = ""
   });
 
   Map<String,dynamic> toJson() => {
     'pickupPoint': geoPointToMap(this.pickupPoint),
-    'hawkerCenter': this.hawkerCenter.toJson(),
+    'hawkerCenter': this.hawkerCenter.uid,
     'delivererUid': this.delivererUid,
     'closingTime': this.closingTime.toIso8601String(),
     'eta': this.eta.toIso8601String(),
     'remarks': this.remarks,
     'maxNumberofDishes': this.maxNumberofDishes,
-    'remainingNumberofDishes': this.remainingNumberofDishes
+    'openOrderUid': this.openOrderUid
   };
 
   @override 
   String toString() {
-
+    return this.toJson().toString();
   }
 }

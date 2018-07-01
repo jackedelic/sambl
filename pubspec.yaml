@@ -9,6 +9,8 @@ dependencies:
   cloud_firestore: "^0.7.0"
   intl: "^0.15.6"
   firebase_auth: "^0.5.11"
+  cloud_functions: "^0.0.1"
+  firebase_messaging: "^1.0.3"
 
   # The following adds Google authentication feature to the application
   google_sign_in: "^3.0.4"

@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,20 +10,19 @@ import 'package:sambl/utility/firebase_reader.dart';
 
 abstract class FirebaseUserAction {
   final FirebaseUser user;
-  final Store<AppState> store;
 
-  void run();
+  void run(Store<AppState> store);
 }
 
 class VerifyUserAction implements FirebaseUserAction {
   final FirebaseUser user;
-  final Store<AppState> store;
 
-  VerifyUserAction(FirebaseUser user, Store store): this.user = user, this.store = store;
+  VerifyUserAction(FirebaseUser user): this.user = user;
 
   @override
-  void run() async {
-    Firestore.instance.collection('user').document(user.uid).get()
+  void run(Store<AppState> store) async {
+    print('verifying user');
+    Firestore.instance.collection('users').document(user.uid).get()
       .then((document) => document.data, onError: (error) => store.dispatch(new RequestSignUpAction(this.user)))
       .then((data) async {
         if (data['isOrdering']) {
@@ -33,7 +30,10 @@ class VerifyUserAction implements FirebaseUserAction {
             await orderReader(data['currentOrder'])));
         } else if (data['isdelivering']) {
             store.dispatch(new LoginWhileDeliveringAction(new User(this.user), 
-            await deliveryListReader(data['currentDelivery'])));
+              new CombinedDeliveryList(
+                approved: await deliveryListReader(data['currentDelivery'],DeliveryListType.pending),
+                pending: await deliveryListReader(data['currentDelivery'],DeliveryListType.approved),
+                detail: await data['currentDelivery'].get().then((delivery) => delivery.data['detail']))));
         } else {
           store.dispatch(new LoginAction(new User(this.user)));
         }

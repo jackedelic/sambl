@@ -36,7 +36,7 @@ class AppState {
   final Optional<HawkerCenter> currentHawkerCenter;
   final List<OrderDetail> openOrderList;
   final Optional<Order> currentOrder;
-  final DeliveryList currentDeliveryList;
+  final CombinedDeliveryList currentDeliveryList;
 
   AppState modify(AppStateFields fieldToModify,dynamic newValue) {
     switch(fieldToModify) {
@@ -107,7 +107,7 @@ class AppState {
     @required Optional<HawkerCenter> currentHawkerCenter,
     @required List<OrderDetail> openOrderList,
     @required Optional<Order> currentOrder,
-    @required DeliveryList currentDeliveryList
+    @required CombinedDeliveryList currentDeliveryList
   }): this.currentUser = currentUser,
     this.currentAppStatus = currentAppStatus,
     this.availableHawkerCenter = availableHawkerCenter,
@@ -123,7 +123,7 @@ class AppState {
       this.currentHawkerCenter = Optional<HawkerCenter>.absent(),
       this.openOrderList = new List<OrderDetail>(),
       this.currentOrder = Optional<Order>.absent(),
-      this.currentDeliveryList = new DeliveryList.absent();
+      this.currentDeliveryList = new CombinedDeliveryList.absent();
 
   AppState.awaitingSignUp(): 
       this.currentUser = new User.initial(),
@@ -132,7 +132,7 @@ class AppState {
       this.currentHawkerCenter = Optional<HawkerCenter>.absent(),
       this.openOrderList = new List<OrderDetail>(),
       this.currentOrder = Optional<Order>.absent(),
-      this.currentDeliveryList = new DeliveryList.absent();
+      this.currentDeliveryList = new CombinedDeliveryList.absent();
   
   AppState.authenticated(User user):
       this.currentUser = user,
@@ -141,7 +141,7 @@ class AppState {
       this.currentHawkerCenter = Optional<HawkerCenter>.absent(),
       this.openOrderList = new List<OrderDetail>(),
       this.currentOrder = Optional<Order>.absent(),
-      this.currentDeliveryList = new DeliveryList.absent();
+      this.currentDeliveryList = new CombinedDeliveryList.absent();
 
   AppState.ordering(User user, Order currentOrder):
       this.currentUser = user,
@@ -150,9 +150,9 @@ class AppState {
       this.currentHawkerCenter = Optional<HawkerCenter>.of(currentOrder.orderDetail.hawkerCenter),
       this.openOrderList = new List<OrderDetail>(),
       this.currentOrder = Optional<Order>.of(currentOrder),
-      this.currentDeliveryList = new DeliveryList.absent();
+      this.currentDeliveryList = new CombinedDeliveryList.absent();
 
-  AppState.delivering(User user, DeliveryList currentDelivery): 
+  AppState.delivering(User user, CombinedDeliveryList currentDelivery): 
       assert(currentDelivery.deliveryDetail.isPresent),
       this.currentUser = user,
       this.currentAppStatus = AppStatusFlags.delivering,

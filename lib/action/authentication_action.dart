@@ -30,7 +30,8 @@ class LoginWhileOrderingAction extends LoginAction {
 }
 
 class LoginWhileDeliveringAction extends LoginAction {
-  final DeliveryList deliveryList;
+  final CombinedDeliveryList deliveryList;
 
-  LoginWhileDeliveringAction(User user, DeliveryList deliveryList) : this.deliveryList = deliveryList, super(user);
+  LoginWhileDeliveringAction(User user, CombinedDeliveryList deliveryList) : 
+    this.deliveryList = deliveryList, super(user);
 }
