@@ -18,19 +18,17 @@ const Map<String,dynamic> secondaryHandler = {
 dynamic primaryMessageHandler (Map<String,dynamic> message, HandlerType type, Store<AppState> store) {
   print(message);
   if(Platform.isIOS) {
-    print(message['aps']['alert']);
-    return null;
-    //return secondaryHandler[message['aps']['']].call(message,store);
+    return secondaryHandler[message['aps']['alert']].call(store);
   } else {
     return null;
   }
 }
 
-void _orderRejectedMessageHandler (Map<String,dynamic> message, Store<AppState> store) async {
+void _orderRejectedMessageHandler (Store<AppState> store) async {
   print('Order rejected by deliverer');
   store.dispatch(new ResetAction());
 }
 
-void _orderApprovedMessageHandler (Map<String,dynamic> message, Store<AppState> store) async {
+void _orderApprovedMessageHandler (Store<AppState> store) async {
   print('The deliverer has approved your order');
 }
