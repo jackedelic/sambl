@@ -14,7 +14,7 @@ class OrderDetail {
   final DateTime closingTime;
   final DateTime eta;
   final String remarks;
-  final int maxNumberofDishes;
+  int maxNumberofDishes;
   final int remainingNumberofDishes;
   final String openOrderUid;
 

@@ -27,7 +27,7 @@ class DeliveringFromLayout extends StatelessWidget {
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    new Text("Delivering from: ",
+                    new Text("Delivering from: Clementi Mall food court",
                       style: new TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.bold

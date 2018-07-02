@@ -10,6 +10,8 @@ import 'package:sambl/action/order_action.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
 import 'package:sambl/action/write_action.dart';
 import 'package:sambl/model/order.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class PlaceOrderPage extends StatefulWidget {
   @override
   _PlaceOrderPageState createState() => _PlaceOrderPageState();
@@ -51,7 +53,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
               child: new Text("Cancel")),
             new FlatButton(
               onPressed: () {
-                Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text));
+                Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text), dishes: new List<Dish>());
 
                 Navigator.of(context).pop(stall);
               },
@@ -203,10 +205,17 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                         //TRIGGER SubmitOrderAction.
                         Optional<Order> newOrder = store.state.currentOrder;
                         // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                        store.dispatch(new OrderAction(order: newOrder));
-
+                       // store.dispatch(new OrderAction(order: newOrder));
+                        Order order = new Order.empty(store.state.openOrderList[0]);
+                        for (int i = 0; i < stalls.length; i++) {
+                          for (int j = 0; j < stalls[i].dishes.length; j++) {
+                            order = order.addDish(stalls[i].dishes[j], stalls[i].identifier);
+                          }
+                          
+                        }
+                         store.dispatch(PlaceOrderAction(order));
                         // Navigate to a page to view ur order
-
+                        Navigator.popAndPushNamed(context, '/HomePage');
                         print("Order placed.");
                       },
                       child: new Container(

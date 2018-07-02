@@ -19,11 +19,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 /// This is the layout that first appear when the user pressed 'Deliver' button on the
 /// home page.
 class CreateOpenOrderMainLayout extends StatefulWidget {
-
-  /// Constructor that receives the OpenOrder obj.
-  CreateOpenOrderMainLayout() {
-
-  }
+  TextEditingController pickUpPtController ;
+  TextEditingController closingTimeController ;
+  TextEditingController etaController;
+  CreateOpenOrderMainLayout(this.pickUpPtController, this.closingTimeController, this.etaController);
 
   @override
   _CreateOpenOrderMainLayoutState createState() =>
@@ -34,6 +33,10 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
   FocusNode _focusNode1 = new FocusNode(); // for 'pick up pt' TextField widgets
   FocusNode _focusNode2 = new FocusNode(); // for 'closing time' TextField widgets
   FocusNode _focusNode3 = new FocusNode(); // for 'ETA' TextField widgets
+  TextEditingController pickUpPtController = new TextEditingController();
+  TextEditingController closingTimeController = new TextEditingController();
+  TextEditingController etaController = new TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +65,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                   child: new EnsureVisibleWhenFocused(
                 focusNode: _focusNode1,
                 child: new TextField(
+                  controller: pickUpPtController,
                   focusNode: _focusNode1,
                   decoration: new InputDecoration(
                     labelText: "Pick up point",
@@ -96,6 +100,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                     child: new EnsureVisibleWhenFocused(
                       focusNode: _focusNode2,
                       child: new TextField(
+                        controller: closingTimeController,
                         focusNode: _focusNode2,
                         decoration: new InputDecoration(
                           labelText: "Closing Time",
@@ -122,6 +127,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                       child: new EnsureVisibleWhenFocused(
                         focusNode: _focusNode3,
                         child: new TextField(
+                          controller: etaController,
                           focusNode: _focusNode3,
                           decoration: new InputDecoration(labelText: "ETA: "),
                         ),

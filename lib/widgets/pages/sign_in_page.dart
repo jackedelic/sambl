@@ -67,11 +67,12 @@ class SignInPage extends StatelessWidget {
                 ),
               ),
               new Container (
-                
+
                 alignment: Alignment.bottomCenter,
                 child: new AspectRatio(
                   aspectRatio: 2.5,
                   child: new Container(
+                      margin: new EdgeInsets.symmetric(vertical: 10.0),
                     alignment: Alignment.bottomCenter,
                     color: Colors.white,
                     width: MediaQuery.of(context).size.width,
@@ -127,7 +128,7 @@ class SignInPage extends StatelessWidget {
 
                             //store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
 
-                            store.dispatch(registerUserAction);
+                            //store.dispatch(registerUserAction);
                             if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
                               print("inside sign in page: not authenticated");
 
@@ -143,14 +144,18 @@ class SignInPage extends StatelessWidget {
                               }
                               print("getOpenOrderList dispatched");
                               print("inside sign in page, list is ${store.state.openOrderList}");
-                              //Navigator.pushNamed(context, '/HomePage');
+                              Navigator.pushNamed(context, '/HomePage');
                             } else {
                               print("${store.state.currentAppStatus}");
                             }
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(
-                              child: new Text("sign in"),
+                              child: new Center(
+                                child: new Text("sign in",
+                                  style: new TextStyle(fontSize: 30.0),
+                                ),
+                              ),
                               color: Colors.red,
                               height: 100.0,
                               width: double.infinity,

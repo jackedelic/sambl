@@ -11,10 +11,12 @@ import 'package:sambl/widgets/shared/quantity_display.dart';
 /// provided in the previous two tabs (tabbarview children) in [OrderDetail].
 /// This layout uses redux to dispatch DeliverAction with OpenOrder obj.
 class CreateOpenOrderConfirmLayout extends StatefulWidget {
-
-  CreateOpenOrderConfirmLayout() {
-
-  }
+  TextEditingController remarkController = new TextEditingController();
+  TextEditingController pickUpPtController = new TextEditingController();
+  TextEditingController closingTimeController = new TextEditingController();
+  TextEditingController etaController = new TextEditingController();
+  OrderDetail orderDetail;
+  CreateOpenOrderConfirmLayout(this.pickUpPtController, this.closingTimeController, this.etaController, this.remarkController, this.orderDetail);
 
   @override
   _CreateOpenOrderConfirmLayoutState createState() => _CreateOpenOrderConfirmLayoutState();
@@ -60,7 +62,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                     child: new Row(
                       children: <Widget>[
                         new Expanded(
-                          child: new Text("Picking up at Changi Prison lobby",
+                          child: new Text("Picking up at ${widget.pickUpPtController.text}",
                             style: new TextStyle(
                               fontSize: 20.0,
                             ),
@@ -87,7 +89,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                             content: "closing in",
                           ),
                           quantity: new QuantityDisplayElement(
-                              content: "45"
+                              content: "${widget.closingTimeController.text}"
                           ),
                           tail: new QuantityDisplayElement(
                               content: "min"
@@ -101,7 +103,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                             content: "ETA",
                           ),
                           quantity: new QuantityDisplayElement(
-                              content: "15"
+                              content: "${widget.etaController.text}"
                           ),
                           tail: new QuantityDisplayElement(
                               content: "min"
@@ -115,7 +117,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                             content: "Delivering",
                           ),
                           quantity: new QuantityDisplayElement(
-                              content: "4"
+                              content: "${widget.orderDetail.maxNumberofDishes}"
                           ),
                           tail: new QuantityDisplayElement(
                               content: "dishes"
@@ -147,11 +149,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                         new Row(
                           children: <Widget>[
                             new Expanded(
-                              child: new Text("""iohasoud asdn asjnd kasn doaissssssssdkjaskjdasodjaois
-                                asodjasjdlasjdlaksasda
-                                asdasda
-                                asdasd
-                                """,
+                              child: new Text("${widget.remarkController.text}",
                                 style: new TextStyle(
                                     fontSize: 16.0
                                 ),

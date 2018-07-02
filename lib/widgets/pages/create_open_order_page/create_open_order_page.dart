@@ -41,9 +41,23 @@ class CreateOpenOrderPage extends StatefulWidget {
 class _CreateOpenOrderPageState extends State<CreateOpenOrderPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
+  TextEditingController pickUpPtController = new TextEditingController();
+  TextEditingController closingTimeController = new TextEditingController();
+  TextEditingController etaController = new TextEditingController();
+  TextEditingController remarkController = new TextEditingController();
+
+  OrderDetail orderDetail = new OrderDetail();
+
   @override
   void initState() {
+    super.initState();
     _tabController = new TabController(length: 3, vsync: this);
+    pickUpPtController = new TextEditingController();
+    closingTimeController = new TextEditingController();
+    etaController = new TextEditingController();
+    remarkController = new TextEditingController();
+
+    orderDetail = new OrderDetail();
     _tabController.addListener(() {
       setState(() {}); // change the state of the icon button
     });
@@ -122,14 +136,14 @@ class _CreateOpenOrderPageState extends State<CreateOpenOrderPage> with SingleTi
                     controller: _tabController,
                     children: <Widget>[
                       // The layout that asks deliverer to input pickup pt, closing time and eta.
-                      new CreateOpenOrderMainLayout(),
+                      new CreateOpenOrderMainLayout(pickUpPtController, closingTimeController, etaController),
 
                       // The layout that asks deliverer to specify number of dishes to deliver
                       // and any additional remarks.
-                      new CreateOpenOrderRemarkLayout(),
+                      new CreateOpenOrderRemarkLayout(orderDetail),
 
                       // The last 'confirmation' layout which shows a summary of the openOrder details
-                      new CreateOpenOrderConfirmLayout(),
+                      new CreateOpenOrderConfirmLayout(pickUpPtController, closingTimeController, etaController, remarkController, orderDetail),
                     ]
                 ),
               ),

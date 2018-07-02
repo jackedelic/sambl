@@ -15,11 +15,9 @@ import 'package:sambl/main.dart';
 /// 2. additional remarks about the delivery.
 
 class CreateOpenOrderRemarkLayout extends StatefulWidget {
-
+  OrderDetail orderDetail;
   /// Constructor that receives the OpenOrder.
-  CreateOpenOrderRemarkLayout() {
-
-  }
+  CreateOpenOrderRemarkLayout(this.orderDetail);
 
   @override
   _CreateOpenOrderRemarkLayoutState createState() => _CreateOpenOrderRemarkLayoutState();
@@ -76,6 +74,7 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                               //REDUXIFY
                               setState(() {
                                 _numOfDishes++;
+                                widget.orderDetail.maxNumberofDishes++;
                               });
                             },
                           ),
@@ -101,6 +100,7 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                               //REDUXIFY
                               setState(() {
                                 _numOfDishes = _numOfDishes > 0 ? _numOfDishes - 1 : _numOfDishes;
+                                widget.orderDetail.maxNumberofDishes--;
                               });
 
                             },
