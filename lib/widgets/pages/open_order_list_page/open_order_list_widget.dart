@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
+import 'package:sambl/widgets/shared/bottom_icon.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
 class OpenOrderListWidget extends StatefulWidget {
-  final OrderDetail jioentry;
+  final OrderDetail openOrder;
 
-  OpenOrderListWidget(this.jioentry);
+  OpenOrderListWidget(this.openOrder);
 
   @override
   _OpenOrderListWidgetState createState() => new _OpenOrderListWidgetState();
@@ -27,7 +28,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
               // This is the left item - the name of deliverer
               new Container(
                 width: 200.0,
-                child: new Text("Pakorn",
+                child: new Text("${widget.openOrder.delivererUid}",
                   style: new TextStyle(
                       fontSize: 20.0,
                   ),
@@ -41,6 +42,12 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                       new Text("25",
                         style: new TextStyle(
                             fontSize: 20.0
+                        ),
+
+                      ),
+                      new Text("min",
+                        style: new TextStyle(
+                            fontSize: 15.0
                         ),
                       )
                     ],

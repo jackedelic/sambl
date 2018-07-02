@@ -128,6 +128,7 @@ class SignInPage extends StatelessWidget {
 
                             } else if (store.state.currentAppStatus == AppStatusFlags.authenticated) {
                               print("authenticated! going to home page");
+                              store.dispatch(getOpenOrderList);
                               Navigator.pushNamed(context, '/HomePage');
                             } else {
                               print("${store.state.currentAppStatus}");

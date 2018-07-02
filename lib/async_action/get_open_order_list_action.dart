@@ -12,7 +12,7 @@ import 'package:sambl/utility/firebase_reader.dart';
 final ThunkAction<AppState> getOpenOrderList = (Store<AppState> store) async {
   print('test 2');
   Firestore.instance.collection('hawker_centers')
-    .document(store.state.currentHawkerCenter.value.uid)
+    .document("64ceajXT6dpCHIf6J9pQ")
     .collection('open_orders').getDocuments()
     .then((collection) => 
       collection.documents.map<String>((document) => document.documentID))
@@ -21,6 +21,10 @@ final ThunkAction<AppState> getOpenOrderList = (Store<AppState> store) async {
         print(openOrderID);
         return await orderDetailReader(Firestore.instance.collection('open_orders').document(openOrderID));
       }).toList())
-    .then((openOrderList) => store.dispatch(
-      new WriteAvailableOpenOrderAction(openOrderList)));
+    .then((openOrderList){
+      print("gonna dispatch writeAvailableOpenOrderAction(openOrderList)");
+      store.dispatch(new WriteAvailableOpenOrderAction(openOrderList));
+      print("done dispatching writeAvailableOpenOrderAction(openOrderList)");
+      print("state's openOrderList is ${store.state.openOrderList.length} long");
+    });
 };
