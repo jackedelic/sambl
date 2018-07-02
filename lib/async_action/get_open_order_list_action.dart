@@ -12,7 +12,7 @@ import 'package:sambl/utility/firebase_reader.dart';
 final ThunkAction<AppState> getOpenOrderList = (Store<AppState> store) async {
   print('test 2');
   Firestore.instance.collection('hawker_centers')
-    .document("64ceajXT6dpCHIf6J9pQ")
+    .document(store.state.currentHawkerCenter.value.uid)
     .collection('open_orders').getDocuments()
     .then((collection) => 
       collection.documents.map<String>((document) => document.documentID))

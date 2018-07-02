@@ -8,7 +8,8 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/action/order_action.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
-
+import 'package:sambl/action/write_action.dart';
+import 'package:sambl/model/order.dart';
 class PlaceOrderPage extends StatefulWidget {
   @override
   _PlaceOrderPageState createState() => _PlaceOrderPageState();
@@ -21,6 +22,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
 
   @override
   void initState() {
+    super.initState();
     stalls = new List<Stall>();
   }
 
@@ -50,6 +52,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
             new FlatButton(
               onPressed: () {
                 Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text));
+
                 Navigator.of(context).pop(stall);
               },
               child: new Text("Add")),
@@ -112,19 +115,20 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
               builder: (_, store){
                 return new Expanded(
                     child: new ListView.builder(
-                        itemCount: 10,
+                        itemCount: stalls.isEmpty ? 0 : stalls.length,
                         itemBuilder: (BuildContext context, int n) {
                           return new AddStallCard(
                               new Stall(
-                                  identifier: new HawkerCenterStall(name: "Wakanda stall"),
-                                  dishes: <Dish>[
-                                    new Dish(name: "High Calorie yummy food"),
-                                    new Dish(name: "Low Calorie not so yummy food"),
-                                    new Dish(name: "African meat"),
-                                    new Dish(name: "Sexy fish"),
-                                    new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
-                                        "almost melting but not really. "),
-                                  ]
+                                  identifier: new HawkerCenterStall(name: "${stalls[n].identifier.name}"),
+                                  dishes: stalls[n].dishes,
+                                  //<Dish>[
+//                                    new Dish(name: "High Calorie yummy food"),
+//                                    new Dish(name: "Low Calorie not so yummy food"),
+//                                    new Dish(name: "African meat"),
+//                                    new Dish(name: "Sexy fish"),
+//                                    new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
+//                                        "almost melting but not really. "),
+                                  //]
                               )
                           );
                         }
@@ -162,7 +166,9 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                           // TRIGGER AddStallAction action, which takes in our newly created stall.
                           // The reducer will add this newly created stall and add it to our existing list
                           // of stalls. The reducer shd create a new state w new Order obj w new list of stalls.
-                          store.dispatch(new AddStallAction(stall: stall));
+                          //store.dispatch(new AddStallAction(stall: stall));
+                          stalls.add(stall);
+                          setState(() {});
                           print("stall added: " + stall.identifier.name);
                         },
                         child: new Text("+ Add stall",
@@ -316,7 +322,7 @@ class _AddStallCardState extends State<AddStallCard> {
                   new Container(
                     height: 150.0,
                     child: new ListView.builder(
-                        itemCount: widget.stall.dishes.length,
+                        itemCount: widget.stall.dishes.isEmpty ? 0 :  widget.stall.dishes.length,
                         itemBuilder: (BuildContext context, int index) {
                           // A column consists of the string for stall name and a divider.
                           return new Column(
@@ -359,8 +365,9 @@ class _AddStallCardState extends State<AddStallCard> {
                               // newly added dish.
                               Dish dish = await _addDishDialog();
                               // The reducer shd create new state w a new Order obj w new stall w one more dish.
-                              store.dispatch(new AddDishAction(stall: widget.stall, dish: dish));
-
+                              //store.dispatch(new AddDishAction(stall: widget.stall, dish: dish));
+                              widget.stall.dishes.add(dish);
+                              setState((){});
                               print("dish added: " + dish.name);
                             },
                             child: new Text("+ Add dish"),

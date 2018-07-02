@@ -25,10 +25,15 @@ import 'package:sambl/action/write_action.dart';
 import 'package:sambl/async_action/register_user_action.dart';
 
 import 'package:sambl/async_action/get_open_order_list_action.dart';
+import 'package:sambl/async_action/get_available_hawker_center_action.dart';
 
 import 'package:sambl/async_action/get_delivery_list.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+
+import 'package:sambl/action/write_action.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignInPage extends StatelessWidget {
 
@@ -75,7 +80,7 @@ class SignInPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         new StoreConnector<AppState,VoidCallback>(
-                          converter: (store) => () {
+                          converter: (store) => () async {
                             // get hawker centers
                             //store.dispatch(getAvailableHawkerCenterAction);
 
@@ -126,10 +131,19 @@ class SignInPage extends StatelessWidget {
                             if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
                               print("inside sign in page: not authenticated");
 
-                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated) {
+                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated){
                               print("authenticated! going to home page");
-                              store.dispatch(getOpenOrderList);
-                              Navigator.pushNamed(context, '/HomePage');
+
+                              store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));
+                              print("print: store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));");
+
+                              if (store.state.currentHawkerCenter.isPresent && store.state.openOrderList.isEmpty) {
+                                store.dispatch(getOpenOrderList);
+
+                              }
+                              print("getOpenOrderList dispatched");
+                              print("inside sign in page, list is ${store.state.openOrderList}");
+                              //Navigator.pushNamed(context, '/HomePage');
                             } else {
                               print("${store.state.currentAppStatus}");
                             }

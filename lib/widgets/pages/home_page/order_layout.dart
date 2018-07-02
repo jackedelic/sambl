@@ -34,7 +34,7 @@ class OrderLayout extends StatelessWidget {
                 new Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    new Text("From: ",
+                    new Text("From: RC4 Utown",
                       style: new TextStyle(
                           fontSize: 17.0,
                           fontWeight: FontWeight.bold
@@ -51,7 +51,7 @@ class OrderLayout extends StatelessWidget {
                 ),
                 new Row(
                   children: <Widget>[
-                    new Text("To:",
+                    new Text("To: Clementi Mall food court",
                         style: new TextStyle(
                             fontSize: 17.0,
                             fontWeight: FontWeight.bold

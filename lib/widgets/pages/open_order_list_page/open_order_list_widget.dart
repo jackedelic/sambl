@@ -3,6 +3,7 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
+import 'package:sambl/widgets/shared/quantity_display.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
 class OpenOrderListWidget extends StatefulWidget {
@@ -26,33 +27,32 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
           child: new Row(
             children: <Widget>[
               // This is the left item - the name of deliverer
-              new Container(
-                width: 200.0,
-                child: new Text("${widget.openOrder.delivererUid}",
-                  style: new TextStyle(
-                      fontSize: 20.0,
+              new Expanded(
+                flex: 1,
+                child: new Container(
+                  width: 200.0,
+                  child: new Text("${widget.openOrder.delivererUid}",
+                    style: new TextStyle(
+                        fontSize: 20.0,
+                    ),
                   ),
                 ),
               ),
               // This is the right items - the closing time, eta, num of dishes
-              new Row(
-                children: <Widget>[
-                  new Column(
-                    children: <Widget>[
-                      new Text("25",
-                        style: new TextStyle(
-                            fontSize: 20.0
-                        ),
 
-                      ),
-                      new Text("min",
-                        style: new TextStyle(
-                            fontSize: 15.0
-                        ),
-                      )
-                    ],
-                  )
-                ],
+              new Expanded(
+                flex: 3,
+                child: new Row(
+                  children: <Widget>[
+                    new QuantityDisplay(
+                      head: new QuantityDisplayElement(content: "closing in"),
+                      quantity: new QuantityDisplayElement(content: "${widget.openOrder.closingTime.compareTo(new DateTime.now())}"),
+                      tail:  new QuantityDisplayElement(content: "min"),
+                    ),
+
+
+                  ],
+                ),
               )
             ],
           ),

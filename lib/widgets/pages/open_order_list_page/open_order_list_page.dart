@@ -38,7 +38,7 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
                   children: <Widget>[
                    new Padding(
                      padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                     child:  new Text("Delivering from",
+                     child:  new Text("Delivering from The Terrace (NUS)",
                        style: new TextStyle(
                          fontSize: 20.0,
                          fontWeight: FontWeight.bold,
@@ -50,19 +50,19 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
                 color: Colors.white,
               ),
 
-              // These are dummies expansion tiles
-//            new Expanded(
-//                child: new ListView(
-//                  children: <Widget>[
-//                    new OpenOrderListWidget(new OrderDetail()),
-//                    new OpenOrderListWidget(new OrderDetail()),
-//                    new OpenOrderListWidget(new OrderDetail())
-//                  ],
-//                ),
-//            ),
-//
+               //These are dummies expansion tiles
+            new Expanded(
+                child: new ListView(
+                  children: <Widget>[
+                    new OpenOrderListWidget(new OrderDetail(delivererUid: "Benjamin Leong", closingTime: new DateTime(2018,7, 2, 19))),
+                    new OpenOrderListWidget(new OrderDetail(delivererUid: "Professor Lupin", closingTime: new DateTime(2018,7, 2, 18))),
+                    new OpenOrderListWidget(new OrderDetail(delivererUid: "Zhao Jin", closingTime: new DateTime(2018,7, 2, 17)))
+                  ],
+                ),
+            ),
 
-              // We trigger 'getDeliveryListAction', and then build a list of 'open orders' based on what the
+
+              // We trigger 'getOpenOrderListAction', and then build a list of 'open orders' based on what the
               // openOrderList in our new appState.
               new StoreConnector<AppState, Store<AppState>>(
                   builder: (_, store) {

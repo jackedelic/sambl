@@ -10,6 +10,7 @@ import 'package:sambl/widgets/pages/create_open_order_page_deprecated/create_ope
 import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_page.dart';
 import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
+import 'package:sambl/widgets/pages/orderer_list_page/orderer_list_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
 import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
@@ -90,6 +91,7 @@ class MyApp extends StatelessWidget {
           "/SignInPage" : (BuildContext context) => new SignInPage(),
           "/SignUpPage" : (BuildContext context) => new SignUpPage(),
           "/CreateOpenOrderPage": (BuildContext context) => new CreateOpenOrderPage(),
+          "/OrdererListPage" : (BuildContext context) => new OrdererListPage(),
         },
       )
     );
