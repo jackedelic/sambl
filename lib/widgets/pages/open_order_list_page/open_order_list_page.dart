@@ -22,109 +22,69 @@ class OpenOrderListPage extends StatefulWidget {
 class _OpenOrderListPageState extends State<OpenOrderListPage> {
   @override
   Widget build(BuildContext context) {
-    return new StoreProvider<AppState>(
-      store: store,
-      child: new Scaffold(
-        appBar: new MyAppBar().build(context),
-        backgroundColor: MyColors.mainBackground,
-        body: new Container(
-          child: new Column(
-            children: <Widget>[
-              // This is the label right below appbar. The text is "Delivering from [someplace]"
-              new Container(
-                margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                   new Padding(
-                     padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                     child:  new Text("Delivering from The Terrace (NUS)",
-                       style: new TextStyle(
-                         fontSize: 20.0,
-                         fontWeight: FontWeight.bold,
-                       ),
+    return new Scaffold(
+      appBar: new MyAppBar().build(context),
+      backgroundColor: MyColors.mainBackground,
+      body: new Container(
+        child: new Column(
+          children: <Widget>[
+            // This is the label right below appbar. The text is "Delivering from [someplace]"
+            new Container(
+              margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                 new Padding(
+                   padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
+                   child:  new Text("Delivering from The Terrace (NUS)",
+                     style: new TextStyle(
+                       fontSize: 20.0,
+                       fontWeight: FontWeight.bold,
                      ),
-                   )
-                  ],
-                ),
-                color: Colors.white,
+                   ),
+                 )
+                ],
               ),
+              color: Colors.white,
+            ),
+//
+//             //These are dummies expansion tiles
+//          new Expanded(
+//              child: new ListView(
+//                children: <Widget>[
+//                  new OpenOrderListWidget(new OrderDetail(delivererUid: "Benjamin Leong", closingTime: new DateTime(2018,7, 2, 19))),
+//                  new OpenOrderListWidget(new OrderDetail(delivererUid: "Professor Lupin", closingTime: new DateTime(2018,7, 2, 18))),
+//                  new OpenOrderListWidget(new OrderDetail(delivererUid: "Zhao Jin", closingTime: new DateTime(2018,7, 2, 17)))
+//                ],
+//              ),
+//          ),
 
-               //These are dummies expansion tiles
-            new Expanded(
-                child: new ListView(
-                  children: <Widget>[
-                    new OpenOrderListWidget(new OrderDetail(delivererUid: "Benjamin Leong", closingTime: new DateTime(2018,7, 2, 19))),
-                    new OpenOrderListWidget(new OrderDetail(delivererUid: "Professor Lupin", closingTime: new DateTime(2018,7, 2, 18))),
-                    new OpenOrderListWidget(new OrderDetail(delivererUid: "Zhao Jin", closingTime: new DateTime(2018,7, 2, 17)))
-                  ],
-                ),
+
+            // We trigger 'getOpenOrderListAction', and then build a list of 'open orders' based on the
+            // openOrderList in our new appState.
+            new StoreConnector<AppState, Store<AppState>>(
+                builder: (_, store) {
+
+                  print("inside open order list page. openOrderList.length is ${store.state.openOrderList.length}");
+                  return new Expanded(
+                      child: new ListView.builder(
+                          itemCount: store.state.openOrderList.length,
+                          itemBuilder: (_, int n) {
+                            return new OpenOrderListWidget(store.state.openOrderList[n]);
+                          }
+                      )
+
+                  );
+
+                },
+                converter: (store) {
+                  return store;
+                }
             ),
 
-
-              // We trigger 'getOpenOrderListAction', and then build a list of 'open orders' based on what the
-              // openOrderList in our new appState.
-              new StoreConnector<AppState, Store<AppState>>(
-                  builder: (_, store) {
-
-                    print("inside open order list page. openOrderList.length is ${store.state.openOrderList.length}");
-                    return new Expanded(
-                        child: new ListView.builder(
-                            itemCount: store.state.openOrderList.length,
-                            itemBuilder: (_, int n) {
-                              return new OpenOrderListWidget(store.state.openOrderList[n]);
-                            }
-                        )
-
-                    );
-
-                  },
-                  converter: (store) {
-                    return store;
-                  }
-              ),
-
-
-
-              //Below will be the real list of items, more specifically a stream of items (since we're
-                // using StreamBuilder).
-//            new Expanded(
-//              child: new StreamBuilder(
-//                stream: Firestore.instance.collection('users').snapshots(),
-//                builder: (context, snapshot){
-//
-//                  if (snapshot.hasData) {
-//                    return new ListView.builder(
-//
-//                      itemCount: snapshot.data.documents.length,
-//                      itemBuilder: (context, index){
-//
-//                        JioEntry entry = new JioEntry(
-//                            hawkerName: snapshot.data.documents[index]['hawker_name'],
-//                            pickupPoint: snapshot.data.documents[index]['pickup_pt'],
-//                            closingTime: snapshot.data.documents[index]['closing_time'],
-//                            eta: snapshot.data.documents[index]['eta'],
-//                            jioCreator: snapshot.data.documents[index]['user_name']
-//                        );
-//                        // Create our JioEntryWidget object using the snapshot data we received.
-//                        var entryWidget = new JioEntryWidget(entry);
-//                        return entryWidget;
-//                      },
-//                    );
-//                  } else {
-//                    print(snapshot.connectionState);
-//                  }
-//                  return new CircularProgressIndicator();
-//                },
-//              ),
-//            ),
-
-
-
-            ],
-          )
+          ],
         )
-      ),
+      )
     );
 
   }

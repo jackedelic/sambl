@@ -14,6 +14,7 @@ import 'create_open_order_main_layout.dart';
 import 'create_open_order_remark_layout.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
 import 'create_open_order_confirm_layout.dart';
+import 'package:sambl/state/app_state.dart';
 /*
 * TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
 * TODO: from The Terrace'.
@@ -67,31 +68,47 @@ class _CreateOpenOrderPageState extends State<CreateOpenOrderPage> with SingleTi
   ///  brings deliverer to 'delivery subscribers' page.
   Widget _buildNextButton() {
 
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        new FlatButton(
-            onPressed: (){
-              _tabController.index != 2 ? _tabController.animateTo((_tabController.index + 1) % 3) :
-              Navigator.popAndPushNamed(context, '/OrdererListPage');
-            },
-            child: _tabController.index != 2 ? new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,) :
-            new Container(
-              decoration: new BoxDecoration(
-                  border: new Border.all(width: 1.0, color: MyColors.mainRed),
-                  borderRadius: new BorderRadius.circular(8.0)
+    return new StoreProvider<AppState>(
+      store: store,
+      child: new StoreConnector<AppState, Store<AppState>>(
+        converter: (store) => store,
+        builder: (_, store) {
+          return new Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new FlatButton(
+                  onPressed: (){
+                    if (_tabController.index != 2) {
+                      _tabController.animateTo((_tabController.index + 1) % 3);
+                    } else {
+//                      OrderDetail newOrderDetail = new OrderDetail(
+//                          pickupPoint: pickUpPtController.text,
+//                          hawkerCenter: , closingTime: null, eta: null, maxNumberofDishes: null)
+//                      store.dispatch(action);
+                      Navigator.popAndPushNamed(context, '/OrdererListPage');
+                    }
 
-              ),
-              padding: new EdgeInsets.all(6.0),
-              child: new Text("Confirm",
-                style: new TextStyle(
-                    color: MyColors.mainRed,
-                    fontSize: 17.0
-                ),
-              ),
-            )
-        )
-      ],
+                  },
+                  child: _tabController.index != 2 ? new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,) :
+                  new Container(
+                    decoration: new BoxDecoration(
+                        border: new Border.all(width: 1.0, color: MyColors.mainRed),
+                        borderRadius: new BorderRadius.circular(8.0)
+
+                    ),
+                    padding: new EdgeInsets.all(6.0),
+                    child: new Text("Confirm",
+                      style: new TextStyle(
+                          color: MyColors.mainRed,
+                          fontSize: 17.0
+                      ),
+                    ),
+                  )
+              )
+            ],
+          );
+        },
+      ),
     );
 
   }
