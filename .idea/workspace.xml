@@ -2,19 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="46930545-0d33-451f-8092-6ae509f80ef7" name="Default" comment="">
-      <change beforePath="" afterPath="$PROJECT_DIR$/lib/widgets/pages/orderer_list_page/orderer_list_page.dart" />
-      <change beforePath="" afterPath="$PROJECT_DIR$/lib/widgets/shared/quantity_display.dart" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/lib/.idea/workspace.xml" afterPath="$PROJECT_DIR$/lib/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/lib/async_action/get_open_order_list_action.dart" afterPath="$PROJECT_DIR$/lib/async_action/get_open_order_list_action.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" afterPath="$PROJECT_DIR$/lib/main.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/create_open_order_page/create_open_order_confirm_layout.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/create_open_order_page/create_open_order_confirm_layout.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/create_open_order_page/create_open_order_page.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/create_open_order_page/create_open_order_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/home_page/order_layout.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/home_page/order_layout.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/open_order_list_page/open_order_list_page.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/open_order_list_page/open_order_list_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/open_order_list_page/open_order_list_widget.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/open_order_list_page/open_order_list_widget.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/place_order_page/place_order_page.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/place_order_page/place_order_page.dart" />
-      <change beforePath="$PROJECT_DIR$/lib/widgets/pages/sign_in_page.dart" afterPath="$PROJECT_DIR$/lib/widgets/pages/sign_in_page.dart" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -92,8 +80,8 @@
       <file leaf-file-name="sign_in_page.dart" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/widgets/pages/sign_in_page.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="144" column="65" lean-forward="false" selection-start-line="144" selection-start-column="65" selection-end-line="144" selection-end-column="65" />
+            <state relative-caret-position="462">
+              <caret line="137" column="37" lean-forward="true" selection-start-line="137" selection-start-column="37" selection-end-line="137" selection-end-column="37" />
               <folding>
                 <element signature="e#0#20#0" expanded="true" />
               </folding>
@@ -505,7 +493,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-16" y="-16" width="3232" height="1832" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Android Profiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -515,9 +502,9 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5012953" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Dart Analysis" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.36266667" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.36266667" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.418" sideWeight="0.49870467" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.418" sideWeight="0.49870467" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Flutter Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Logcat" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -875,7 +862,7 @@
         <state relative-caret-position="252">
           <caret line="102" column="35" lean-forward="false" selection-start-line="102" selection-start-column="35" selection-end-line="102" selection-end-column="35" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#39#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -966,8 +953,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/widgets/pages/sign_in_page.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="144" column="65" lean-forward="false" selection-start-line="144" selection-start-column="65" selection-end-line="144" selection-end-column="65" />
+        <state relative-caret-position="462">
+          <caret line="137" column="37" lean-forward="true" selection-start-line="137" selection-start-column="37" selection-end-line="137" selection-end-column="37" />
           <folding>
             <element signature="e#0#20#0" expanded="true" />
           </folding>
