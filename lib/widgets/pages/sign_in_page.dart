@@ -107,9 +107,9 @@ class SignInPage extends StatelessWidget {
                             //   hawkerCenter: store.state.currentHawkerCenter.value
                             // )));
 
-                            //store.dispatch(signInWithGoogleAction);
-                            FirebaseMessaging().requestNotificationPermissions();
-                            FirebaseMessaging().subscribeToTopic('xGgTP5yfC7oFRHJu9aNy');
+                            store.dispatch(signInWithGoogleAction);
+                            //FirebaseMessaging().requestNotificationPermissions();
+                            //FirebaseMessaging().subscribeToTopic('xGgTP5yfC7oFRHJu9aNy');
                             print('test');
                             //store.dispatch();
                             //print(store.state.currentOrder.value.toJson());
@@ -122,10 +122,20 @@ class SignInPage extends StatelessWidget {
 
                             //store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
 
-                            //store.dispatch(registerUserAction);
+                            store.dispatch(registerUserAction);
+                            if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
+                              print("inside sign in page: not authenticated");
+
+                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated) {
+                              print("authenticated! going to home page");
+                              Navigator.pushNamed(context, '/HomePage');
+                            } else {
+                              print("${store.state.currentAppStatus}");
+                            }
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(
+                              child: new Text("sign in"),
                               color: Colors.red,
                               height: 100.0,
                               width: double.infinity,
