@@ -4,7 +4,11 @@ import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:sambl/main.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/state/app_state.dart';
-
+import 'package:sambl/async_action/sign_out.dart';
+import 'package:sambl/main.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:sambl/widgets/shared/my_color.dart';
 class OrdererListPage extends StatefulWidget {
   @override
   _OrdererListPageState createState() => _OrdererListPageState();
@@ -16,6 +20,33 @@ class _OrdererListPageState extends State<OrdererListPage> {
     return new StoreProvider<AppState>(
       store: store,
       child: Scaffold(
+        drawer: new Drawer(
+          child: new ListView(
+            children: <Widget>[
+              new DrawerHeader(child: new CircleAvatar(child: new Text("J.H"),)),
+              new StoreConnector<AppState, Store<AppState>>(
+                converter: (store) => store,
+                builder: (_, store) {
+                  return new ListTile(
+                    title: new Center(
+                      child: new Text("Sign out",
+                        style: new TextStyle(
+                          color: MyColors.mainRed,
+                          fontSize: 20.0
+                        ),
+                      ),
+                    ),
+                    onTap: () {
+                      store.dispatch(signOutAction);
+                      Navigator.popAndPushNamed(context, '/SignInPage');
+                    },
+
+                  );
+                }
+              )
+            ],
+          ),
+        ),
         appBar: new MyAppBar().build(context),
         backgroundColor: MyColors.mainBackground,
         body: new Column(
