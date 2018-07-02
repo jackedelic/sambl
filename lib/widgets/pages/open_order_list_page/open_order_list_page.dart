@@ -4,6 +4,11 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_widget.dart';
 import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:redux/redux.dart';
+import 'package:sambl/state/app_state.dart';
+import 'package:sambl/main.dart';
+import 'package:sambl/async_action/get_delivery_list.dart';
 /*
 This is the page directed when the user wants to see any available food delivery services
 (when he pressed 'order' button in the home page).
@@ -47,14 +52,35 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
             new Expanded(
                 child: new ListView(
                   children: <Widget>[
-                    new JioEntryWidget(new OrderDetail()),
-                    new JioEntryWidget(new OrderDetail()),
-                    new JioEntryWidget(new OrderDetail())
+                    new OpenOrderListWidget(new OrderDetail()),
+                    new OpenOrderListWidget(new OrderDetail()),
+                    new OpenOrderListWidget(new OrderDetail())
                   ],
                 ),
             ),
-            
-            
+
+
+            // We trigger 'getDeliveryListAction', and then build a list of 'open orders' based on what the
+            // openOrderList in our new appState.
+            new StoreConnector<AppState, Store<AppState>>(
+                builder: (_, store) {
+                  store.dispatch(getOpenOrderListAction);
+                  print("after dispatching getDeliveryAction");
+                  return new Expanded(
+                      child: new ListView.builder(
+                          itemCount: store.state.openOrderList.length,
+                          itemBuilder: (_, int n) {
+                            new OpenOrderListWidget(store.state.openOrderList[n]);
+                          }
+                      )
+
+                  );
+
+                },
+                converter: (store) {
+                  return store;
+                }
+            ),
 
 
 

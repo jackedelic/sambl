@@ -12,7 +12,7 @@ import 'package:sambl/utility/firebase_reader.dart';
 
 final ThunkAction<AppState> getDeliveryListAction = (Store<AppState> store) async {
   print('test 3');
-  FirebaseAuth.instance.currentUser().then((user) async {
+  await FirebaseAuth.instance.currentUser().then((user) async {
     return Firestore.instance.collection('users').document(user.uid).get().then((snapshot) async {
       return new CombinedDeliveryList(
         pending: await deliveryListReader(snapshot.data['currentDelivery'],DeliveryListType.pending),

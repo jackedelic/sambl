@@ -10,7 +10,8 @@ import 'package:sambl/async_action/sign_out.dart';
 
 final ThunkAction<AppState> registerUserAction = (Store<AppState> store) async {
   CloudFunctions.instance.call(functionName: "registerUser");
-  FirebaseAuth.instance.currentUser().then((user) => store.dispatch(LoginAction(new User(user))));
+  await FirebaseAuth.instance.currentUser().then((user) => store.dispatch(LoginAction(new User(user))));
+  print("firebase user is ${await FirebaseAuth.instance.currentUser()}, appstate's user is ${store.state.currentUser}");
 };
 
 final ThunkAction<AppState> cancelSignupAction = (Store<AppState> store) async {

@@ -4,16 +4,16 @@ import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
-class JioEntryWidget extends StatefulWidget {
+class OpenOrderListWidget extends StatefulWidget {
   final OrderDetail jioentry;
 
-  JioEntryWidget(this.jioentry);
+  OpenOrderListWidget(this.jioentry);
 
   @override
-  _JioEntryWidgetState createState() => new _JioEntryWidgetState();
+  _OpenOrderListWidgetState createState() => new _OpenOrderListWidgetState();
 }
 
-class _JioEntryWidgetState extends State<JioEntryWidget> {
+class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
   @override
   Widget build(BuildContext context) {
     return new Container(
