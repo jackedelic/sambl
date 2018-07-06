@@ -73,7 +73,7 @@ class SignInPage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.max,
                       children: <Widget>[
                         new StoreConnector<AppState,VoidCallback>(
-                          converter: (store) => () {
+                          converter: (store) => () async {
                             // get hawker centers
                             //store.dispatch(getAvailableHawkerCenterAction);
 
@@ -106,18 +106,7 @@ class SignInPage extends StatelessWidget {
                             // )));
 
                             store.dispatch(signInWithGoogleAction);
-                            if (store.state.currentAppStatus == AppStatusFlags.awaitingSignup) {
-                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
-                              Navigator.popAndPushNamed(context, '/SignUpPage');
-                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated) {
-                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
-                              Navigator.popAndPushNamed(context, '/HomePage');
-                            } else if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
-                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
-                              Navigator.popAndPushNamed(context, '/SignUpPage');
-                            } else {
-                              print("inside sign in page, app status is ${store.state.currentAppStatus}");
-                            }
+
                             //store.dispatch();
                             //print(store.state.currentOrder.value.toJson());
                             
@@ -128,6 +117,26 @@ class SignInPage extends StatelessWidget {
                             //store.dispatch(new FinalizeDeliveryAction());
 
                             //store.dispatch(registerUserAction);
+
+                            if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
+                              print("inside sign in page: not authenticated");
+
+                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated){
+                              print("authenticated! going to home page");
+
+                              store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));
+                              print("print: store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));");
+
+                              if (store.state.currentHawkerCenter.isPresent && store.state.openOrderList.isEmpty) {
+                                store.dispatch(getOpenOrderList);
+                                print("getOpenOrderList dispatched");
+                              }
+
+                              print("inside sign in page, list is ${store.state.openOrderList}");
+                              Navigator.pushNamed(context, '/HomePage');
+                            } else {
+                               print("${store.state.currentAppStatus}");
+                            }
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(

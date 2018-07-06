@@ -63,167 +63,164 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
   Widget build(BuildContext context) {
     // Inside this widget tree, we have three buttons that trigger some Action -
     // add dish, add stall, and place order.
-    return new StoreProvider<AppState>(
-      store: store,
-      child: Scaffold(
-        appBar: new AppBar(
-          title: new Container(
-            padding: new EdgeInsets.only(left: 75.0),
-            child: new Text('Sambl',
-              style: new TextStyle(
-                color: new Color(0xFFDF1B01),
-                fontFamily: 'Indie Flower',
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-              ),
+    return Scaffold(
+      appBar: new AppBar(
+        title: new Container(
+          padding: new EdgeInsets.only(left: 75.0),
+          child: new Text('Sambl',
+            style: new TextStyle(
+              color: new Color(0xFFDF1B01),
+              fontFamily: 'Indie Flower',
+              fontSize: 25.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: Colors.white,
-          leading: new Icon(Icons.menu, color: new Color(0xFFDF1B01),),
-          elevation: 0.0,
         ),
-        backgroundColor: new Color(0xFFEBEBEB),
-        body: new Column(
-          children: <Widget>[
-            // "Delivering From" title/banner.
-            new Container(
-              margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new Padding(
-                    padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child:  new Text("Delivering from",
-                      style: new TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+        backgroundColor: Colors.white,
+        leading: new Icon(Icons.menu, color: new Color(0xFFDF1B01),),
+        elevation: 0.0,
+      ),
+      backgroundColor: new Color(0xFFEBEBEB),
+      body: new Column(
+        children: <Widget>[
+          // "Delivering From" title/banner.
+          new Container(
+            margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                new Padding(
+                  padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
+                  child:  new Text("Delivering from",
+                    style: new TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
                     ),
-                  )
-                ],
-              ),
-              color: Colors.white,
-            ),
-
-            // AddStallCard cards
-            // NEED A STORE CONNECTOR TO DETECT CHANGES WHEN NEW STALL IS ADDED
-            new StoreConnector<AppState, Store<AppState>>(
-              converter: (store) => store,
-              builder: (_, store){
-                return new Expanded(
-                    child: new ListView.builder(
-                        itemCount: 1,
-                        itemBuilder: (BuildContext context, int n) {
-                          return new AddStallCard(
-                              new Stall(
-                                  identifier: new HawkerCenterStall(name: "Wakanda stall"),
-                                  dishes: <Dish>[
-                                    new Dish(name: "High Calorie yummy food"),
-                                    new Dish(name: "Low Calorie not so yummy food"),
-                                    new Dish(name: "African meat"),
-                                    new Dish(name: "Sexy fish"),
-                                    new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
-                                        "almost melting but not really. "),
-                                  ]
-                              )
-                          );
-                        }
-                    )
-                );
-              },
-
-            ),
-
-            // just a space
-            new Container(
-              height: 10.0,
-              color: new Color(0xFFEBEBEB),
-            ),
-
-            // Add stall button. Right at the bottom.
-            new Container(
-              color: Colors.white,
-              child: new Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  new Padding(padding: new EdgeInsets.all(20.0)), // Just some space to the left.
-                  // this add stall button triggers AddStallAction action.
-                  new StoreConnector<AppState, Store<AppState>>(
-                    converter: (store) => store,
-                    builder: (_, store){
-                      return new FlatButton(
-                        padding: new EdgeInsets.all(10.0),
-                        onPressed: () async {
-                          // pop up a textfield to for user to input stall name.
-                          // We then create a Stall object based on the input.
-                          Stall stall = await _addStallDialog();
-
-
-                          // TRIGGER AddStallAction action, which takes in our newly created stall.
-                          // The reducer will add this newly created stall and add it to our existing list
-                          // of stalls. The reducer shd create a new state w new Order obj w new list of stalls.
-                          store.dispatch(new AddStallAction(stall: stall));
-                          print("stall added: " + stall.identifier.name);
-                        },
-                        child: new Text("+ Add stall",
-                          style: new TextStyle(
-                              fontSize: 17.0
-                          ),
-                        ),
-                      );
-                    },
                   ),
-                ],
-              ),
+                )
+              ],
             ),
+            color: Colors.white,
+          ),
 
-            // just a space
-            new Container(
-              height: 10.0,
-              color: new Color(0xFFEBEBEB),
-            ),
+          // AddStallCard cards
+          // NEED A STORE CONNECTOR TO DETECT CHANGES WHEN NEW STALL IS ADDED
+          new StoreConnector<AppState, Store<AppState>>(
+            converter: (store) => store,
+            builder: (_, store){
+              return new Expanded(
+                  child: new ListView.builder(
+                      itemCount: 1,
+                      itemBuilder: (BuildContext context, int n) {
+                        return new AddStallCard(
+                            new Stall(
+                                identifier: new HawkerCenterStall(name: "Wakanda stall"),
+                                dishes: <Dish>[
+                                  new Dish(name: "High Calorie yummy food"),
+                                  new Dish(name: "Low Calorie not so yummy food"),
+                                  new Dish(name: "African meat"),
+                                  new Dish(name: "Sexy fish"),
+                                  new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
+                                      "almost melting but not really. "),
+                                ]
+                            )
+                        );
+                      }
+                  )
+              );
+            },
 
-            //Place order button
-            new Center(
-              child: new Container(
-                color: Colors.white,
-                // TRIGGER SubmitOrderAction which I believe is async and involves Middleware(thunk).
-                child: new StoreConnector<AppState, Store<AppState>>(
+          ),
+
+          // just a space
+          new Container(
+            height: 10.0,
+            color: new Color(0xFFEBEBEB),
+          ),
+
+          // Add stall button. Right at the bottom.
+          new Container(
+            color: Colors.white,
+            child: new Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                new Padding(padding: new EdgeInsets.all(20.0)), // Just some space to the left.
+                // this add stall button triggers AddStallAction action.
+                new StoreConnector<AppState, Store<AppState>>(
                   converter: (store) => store,
                   builder: (_, store){
                     return new FlatButton(
                       padding: new EdgeInsets.all(10.0),
-                      onPressed: (){
-                        //TRIGGER SubmitOrderAction.
-                        Optional<Order> newOrder = store.state.currentOrder;
-                        // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                        store.dispatch(new OrderAction(order: newOrder));
+                      onPressed: () async {
+                        // pop up a textfield to for user to input stall name.
+                        // We then create a Stall object based on the input.
+                        Stall stall = await _addStallDialog();
 
-                        // Navigate to a page to view ur order
 
-                        print("Order placed.");
+                        // TRIGGER AddStallAction action, which takes in our newly created stall.
+                        // The reducer will add this newly created stall and add it to our existing list
+                        // of stalls. The reducer shd create a new state w new Order obj w new list of stalls.
+                        store.dispatch(new AddStallAction(stall: stall));
+                        print("stall added: " + stall.identifier.name);
                       },
-                      child: new Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: new Text("Place Order",
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                              color: Colors.green,
-                              fontSize: 17.0
-                          ),
+                      child: new Text("+ Add stall",
+                        style: new TextStyle(
+                            fontSize: 17.0
                         ),
                       ),
                     );
                   },
-
                 ),
+              ],
+            ),
+          ),
 
+          // just a space
+          new Container(
+            height: 10.0,
+            color: new Color(0xFFEBEBEB),
+          ),
+
+          //Place order button
+          new Center(
+            child: new Container(
+              color: Colors.white,
+              // TRIGGER SubmitOrderAction which I believe is async and involves Middleware(thunk).
+              child: new StoreConnector<AppState, Store<AppState>>(
+                converter: (store) => store,
+                builder: (_, store){
+                  return new FlatButton(
+                    padding: new EdgeInsets.all(10.0),
+                    onPressed: (){
+                      //TRIGGER SubmitOrderAction.
+                      Optional<Order> newOrder = store.state.currentOrder;
+                      // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                      store.dispatch(new OrderAction(order: newOrder));
+
+                      // Navigate to a page to view ur order
+
+                      print("Order placed.");
+                    },
+                    child: new Container(
+                      width: MediaQuery.of(context).size.width,
+                      child: new Text("Place Order",
+                        textAlign: TextAlign.center,
+                        style: new TextStyle(
+                            color: Colors.green,
+                            fontSize: 17.0
+                        ),
+                      ),
+                    ),
+                  );
+                },
 
               ),
-            ),
 
-          ],
-        ),
+
+            ),
+          ),
+
+        ],
       ),
     );
   }
