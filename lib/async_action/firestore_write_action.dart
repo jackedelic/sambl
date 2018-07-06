@@ -3,7 +3,9 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/action/reset_action.dart';
 
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sambl/action/write_action.dart';
+import 'package:quiver/core.dart';
 
 abstract class FirestoreWriteAction {
 
@@ -17,9 +19,15 @@ class PlaceOrderAction implements FirestoreWriteAction {
 
   PlaceOrderAction(Order order): toWrite = order;
 
-  void run(Store<AppState> store) {
-    CloudFunctions.instance.call(functionName: "placeOrder",parameters: this.toWrite.toJson());
-    store.dispatch(new WriteCurrentOrderAction(toWrite));
+  void run(Store<AppState> store) async {
+    Optional.fromNullable(
+      await CloudFunctions.instance.call(functionName: "placeOrder",
+      parameters: this.toWrite.toJson()))
+      .ifPresent((orderId) {
+        print(orderId);
+        FirebaseMessaging().subscribeToTopic(orderId);
+        store.dispatch(new WriteCurrentOrderAction(toWrite));
+      });
   }
 }
 

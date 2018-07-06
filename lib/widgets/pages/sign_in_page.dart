@@ -28,6 +28,8 @@ import 'package:sambl/async_action/get_open_order_list_action.dart';
 
 import 'package:sambl/async_action/get_delivery_list.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+
 class SignInPage extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -107,6 +109,7 @@ class SignInPage extends StatelessWidget {
 
                             store.dispatch(signInWithGoogleAction);
 
+
                             //store.dispatch();
                             //print(store.state.currentOrder.value.toJson());
                             
@@ -115,6 +118,8 @@ class SignInPage extends StatelessWidget {
                             //store.dispatch(getDeliveryListAction);
                             //print(store.state.currentDeliveryList.toJson());
                             //store.dispatch(new FinalizeDeliveryAction());
+
+                            //store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
 
                             //store.dispatch(registerUserAction);
 
