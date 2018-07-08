@@ -11,10 +11,17 @@ import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/async_action/verify_user.dart';
 
+import 'package:sambl/subscribers/get_user_subscription.dart';
+import 'package:sambl/subscribers/subscriber.dart';
+
+
 
   final ThunkAction<AppState> signInWithGoogleAction = (Store<AppState> store) async {
     await _handleGoogleSignIn()
-      .then((user) => store.dispatch(new VerifyUserAction(user)))
+      .then((user) {
+        CombinedSubscriber.instance().add(name: "userSubscription", 
+          subscription: toUserSubscription(user,store));
+      })
       .catchError((error) => print(error));
   };
 

@@ -22,6 +22,7 @@ import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:sambl/message_handler/primary_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.
@@ -45,7 +46,7 @@ Widget defaultPage(AppStatusFlags flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
     case AppStatusFlags.authenticated:
-      return new SignInPage();
+      return new HomePage();
     case AppStatusFlags.awaitingSignup:
       return new SignInPage();
     case AppStatusFlags.delivering:

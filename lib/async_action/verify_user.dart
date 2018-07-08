@@ -15,6 +15,7 @@ abstract class FirebaseUserAction {
   void run(Store<AppState> store);
 }
 
+
 class VerifyUserAction implements FirebaseUserAction {
   final FirebaseUser user;
 

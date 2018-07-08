@@ -30,6 +30,8 @@ dependencies:
   # The following adds the haversine formula to the project, it allows calculation of distance between 2 points on a sphere
   haversine: "^1.0.2"
 
+  composite_subscription: "^0.1.0"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
