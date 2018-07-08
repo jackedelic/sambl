@@ -15,8 +15,20 @@ class MyAppBar extends StatelessWidget{
     ),
   );
   Color backgroundColor = Colors.white;
-  Widget leading = new Icon(Icons.menu, color: MyColors.mainRed);
+
   double elevation = 0.0;
+
+  Widget leading;
+
+  Widget _buildLeading(context) {
+    return new IconButton(
+      icon: new Icon(Icons.chevron_left),
+      color: MyColors.mainRed,
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+  }
 
   MyAppBar({title,backgroundColor,leading, elevation}) {
     this.title = title ?? this.title;
@@ -30,7 +42,7 @@ class MyAppBar extends StatelessWidget{
     return new AppBar(
       title: this.title,
       backgroundColor: this.backgroundColor,
-      leading: this.leading,
+      leading: this.leading ?? _buildLeading(context),
       elevation: this.elevation,
 
       // Some space to align title 'Sambl' to the center

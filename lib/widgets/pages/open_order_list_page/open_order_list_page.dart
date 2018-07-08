@@ -23,68 +23,66 @@ class OpenOrderListPage extends StatefulWidget {
 class _OpenOrderListPageState extends State<OpenOrderListPage> {
   @override
   Widget build(BuildContext context) {
-    return new StoreProvider<AppState>(
-      store: store,
-      child: new Scaffold(
-        appBar: new MyAppBar().build(context),
-        backgroundColor: MyColors.mainBackground,
-        body: new Container(
-          child: new Column(
-            children: <Widget>[
-              // This is the label right below appbar. The text is "Delivering from [someplace]"
-              new Container(
-                margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
-                child: new Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                   new Padding(
-                     padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                     child:  new Text("Delivering from",
-                       style: new TextStyle(
-                         fontSize: 20.0,
-                         fontWeight: FontWeight.bold,
-                       ),
+    return new Scaffold(
+      appBar: new MyAppBar().build(context),
+      backgroundColor: MyColors.mainBackground,
+      body: new Container(
+        child: new Column(
+          children: <Widget>[
+            // This is the label right below appbar. The text is "Delivering from [someplace]"
+            new Container(
+              margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                 new Padding(
+                   padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
+                   child:  new Text("Delivering from",
+                     style: new TextStyle(
+                       fontSize: 20.0,
+                       fontWeight: FontWeight.bold,
                      ),
-                   )
+                   ),
+                 )
+                ],
+              ),
+              color: Colors.white,
+            ),
+
+            // These are dummies expansion tiles
+            new Expanded(
+                child: new ListView(
+                  children: <Widget>[
+                    new OpenOrderListWidget(new OrderDetail()),
+                    new OpenOrderListWidget(new OrderDetail()),
+                    new OpenOrderListWidget(new OrderDetail())
                   ],
                 ),
-                color: Colors.white,
-              ),
+            ),
 
-              // These are dummies expansion tiles
-              new Expanded(
-                  child: new ListView(
-                    children: <Widget>[
-                      new OpenOrderListWidget(new OrderDetail()),
-                      new OpenOrderListWidget(new OrderDetail()),
-                      new OpenOrderListWidget(new OrderDetail())
-                    ],
-                  ),
-              ),
+            // We trigger 'getDeliveryListAction', and then build a list of 'open orders' based on what the
+            // openOrderList in our new appState.
+            new StoreConnector<AppState, Store<AppState>>(
+              builder: (_, store) {
+                store.dispatch(getDeliveryListAction);
+                return new Expanded(
+                  child: new ListView.builder(
+                    itemCount: store.state.openOrderList.length,
+                    itemBuilder: (_, int n) {
+                      new OpenOrderListWidget(store.state.openOrderList[n]);
+                    }
+                  )
 
-              // We trigger 'getDeliveryListAction', and then build a list of 'open orders' based on what the
-              // openOrderList in our new appState.
-              new StoreConnector<AppState, Store<AppState>>(
-                builder: (_, store) {
-                  store.dispatch(getDeliveryListAction);
-                  return new Expanded(
-                    child: new ListView.builder(
-                      itemCount: store.state.openOrderList.length,
-                      itemBuilder: (_, int n) {
-                        new OpenOrderListWidget(store.state.openOrderList[n]);
-                      }
-                    )
+                );
 
-                  );
+              },
+              converter: (store) {
+                return store;
+              }
+            ),
 
-                },
-                converter: (store) {
-                  return store;
-                }
-              ),
-
-              //Below will be the real list of items, more specifically a stream of items (since we're
-                // using StreamBuilder).
+            //Below will be the real list of items, more specifically a stream of items (since we're
+              // using StreamBuilder).
 //            new Expanded(
 //              child: new StreamBuilder(
 //                stream: Firestore.instance.collection('users').snapshots(),
@@ -118,10 +116,9 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
 
 
 
-            ],
-          )
+          ],
         )
-      ),
+      )
     );
 
   }

@@ -8,20 +8,26 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/action/order_action.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
+import 'package:sambl/widgets/shared/my_app_bar.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_widget.dart';
 
 class PlaceOrderPage extends StatefulWidget {
+  final OrderModel orderModel;
+
+  PlaceOrderPage(this.orderModel);
+
   @override
   _PlaceOrderPageState createState() => _PlaceOrderPageState();
 }
 
 class _PlaceOrderPageState extends State<PlaceOrderPage> {
-  // our list of stalls
-  List<Stall> stalls;
+
 
 
   @override
   void initState() {
-    stalls = new List<Stall>();
+    super.initState();
   }
 
   /// This dialog shows up when +Add stall button is tapped. It returns Future<Stall> future when
@@ -49,7 +55,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
               child: new Text("Cancel")),
             new FlatButton(
               onPressed: () {
-                Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text));
+                Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text), dishes: new List<Dish>());
                 Navigator.of(context).pop(stall);
               },
               child: new Text("Add")),
@@ -63,164 +69,156 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
   Widget build(BuildContext context) {
     // Inside this widget tree, we have three buttons that trigger some Action -
     // add dish, add stall, and place order.
-    return Scaffold(
-      appBar: new AppBar(
-        title: new Container(
-          padding: new EdgeInsets.only(left: 75.0),
-          child: new Text('Sambl',
-            style: new TextStyle(
-              color: new Color(0xFFDF1B01),
-              fontFamily: 'Indie Flower',
-              fontSize: 25.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-        backgroundColor: Colors.white,
-        leading: new Icon(Icons.menu, color: new Color(0xFFDF1B01),),
-        elevation: 0.0,
-      ),
-      backgroundColor: new Color(0xFFEBEBEB),
-      body: new Column(
-        children: <Widget>[
-          // "Delivering From" title/banner.
-          new Container(
-            margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Padding(
-                  padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child:  new Text("Delivering from",
-                    style: new TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+    return new ScopedModel(
+      model: widget.orderModel,
+      child: Scaffold(
+        appBar: new MyAppBar().build(context),
+        backgroundColor: new Color(0xFFEBEBEB),
+        body: new Column(
+          children: <Widget>[
+            // "Delivering From" title/banner.
+            new Container(
+              margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  new Padding(
+                    padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child:  new Text("Delivering from",
+                      style: new TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                )
-              ],
-            ),
-            color: Colors.white,
-          ),
-
-          // AddStallCard cards
-          // NEED A STORE CONNECTOR TO DETECT CHANGES WHEN NEW STALL IS ADDED
-          new StoreConnector<AppState, Store<AppState>>(
-            converter: (store) => store,
-            builder: (_, store){
-              return new Expanded(
-                  child: new ListView.builder(
-                      itemCount: 1,
-                      itemBuilder: (BuildContext context, int n) {
-                        return new AddStallCard(
-                            new Stall(
-                                identifier: new HawkerCenterStall(name: "Wakanda stall"),
-                                dishes: <Dish>[
-                                  new Dish(name: "High Calorie yummy food"),
-                                  new Dish(name: "Low Calorie not so yummy food"),
-                                  new Dish(name: "African meat"),
-                                  new Dish(name: "Sexy fish"),
-                                  new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
-                                      "almost melting but not really. "),
-                                ]
-                            )
-                        );
-                      }
                   )
-              );
-            },
+                ],
+              ),
+              color: Colors.white,
+            ),
 
-          ),
+            // AddStallCard cards
+            // Use Scoped Model Descendant to update the current Order model.
+            new ScopedModelDescendant<OrderModel>(
+              builder: (context, child, orderModel) {
+                print("inside addstallcard, ordermodel is :  $orderModel");
+                return new Expanded(
+                    child: new ListView.builder(
+                        itemCount: orderModel.order.stalls?.length ?? 0,
+                        itemBuilder: (BuildContext context, int n) {
+                          return new AddStallCard( orderModel.order.stalls[n]);
+                              new Stall(
+                                  identifier: new HawkerCenterStall(name: "Wakanda stall"),
+                                  dishes: <Dish>[
+                                    new Dish(name: "High Calorie yummy food"),
+                                    new Dish(name: "Low Calorie not so yummy food"),
+                                    new Dish(name: "African meat"),
+                                    new Dish(name: "Sexy fish"),
+                                    new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
+                                        "almost melting but not really. "),
+                                  ]
+                              );
 
-          // just a space
-          new Container(
-            height: 10.0,
-            color: new Color(0xFFEBEBEB),
-          ),
+                        }
+                    )
+                );
+              },
 
-          // Add stall button. Right at the bottom.
-          new Container(
-            color: Colors.white,
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new Padding(padding: new EdgeInsets.all(20.0)), // Just some space to the left.
-                // this add stall button triggers AddStallAction action.
-                new StoreConnector<AppState, Store<AppState>>(
+            ),
+
+            // just a space
+            new Container(
+              height: 10.0,
+              color: new Color(0xFFEBEBEB),
+            ),
+
+            // Add stall button. Right at the bottom.
+            new Container(
+              color: Colors.white,
+              child: new Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  new Padding(padding: new EdgeInsets.all(20.0)), // Just some space to the left.
+                  // this add stall button edit orderModel.
+                  new ScopedModelDescendant<OrderModel>(
+
+                    builder: (context, child, orderModel){
+                      return new FlatButton(
+                        padding: new EdgeInsets.all(10.0),
+                        onPressed: () async {
+                          // pop up a textfield to for user to input stall name.
+                          // We then create a Stall object based on the input.
+                          Stall stall = await _addStallDialog();
+
+                          // Update orderModel, then notify all descendants.
+                          // Bad practice since I accessed order field directly.
+                          orderModel.order.stalls.add(stall);
+                          orderModel.editOrderModel(order: orderModel);
+
+                          // TRIGGER AddStallAction action, which takes in our newly created stall.
+                          // The reducer will add this newly created stall and add it to our existing list
+                          // of stalls. The reducer shd create a new state w new Order obj w new list of stalls.
+                          // store.dispatch(new AddStallAction(stall: stall));
+                          print("stall added: " + stall.identifier.name);
+                        },
+                        child: new Text("+ Add stall",
+                          style: new TextStyle(
+                              fontSize: 17.0
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            // just a space
+            new Container(
+              height: 10.0,
+              color: new Color(0xFFEBEBEB),
+            ),
+
+            //Place order button
+            new Center(
+              child: new Container(
+                color: Colors.white,
+                // TRIGGER SubmitOrderAction which I believe is async and involves Middleware(thunk).
+                child: new StoreConnector<AppState, Store<AppState>>(
                   converter: (store) => store,
                   builder: (_, store){
                     return new FlatButton(
                       padding: new EdgeInsets.all(10.0),
-                      onPressed: () async {
-                        // pop up a textfield to for user to input stall name.
-                        // We then create a Stall object based on the input.
-                        Stall stall = await _addStallDialog();
+                      onPressed: (){
+                        //TRIGGER SubmitOrderAction.
+                        Optional<Order> newOrder = store.state.currentOrder;
+                        // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                        store.dispatch(new OrderAction(order: newOrder));
 
+                        // Navigate to a page to view ur order
 
-                        // TRIGGER AddStallAction action, which takes in our newly created stall.
-                        // The reducer will add this newly created stall and add it to our existing list
-                        // of stalls. The reducer shd create a new state w new Order obj w new list of stalls.
-                        store.dispatch(new AddStallAction(stall: stall));
-                        print("stall added: " + stall.identifier.name);
+                        print("Order placed.");
                       },
-                      child: new Text("+ Add stall",
-                        style: new TextStyle(
-                            fontSize: 17.0
+                      child: new Container(
+                        width: MediaQuery.of(context).size.width,
+                        child: new Text("Place Order",
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                              color: Colors.green,
+                              fontSize: 17.0
+                          ),
                         ),
                       ),
                     );
                   },
+
                 ),
-              ],
-            ),
-          ),
 
-          // just a space
-          new Container(
-            height: 10.0,
-            color: new Color(0xFFEBEBEB),
-          ),
-
-          //Place order button
-          new Center(
-            child: new Container(
-              color: Colors.white,
-              // TRIGGER SubmitOrderAction which I believe is async and involves Middleware(thunk).
-              child: new StoreConnector<AppState, Store<AppState>>(
-                converter: (store) => store,
-                builder: (_, store){
-                  return new FlatButton(
-                    padding: new EdgeInsets.all(10.0),
-                    onPressed: (){
-                      //TRIGGER SubmitOrderAction.
-                      Optional<Order> newOrder = store.state.currentOrder;
-                      // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                      store.dispatch(new OrderAction(order: newOrder));
-
-                      // Navigate to a page to view ur order
-
-                      print("Order placed.");
-                    },
-                    child: new Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: new Text("Place Order",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            color: Colors.green,
-                            fontSize: 17.0
-                        ),
-                      ),
-                    ),
-                  );
-                },
 
               ),
-
-
             ),
-          ),
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -230,7 +228,8 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
 // a new AddStallCard object will be created. It contains info such as the dish the user wants to
 // order.
 class AddStallCard extends StatefulWidget {
-  final Stall stall;
+  Stall stall;
+
 
   AddStallCard(this.stall);
 
@@ -239,6 +238,8 @@ class AddStallCard extends StatefulWidget {
 }
 
 class _AddStallCardState extends State<AddStallCard> {
+
+
 
   /// This dialog shows up when +Add dish button is tapped. It returns Future<Dish> future when
   /// popped from Navigator.
@@ -312,32 +313,38 @@ class _AddStallCardState extends State<AddStallCard> {
                   // The ListView wraps all dishes in this card. Remember each card represents one stall.
                   new Container(
                     height: 150.0,
-                    child: new ListView.builder(
-                        itemCount: widget.stall.dishes.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          // A column consists of the string for stall name and a divider.
-                          return new Column(
-                            children: <Widget>[
-                              new Row(
-                                children: <Widget>[
-                                  new Expanded(
-                                    child: new Container(
-                                      padding: new EdgeInsets.all(10.0) ,
-                                      child: new Text(widget.stall.dishes[index].name,
-                                        style: new TextStyle(fontSize: 20.0,),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              new Divider(
-                                color: Colors.black,
-                                height: 3.0,
-                              )
-                            ],
-                          );
+                    child: new ScopedModelDescendant<OrderModel>(
 
-                        }
+                      builder: (context, child, orderModel) {
+                        print("inside list of dishes, dishes.length is ${widget.stall.dishes?.length}");
+                        return new ListView.builder(
+                            itemCount: widget.stall.dishes?.length ?? 0,
+                            itemBuilder: (BuildContext context, int index) {
+                              // A column consists of the string for stall name and a divider.
+                              return new Column(
+                                children: <Widget>[
+                                  new Row(
+                                    children: <Widget>[
+                                      new Expanded(
+                                        child: new Container(
+                                          padding: new EdgeInsets.all(10.0) ,
+                                          child: new Text(widget.stall.dishes[index].name,
+                                            style: new TextStyle(fontSize: 20.0,),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  new Divider(
+                                    color: Colors.black,
+                                    height: 3.0,
+                                  )
+                                ],
+                              );
+
+                            }
+                        );
+                      },
                     ),
                   ),
 
@@ -345,9 +352,8 @@ class _AddStallCardState extends State<AddStallCard> {
                   new Row(
                     children: <Widget>[
                       new Padding(padding: new EdgeInsets.all(16.0)), // Just some space to the left.
-                      new StoreConnector<AppState, Store<AppState>>(
-                        converter: (store) => store,
-                        builder: (_, store){
+                      new ScopedModelDescendant<OrderModel>(
+                        builder: (context, child, orderModel){
                           return new FlatButton(
                             padding: new EdgeInsets.all(10.0),
                             onPressed: () async {
@@ -355,8 +361,14 @@ class _AddStallCardState extends State<AddStallCard> {
                               // particular stall. This addStallCard widget is rebuilt with the
                               // newly added dish.
                               Dish dish = await _addDishDialog();
+
+                              // update our orderModel
+                              widget.stall.dishes.add(dish);
+                              print("indise add dish button, this particular stall's dish lengh is ${widget.stall.dishes.length}");
+                              orderModel.editOrderModel(order: orderModel); // notify
+
                               // The reducer shd create new state w a new Order obj w new stall w one more dish.
-                              store.dispatch(new AddDishAction(stall: widget.stall, dish: dish));
+                              //store.dispatch(new AddDishAction(stall: widget.stall, dish: dish));
 
                               print("dish added: " + dish.name);
                             },
@@ -374,5 +386,7 @@ class _AddStallCardState extends State<AddStallCard> {
       ),
     );
   }
+
+
 }
 

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scoped_model/scoped_model.dart';
+
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:quiver/core.dart';
 import 'package:redux/redux.dart';
@@ -10,10 +12,15 @@ import 'package:sambl/action/order_action.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_app_bar.dart';
+import 'package:sambl/utility/geo_point_utilities.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'create_open_order_main_layout.dart';
 import 'create_open_order_remark_layout.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
 import 'create_open_order_confirm_layout.dart';
+
+// temporary model used only within create_order_page folder
+import 'package:sambl/model/order_detail.dart';
 /*
 * TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
 * TODO: from The Terrace'.
@@ -40,13 +47,18 @@ class CreateOpenOrderPage extends StatefulWidget {
 
 class _CreateOpenOrderPageState extends State<CreateOpenOrderPage> with SingleTickerProviderStateMixin {
 TabController _tabController;
-
+Info info;
   @override
   void initState() {
+    super.initState();
     _tabController = new TabController(length: 3, vsync: this);
     _tabController.addListener(() {
+        info.notifyListeners(); // update the scopedModelDescendants on any new info.
         setState(() {}); // change the state of the icon button
     });
+
+    //scopedmodel
+    info = new Info();
   }
 
   /// button to navigate to the next tab. In the last tab (tab controller's index == 2), the button when pressed
@@ -84,89 +96,136 @@ TabController _tabController;
 
 @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new MyAppBar().build(context),
-      backgroundColor: MyColors.mainBackground,
-      body: new Container(
-          margin: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
-          height: MediaQuery.of(context).size.height, // max out the height and then
-          // constrained by specified margin
-          decoration: new BoxDecoration(
-              borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
-              color: Colors.white
-          ),
-          child: new ListView(
-            children: <Widget>[
-              // title like -> [Deliver from: FoodClique(NUS)]
-              new Container(
-                margin: new EdgeInsets.symmetric(vertical: 10.0),
-                child: new Row(
-                  children: <Widget>[
-                    new Expanded(
-                      child: new Text("Delivering from:",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            fontSize: 20.0
-                        ),
-
-                      ),
-                    )
-                  ],
-                ),
-              ),
-
-              // TabBarViews for the layouts - main, remark
-              new Container(
-                height: 320.0,
-                child: new TabBarView(
-                  controller: _tabController,
+    return new ScopedModel<Info>(
+      model: info,
+      child: new Scaffold(
+        appBar: new MyAppBar().build(context),
+        backgroundColor: MyColors.mainBackground,
+        body: new Container(
+            margin: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            height: MediaQuery.of(context).size.height, // max out the height and then
+            // constrained by specified margin
+            decoration: new BoxDecoration(
+                borderRadius: new BorderRadius.all(new Radius.circular(20.0)),
+                color: Colors.white
+            ),
+            child: new ListView(
+              children: <Widget>[
+                // title like -> [Deliver from: FoodClique(NUS)]
+                new Container(
+                  margin: new EdgeInsets.symmetric(vertical: 10.0),
+                  child: new Row(
                     children: <Widget>[
-                      // The layout that asks deliverer to input pickup pt, closing time and eta.
-                      new CreateOpenOrderMainLayout(),
+                      new Expanded(
+                        child: new Text("Delivering from:",
+                          textAlign: TextAlign.center,
+                          style: new TextStyle(
+                              fontSize: 20.0
+                          ),
 
-                      // The layout that asks deliverer to specify number of dishes to deliver
-                      // and any additional remarks.
-                      new CreateOpenOrderRemarkLayout(),
-
-                      // The last 'confirmation' layout which shows a summary of the openOrder details
-                      new CreateOpenOrderConfirmLayout(),
-                    ]
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-              ),
+
+                // TabBarViews for the layouts - main, remark
+                new Container(
+                  height: 320.0,
+                  child: new TabBarView(
+                    controller: _tabController,
+                      children: <Widget>[
+                        // The layout that asks deliverer to input pickup pt, closing time and eta.
+                        new CreateOpenOrderMainLayout(),
+
+                        // The layout that asks deliverer to specify number of dishes to deliver
+                        // and any additional remarks.
+                        new CreateOpenOrderRemarkLayout(),
+
+                        // The last 'confirmation' layout which shows a summary of the openOrder details
+                        new CreateOpenOrderConfirmLayout(),
+                      ]
+                  ),
+                ),
 
 
-              // Some space in between the list of 'nearby places' above and the arrow button
-              // This Padding widget may have diff padding value than the next page - 'create_open_order_remark_page'
-              // for the purpose of fixing the arrow button and icons at the bottom to the same
-              // position in the two pages.
-              new Padding(padding: new EdgeInsets.all(5.0),),
+                // Some space in between the list of 'nearby places' above and the arrow button
+                // This Padding widget may have diff padding value than the next page - 'create_open_order_remark_page'
+                // for the purpose of fixing the arrow button and icons at the bottom to the same
+                // position in the two pages.
+                new Padding(padding: new EdgeInsets.all(5.0),),
 
-              // The Arrow BUTTON to navigate to 'additional remark/confirmation page' when pressed.
-              // Arrow button becomes confirm button in confirmation page. At this point, when confirm button is pressed,
-              // deliverer will be navigated to 'subscribers page'.
-              _buildNextButton(),
-
-
-              // some space btwn 'arrow button' and 'bottom icon'
-              new Padding(
-                padding: new EdgeInsets.all(10.0),
-              ),
-
-              // The bottom icons
-              new Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  new BottomIcon(pageNum: _tabController.index + 2),
-                ],
-              )
+                // The Arrow BUTTON to navigate to 'additional remark/confirmation page' when pressed.
+                // Arrow button becomes confirm button in confirmation page. At this point, when confirm button is pressed,
+                // deliverer will be navigated to 'subscribers page'.
+                _buildNextButton(),
 
 
-            ],
-          )
+                // some space btwn 'arrow button' and 'bottom icon'
+                new Padding(
+                  padding: new EdgeInsets.all(10.0),
+                ),
+
+                // The bottom icons
+                new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new BottomIcon(pageNum: _tabController.index + 2),
+                  ],
+                )
+
+
+              ],
+            )
+        ),
+
+
+
       ),
-
-
-
     );
+  }
+}
+
+// Model subclass used only within create_open_order_page
+class Info extends Model {
+
+
+  GeoPoint pickupPoint;
+  HawkerCenter hawkerCenter;
+  String delivererUid;
+  DateTime closingTime;
+  DateTime eta;
+  String remarks = "Hi, it's my pleasure to deliver for you.";
+  int maxNumberofDishes = 3;
+  int remainingNumberofDishes;
+  String openOrderUid;
+
+  /// create and return an OrderDetail object based on this info's attributes.
+  OrderDetail getOrderDetail() {
+    return new OrderDetail(
+      pickupPoint: pickupPoint,
+      hawkerCenter: hawkerCenter,
+      delivererUid: delivererUid,
+      closingTime: closingTime,
+      eta: eta,
+      remarks: remarks,
+      maxNumberofDishes: maxNumberofDishes,
+      remainingNumberofDishes: remainingNumberofDishes,
+      openOrderUid: openOrderUid
+    );
+  }
+
+  void editInfo({pickupPoint, hawkerCenter, delivererUid, closingTime, eta, remarks, maxNumberofDishes, remainingNumberofDishes, openOrderUid }){
+    this.pickupPoint = pickupPoint ?? this.pickupPoint;
+    this.hawkerCenter = hawkerCenter ?? this.hawkerCenter;
+    this.delivererUid = delivererUid ?? this.delivererUid;
+    this.closingTime = closingTime ?? (this.closingTime ?? DateTime.now());
+    this.eta = eta ?? (this.eta ?? DateTime.now());
+    this.remarks = remarks ?? "Hi, it's my pleasure to deliver for you.";
+    this.maxNumberofDishes = maxNumberofDishes ?? this.maxNumberofDishes;
+    this.remainingNumberofDishes = remainingNumberofDishes ?? this.remainingNumberofDishes;
+    this.openOrderUid = openOrderUid ?? this.openOrderUid;
+
+    notifyListeners();
   }
 }

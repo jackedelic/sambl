@@ -9,6 +9,8 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/action/order_action.dart';
 import 'package:sambl/main.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
 /// This is the layout shown when the user (deliverer) has filled the 'Pick Up point', 'Order Closing
 /// Time' and 'ETA' on the prev layout (create_open_order_main_layout).
 /// This page requires the deliverer to do two things - 1. specify the number of dishes to deliver and
@@ -70,13 +72,15 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                         // The Increment button
                         new Expanded(
                           flex: 5,
-                          child: new IconButton(
-                            icon: new Icon(Icons.add),
-                            onPressed: (){
-                              //REDUXIFY
-                              setState(() {
-                                _numOfDishes++;
-                              });
+                          child: new ScopedModelDescendant<Info>(
+                            builder: (context, child, info) {
+                              return new IconButton(
+                                icon: new Icon(Icons.add),
+                                onPressed: (){
+                                  // edit oiur info model
+                                  info.editInfo(maxNumberofDishes: ++_numOfDishes);
+                                },
+                              );
                             },
                           ),
                         ),
@@ -84,25 +88,33 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                         // The number representing the number of dishes to deliver.
                         new Expanded(
                           flex: 3,
-                          child: new Text("$_numOfDishes",
-                            style: new TextStyle(
-                              fontSize: 16.0
-                            ),
-                            textAlign: TextAlign.center,
+                          child: new ScopedModelDescendant<Info>(
+                            builder: (context, child, info){
+                              return new Text("${info.maxNumberofDishes}",
+                                style: new TextStyle(
+                                    fontSize: 16.0
+                                ),
+                                textAlign: TextAlign.center,
+                              );
+                            },
                           ),
                         ),
 
                         // The decrement button
                         new Expanded(
                           flex: 5,
-                          child: new IconButton(
-                            icon: new Icon(Icons.remove),
-                            onPressed: (){
-                              //REDUXIFY
-                              setState(() {
-                                _numOfDishes = _numOfDishes > 0 ? _numOfDishes - 1 : _numOfDishes;
-                              });
+                          child: new ScopedModelDescendant<Info>(
+                            builder: (context, child, info){
+                              return new IconButton(
+                                icon: new Icon(Icons.remove),
+                                onPressed: (){
+                                  // edit our info model
+                                  setState(() {
+                                   info.editInfo(maxNumberofDishes:  _numOfDishes == 0 ? _numOfDishes : --_numOfDishes);
+                                  });
 
+                                },
+                              );
                             },
                           ),
                         ),
@@ -131,13 +143,20 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
 //              height: 200.0,
               child: new Container(
                 padding: new EdgeInsets.all(10.0),
-                child: new TextField(
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 10,
-                  decoration: new InputDecoration(
-                    hintText: 'I never underdeliver.',
-                    labelText: "Additional remarks"
-                  ),
+                child: new ScopedModelDescendant<Info>(
+                  builder: (context, child, info) {
+                    return new TextField(
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 10,
+                      decoration: new InputDecoration(
+                          hintText: 'I never underdeliver.',
+                          labelText: "Additional remarks"
+                      ),
+                      onChanged: (text) {
+                        info.editInfo(remarks: text);
+                      },
+                    );
+                  },
                 )
 
                 ),

@@ -3,64 +3,116 @@ import 'package:flutter/material.dart';
 class OrderLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return new Container(
-        margin: new EdgeInsets.fromLTRB(45.0, 0.0, 45.0, 10.0),
+        padding: new EdgeInsets.symmetric(vertical: 15.0),
+        margin: new EdgeInsets.only(bottom: 20.0),
+        width:  screenWidth,
         decoration: new BoxDecoration(
-          color: Colors.white,
-          borderRadius: new BorderRadius.all(const Radius.circular(15.0)),
+          color: new Color(0x38FFFFFF),
         ),
 
         child: new Row(
           children: <Widget>[
-            new Column(
-              children: <Widget>[
-                new Padding(
-                  padding: new EdgeInsets.fromLTRB(15.0, 5.0, 10.0, 0.0),
-                  child:new Icon(Icons.restaurant),
-                ),
-                new Padding(
-                  padding: new EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 0.0),
-                  child:new Icon(Icons.more_vert),
-                ),
-                new Padding(
-                  padding: new EdgeInsets.fromLTRB(15.0, 0.0, 10.0, 5.0),
-                  child:new Icon(Icons.place),
-                ),
-              ],
+            // This is the left 'padding' that comes before the 'location'
+            new Expanded(
+              flex: 1,
+              child: new Container(width: 1.0, height: 0.0,),
             ),
-            new Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                new Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    new Text("From: ",
-                      style: new TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.bold
-                      ),
-                    )
-                  ],
-                ),
-                // This is horizontal divider
-                new Container(
-                  margin: new EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
-                  width: 220.0,
-                  height: 2.0,
-                  color: Colors.black12,
-                ),
-                new Row(
-                  children: <Widget>[
-                    new Text("To:",
+
+            new Flexible(
+              flex: 4,
+              child: new Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  new Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      new Text("From: ",
                         style: new TextStyle(
                             fontSize: 17.0,
-                            fontWeight: FontWeight.bold
-                        )
-                    )
-                  ],
-                )
-              ],
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white
+                        ),
+                      )
+                    ],
+                  ),
+
+                  // This is horizontal divider
+                  new Container(
+                    margin: new EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                    width: 256.0,
+                    height: 1.0,
+                    color: Colors.white,
+                  ),
+
+                  // This is right below the 'from'
+                  new Row(
+                    children: <Widget>[
+                      new Expanded(
+                        flex: 5,
+                        child: new InkWell(
+                          onTap: () {
+
+                          },
+                          child: new Text("Tap to select your location",
+                              style: new TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.bold,
+                                color: Colors.white
+                              )
+                          ),
+                        ),
+                      ),
+
+                      // vertical divider -> Tap to select your location | Use my location
+                      new Container(
+                        height: 20.0,
+                        width: 1.0,
+                        color: Colors.white,
+                      ),
+
+                      // use my location
+                      new Expanded(
+                        flex: 2,
+                        child: new InkWell(
+                          onTap: (){
+                            print("you tapped 'use my location'");
+                          },
+                          child: new Row(
+                            children: <Widget>[
+                              new Icon(Icons.place),
+                              new Expanded(
+                                child: new Text("Use my location",
+                                  style: new TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13.0
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+
+
+                    ],
+                  )
+                ],
+              ),
+            ),
+
+            // This is the arrow button
+            new Expanded(
+                flex: 1,
+                child: new IconButton(
+                  icon: new Icon(Icons.chevron_right),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/OpenOrderListPage");
+                  }),
             )
+
+
           ],
         )
     );

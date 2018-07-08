@@ -49,15 +49,22 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: MyColors.mainBackground,
-      body: new Center(
+      body: new Container(
+              decoration: new BoxDecoration(
+                image: new DecorationImage(
+                    image: new AssetImage("assets/images/home_page_background.jpg"),
+                    fit: BoxFit.cover,
+                    )
+              ),
               child: new Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+
                         new Padding(
-                          padding: new EdgeInsets.only(bottom: 70.0),
+                          padding: new EdgeInsets.only(bottom: 50.0),
                           child: new Text(
-                            'Sambl',
+                            'SamBl',
                             style: new TextStyle(
                               fontSize: 60.0,
                               fontFamily: "Indie Flower", // Just a dummy fontfamily
@@ -77,21 +84,21 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
 
+                          // 'Order' button
                           new Container(
-
                             child: new FlatButton(
                               child: new Container(
                                 child:  new Text("Order",
-                                  style: new TextStyle(color: _fontColor1),
+                                  style: new TextStyle(color: Colors.white),
                                 ),
                               ),
                               onPressed: (){
                                 setState(() {
                                   if (_orderButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
                                   _orderButtonColor = MyColors.mainRed;
-                                  _deliverButtonColor = Colors.white;
+                                  _deliverButtonColor = new Color(0x38FFFFFF);
                                   _centerLayout = new OrderLayout();
-                                  _toggleFontColor();
+                                  //_toggleFontColor();
                                 });
                               },
                             ),
@@ -100,28 +107,25 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                               color: _orderButtonColor,
                             ),
                           ),
-                          //A vertical divider in between the two buttons.
-                          new Container(
-                            width: 2.0,
-                            height: 25.0,
-                            color: Colors.black12 ,
-                          ),
 
+                          // Invisible divider between 'order' and 'Delievries' buttons
+
+                          // 'Deliveries' button
                           new Container(
                             child: new FlatButton(
                               child: new Container(
                                 child:  new Text("Deliveries",
-                                  style: new TextStyle(color: _fontColor2),
+                                  style: new TextStyle(color: Colors.white),
                                 ),
                                 color: Colors.transparent,
                               ),
                               onPressed: (){
                                 setState(() {
-                                  if (_deliverButtonColor == new Color(0xFFDF1B01)) return; // prevent the following lines from executing
-                                  _deliverButtonColor = new Color(0xFFDF1B01);
-                                  _orderButtonColor = Colors.white;
+                                  if (_deliverButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
+                                  _deliverButtonColor = MyColors.mainRed;
+                                  _orderButtonColor = new Color(0x38FFFFFF);
                                   _centerLayout = new DeliveringFromLayout();
-                                  _toggleFontColor();
+                                 // _toggleFontColor();
 
                                 });
                               },
@@ -150,12 +154,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 Navigator.pushNamed(context, "/CreateOpenOrderPage");
                               }
                             },
-                            child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,),
+                            child: new Icon(Icons.arrow_forward_ios, color: Colors.white,),
 
                           ),
                           decoration: new BoxDecoration(
                             borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
-                            color: Colors.white,
+                            color: new Color(0x38FFFFFF),
                           ),
 
 

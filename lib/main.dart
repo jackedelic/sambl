@@ -41,7 +41,7 @@ void main() {
 }
 
 Widget defaultPage(AppStatusFlags flag) {
-//  return new HomePage();
+  return new HomePage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
           "/CreateOpenOrderPageDeprecated" : (BuildContext context) => new CreateOpenOrderPageDeprecated(),
           "/HomePage" : (BuildContext context) => new HomePage(),
           "/OpenOrderListPage" : (BuildContext context) => new OpenOrderListPage(),
-          "/PlaceOrderPage" : (BuildContext context) => new PlaceOrderPage(),
+          //"/PlaceOrderPage" : (BuildContext context) => new PlaceOrderPage(),
           "/SignInPage" : (BuildContext context) => new SignInPage(),
           "/SignUpPage" : (BuildContext context) => new SignUpPage(),
           "/CreateOpenOrderPage" : (BuildContext context) => new CreateOpenOrderPage(),

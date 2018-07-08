@@ -30,6 +30,11 @@ dependencies:
   # The following adds the haversine formula to the project, it allows calculation of distance between 2 points on a sphere
   haversine: "^1.0.2"
 
+  # This is used to manage state that does not involve backend. e.g used in passing data between tabs.
+  scoped_model:
+
+  # wheel-based number picker to choose time/numbers
+  numberpicker:
 dev_dependencies:
   flutter_test:
     sdk: flutter
