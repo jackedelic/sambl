@@ -28,12 +28,24 @@ class CombinedDeliveryList {
   CombinedDeliveryList({
     @required this.pending,
     @required this.approved,
-    @required OrderDetail detail
-  }): this.deliveryDetail = Optional<OrderDetail>.of(detail);
+    @required Optional<OrderDetail> detail
+  }): this.deliveryDetail = detail;
 
   CombinedDeliveryList.absent(): 
     this.pending = new DeliveryList.absent(), this.approved = new DeliveryList.absent(),
     this.deliveryDetail = Optional<OrderDetail>.absent();
+
+  CombinedDeliveryList copyWith({
+    DeliveryList pending,
+    DeliveryList approved,
+    OrderDetail detail,
+  }) {
+    return new CombinedDeliveryList(
+      pending: pending ?? this.pending,
+      approved: approved ?? this.approved,
+      detail: Optional.fromNullable(detail) ?? this.deliveryDetail
+    );
+  }
 
   Map<String,dynamic> toJson() => {
     'pending': this.pending.toJson(),

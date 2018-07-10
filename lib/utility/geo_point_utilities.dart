@@ -8,11 +8,12 @@ Map<String,dynamic> geoPointToMap(GeoPoint point) {
   };
 }
 
+// return distance in metres
 double getDistance(GeoPoint p1, GeoPoint p2) {
   return new Haversine.fromDegrees(
     latitude1: p1.latitude,
     longitude1: p1.longitude,
     latitude2: p2.latitude,
-    longitude2: p2.longitude,)
+    longitude2: p2.longitude)
     .distance();
 }

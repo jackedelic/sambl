@@ -1,10 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
+import 'package:sambl/subscribers/combined_subscriber.dart';
 
   final ThunkAction<AppState> signOutAction = (Store<AppState> store) async {
     FirebaseAuth.instance.currentUser().then((user){
@@ -16,6 +17,7 @@ import 'package:sambl/state/app_state.dart';
     await FirebaseAuth.instance.signOut()
       .then((_) {
         print('signing out');
+        CombinedSubscriber.instance().removeAll();
         store.dispatch(new LogoutAction());
       });
   };

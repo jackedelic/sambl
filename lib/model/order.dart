@@ -1,12 +1,7 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:sambl/model/hawker_center.dart';
 import 'package:sambl/model/order_detail.dart';
 
 export 'package:sambl/model/hawker_center.dart';
-
 
 class Dish {
   bool isPriceSpecified;

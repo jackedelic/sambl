@@ -1,8 +1,9 @@
-import 'dart:async';
-import 'package:redux/redux.dart';
-import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/reset_action.dart';
 import 'dart:io' show Platform;
+
+import 'package:redux/redux.dart';
+
+import 'package:sambl/action/reset_action.dart';
+import 'package:sambl/state/app_state.dart';
 
 enum HandlerType {
   onMessage,

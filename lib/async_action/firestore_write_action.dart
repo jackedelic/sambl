@@ -1,20 +1,13 @@
-import 'package:redux/redux.dart';
-import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/reset_action.dart';
-
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:sambl/action/write_action.dart';
 import 'package:quiver/core.dart';
+import 'package:redux/redux.dart';
 
-abstract class FirestoreWriteAction {
+import 'package:sambl/action/write_action.dart';
+import 'package:sambl/middleware/runnabl_action_middleware.dart';
+import 'package:sambl/state/app_state.dart';
 
-  void run(Store<AppState> store) {
-
-  }
-}
-
-class PlaceOrderAction implements FirestoreWriteAction {
+class PlaceOrderAction implements RunnableAction {
   final Order toWrite;
 
   PlaceOrderAction(Order order): toWrite = order;
@@ -31,7 +24,7 @@ class PlaceOrderAction implements FirestoreWriteAction {
   }
 }
 
-class CreateOpenOrderAction implements FirestoreWriteAction {
+class CreateOpenOrderAction implements RunnableAction {
   final OrderDetail toWrite;
 
   CreateOpenOrderAction(OrderDetail detail): toWrite = detail;
@@ -41,13 +34,13 @@ class CreateOpenOrderAction implements FirestoreWriteAction {
   }
 }
 
-class CloseOrderAction implements FirestoreWriteAction {
+class CloseOpenOrderAction implements RunnableAction {
   void run(Store<AppState> store) {
-    CloudFunctions.instance.call(functionName: "closeOrder");
+    CloudFunctions.instance.call(functionName: "closeOpenOrder");
   }
 }
 
-class ApproveOrderAction implements FirestoreWriteAction{
+class ApproveOrderAction implements RunnableAction {
   final String toWrite;
   
   ApproveOrderAction(String id): toWrite = id;
@@ -57,7 +50,7 @@ class ApproveOrderAction implements FirestoreWriteAction{
   }
 }
 
-class RejectOrderAction implements FirestoreWriteAction{
+class RejectOrderAction implements RunnableAction {
   final String toWrite;
   
   RejectOrderAction(String id): toWrite = id;
@@ -67,9 +60,12 @@ class RejectOrderAction implements FirestoreWriteAction{
   }
 }
 
-class FinalizeDeliveryAction implements FirestoreWriteAction{
+class ReportDeliveryAction implements RunnableAction {
+  final String toWrite;
+  
+  ReportDeliveryAction(String id): toWrite = id;
+
   void run(Store<AppState> store) {
-    CloudFunctions.instance.call(functionName: "finalizeDelivery");
-    store.dispatch(new ResetAction());
+    CloudFunctions.instance.call(functionName: "reportDelivery",parameters: {"id": toWrite});
   }
 }

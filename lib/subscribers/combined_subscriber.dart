@@ -1,9 +1,6 @@
 import 'dart:async';
+
 import 'package:meta/meta.dart';
-import 'package:composite_subscription/composite_subscription.dart';
-
-export 'package:composite_subscription/composite_subscription.dart';
-
 
 class CombinedSubscriber {
   Map<String,StreamSubscription> _subscriptions;
@@ -17,7 +14,6 @@ class CombinedSubscriber {
   CombinedSubscriber(): this._subscriptions = new Map<String,StreamSubscription>();
 
   void remove({@required String name}) {
-    assert(_subscriptions.containsKey(name));
     _subscriptions[name].cancel();
     _subscriptions.remove(name);
   }
@@ -30,6 +26,14 @@ class CombinedSubscriber {
   void add({@required String name, @required StreamSubscription subscription}) {
     assert(!_subscriptions.containsKey(name));
     _subscriptions.putIfAbsent(name, () => subscription);
+  }
+
+  void addAll({@required CombinedSubscriber subscriptions}) {
+    _subscriptions.addEntries(subscriptions.toList());
+  }
+
+  void removeWhere(bool test(String name, StreamSubscription sub)) {
+    _subscriptions.removeWhere(test);
   }
 
   StreamSubscription get({@required String name}) {

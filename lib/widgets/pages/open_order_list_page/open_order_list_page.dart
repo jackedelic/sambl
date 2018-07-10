@@ -8,7 +8,6 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/main.dart';
-import 'package:sambl/async_action/get_open_order_list_action.dart';
 /*
 This is the page directed when the user wants to see any available food delivery services
 (when he pressed 'order' button in the home page).

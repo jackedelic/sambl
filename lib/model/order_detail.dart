@@ -2,11 +2,9 @@ import 'package:meta/meta.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:sambl/model/hawker_center.dart';
-
 import 'package:sambl/utility/geo_point_utilities.dart';
 
 /// This class constructs open order created by the user.
-
 class OrderDetail {
   final GeoPoint pickupPoint;
   final HawkerCenter hawkerCenter;

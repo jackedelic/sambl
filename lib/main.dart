@@ -5,7 +5,6 @@ import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
-import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_remark_layout.dart';
 import 'package:sambl/widgets/pages/create_open_order_page_deprecated/create_open_order_page.dart';
 import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_page.dart';
@@ -16,13 +15,14 @@ import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/reducer/primary_reducer.dart';
-import 'package:sambl/middleware/firebase_auth_middleware.dart';
+import 'package:sambl/message_handler/primary_handler.dart';
+import 'package:sambl/middleware/runnabl_action_middleware.dart';
 
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'package:sambl/message_handler/primary_handler.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:haversine/haversine.dart';
+
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.
@@ -30,31 +30,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 final Store<AppState> store = new Store<AppState>(
   primaryReducer, /* Function defined in the reducers file */
-  initialState: new AppState.unauthenticated(),
-  middleware: [thunkMiddleware,firebaseMiddleware],
+  initialState: new AppState.initial(),
+  middleware: [thunkMiddleware,runnableActionMiddleware],
 );
 
 void main() {
   runApp(new MyApp(
     store: store,
   ));
-}
-
-Widget defaultPage(AppStatusFlags flag) {
-  //return new HomePage();
-  switch (flag) {
-    case AppStatusFlags.unauthenticated:
-      return new SignInPage();
-    case AppStatusFlags.authenticated:
-      return new HomePage();
-    case AppStatusFlags.awaitingSignup:
-      return new SignInPage();
-    case AppStatusFlags.delivering:
-      return new SignInPage();
-    case AppStatusFlags.ordering:
-      return new SignInPage();
-  }
-  return new HomePage();
 }
 
 class MyApp extends StatelessWidget {
@@ -72,6 +55,7 @@ class MyApp extends StatelessWidget {
       onLaunch: (message) => primaryMessageHandler(message,HandlerType.onLaunch,store),
       onResume: (message) => primaryMessageHandler(message,HandlerType.onResume,store)
     );
+
     return new StoreProvider<AppState>(
       store: store,
       child: new MaterialApp(
