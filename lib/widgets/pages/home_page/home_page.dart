@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   void initState() {
     super.initState();
     _orderButtonColor = MyColors.mainRed; // Red
-    _deliverButtonColor = Colors.white;
+    _deliverButtonColor = MyColors.semiTransparent[100];
 
     _centerLayout = new OrderLayout();
     _fontColor1 = Colors.white;
@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 setState(() {
                                   if (_orderButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
                                   _orderButtonColor = MyColors.mainRed;
-                                  _deliverButtonColor = new Color(0x38FFFFFF);
+                                  _deliverButtonColor = MyColors.semiTransparent[100];
                                   _centerLayout = new OrderLayout();
                                   //_toggleFontColor();
                                 });
@@ -123,7 +123,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                                 setState(() {
                                   if (_deliverButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
                                   _deliverButtonColor = MyColors.mainRed;
-                                  _orderButtonColor = new Color(0x38FFFFFF);
+                                  _orderButtonColor = MyColors.semiTransparent[100];
                                   _centerLayout = new DeliveringFromLayout();
                                  // _toggleFontColor();
 
@@ -148,9 +148,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           margin: new EdgeInsets.only(top: 150.0  ),
                           child: new FlatButton(
                             onPressed: (){
-                              if (_orderButtonColor == new Color(0xFFDF1B01)) {
+                              if (_orderButtonColor == MyColors.mainRed) {
                                 Navigator.pushNamed(context, "/OpenOrderListPage");
-                              } else if (_deliverButtonColor == new Color(0xFFDF1B01)) {
+                              } else if (_deliverButtonColor == MyColors.mainRed) {
                                 Navigator.pushNamed(context, "/CreateOpenOrderPage");
                               }
                             },
@@ -159,7 +159,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           ),
                           decoration: new BoxDecoration(
                             borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
-                            color: new Color(0x38FFFFFF),
+                            color: MyColors.semiTransparent,
                           ),
 
 

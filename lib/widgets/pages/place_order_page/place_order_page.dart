@@ -23,7 +23,7 @@ class PlaceOrderPage extends StatefulWidget {
 
 class _PlaceOrderPageState extends State<PlaceOrderPage> {
 
-
+  GlobalKey<FormState> _addStallFormKey = new GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -39,12 +39,17 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
       builder: (BuildContext context) {
         return new AlertDialog(
           title: new Text("Stall Name"),
-          content: new TextField(
-            controller: textEditingController,
-            autofocus: true,
-            decoration: new InputDecoration(
-              labelText: 'stall name',
-              hintText: 'eg. Wakanda stall'
+          content: new Form(
+            key: _addStallFormKey,
+            child: new TextFormField(
+              controller: textEditingController,
+              autofocus: true,
+              decoration: new InputDecoration(
+                errorMaxLines: 2,
+                labelText: 'stall name',
+                hintText: 'eg. Wakanda stall'
+              ),
+              validator: _validateAddStallForm,
             ),
           ),
           actions: <Widget>[
@@ -55,14 +60,25 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
               child: new Text("Cancel")),
             new FlatButton(
               onPressed: () {
-                Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text), dishes: new List<Dish>());
-                Navigator.of(context).pop(stall);
+                if (_addStallFormKey.currentState.validate()) {
+                  Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text), dishes: new List<Dish>());
+                  Navigator.of(context).pop(stall);
+                }
+
               },
               child: new Text("Add")),
           ],
         );
       }
     );
+  }
+
+  /// This validates the user input when adding stall
+  String _validateAddStallForm(String input) {
+    if (input.isEmpty) {
+      return "Please enter the name of the stall you want to add.";
+    }
+    return null;
   }
 
   @override
@@ -106,17 +122,6 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                         itemCount: orderModel.order.stalls?.length ?? 0,
                         itemBuilder: (BuildContext context, int n) {
                           return new AddStallCard( orderModel.order.stalls[n]);
-                              new Stall(
-                                  identifier: new HawkerCenterStall(name: "Wakanda stall"),
-                                  dishes: <Dish>[
-                                    new Dish(name: "High Calorie yummy food"),
-                                    new Dish(name: "Low Calorie not so yummy food"),
-                                    new Dish(name: "African meat"),
-                                    new Dish(name: "Sexy fish"),
-                                    new Dish(name: "Sizzling butter pork with extra oozing cheese that is "
-                                        "almost melting but not really. "),
-                                  ]
-                              );
 
                         }
                     )
@@ -148,7 +153,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                           // pop up a textfield to for user to input stall name.
                           // We then create a Stall object based on the input.
                           Stall stall = await _addStallDialog();
-
+                          if (stall == null) return;
                           // Update orderModel, then notify all descendants.
                           // Bad practice since I accessed order field directly.
                           orderModel.order.stalls.add(stall);
@@ -239,24 +244,39 @@ class AddStallCard extends StatefulWidget {
 
 class _AddStallCardState extends State<AddStallCard> {
 
+  final GlobalKey<FormState> _addDishFormKey = new GlobalKey<FormState>();
 
+  /// sanitise the user input for adding dish.
+  String _validateAddDishForm(String input) {
+    if (input.isEmpty) {
+      return "Please enter the dish you want to add.";
+    }
+
+    return null;
+  }
 
   /// This dialog shows up when +Add dish button is tapped. It returns Future<Dish> future when
   /// popped from Navigator.
   Future<Dish> _addDishDialog() {
-    TextEditingController textEditingController = new TextEditingController();
+    TextEditingController textEditingController = new TextEditingController(); // input text controller for the dialog
     return showDialog<Dish>(
         context: context,
         builder: (BuildContext context) {
           return new AlertDialog(
             title: new Text("Add dish"),
-            content: new TextField(
-              controller: textEditingController,
-              autofocus: true,
-              decoration: new InputDecoration(
+            content: new Form(
+              key: _addDishFormKey,
+              child: new TextFormField(
+                controller: textEditingController,
+                autofocus: true,
+                decoration: new InputDecoration(
+                  errorMaxLines: 2,
                   labelText: "What's the dish you want to order?",
                   hintText: 'eg. butter chicken rice. Extra rice. '
+                ),
+                validator: _validateAddDishForm,
               ),
+
             ),
             actions: <Widget>[
               new FlatButton(
@@ -266,9 +286,13 @@ class _AddStallCardState extends State<AddStallCard> {
                   child: new Text("Cancel")),
               new FlatButton(
                   onPressed: () {
-                    Dish dish = new Dish(name: textEditingController.text);
-                    Navigator.of(context).pop(dish); // When popped, the dish is wrapped in a Future
-                                                     // object which is returned by this _addDishDialog().
+                    // check if input is valid
+                    if (_addDishFormKey.currentState.validate()) {
+                      Dish dish = new Dish(name: textEditingController.text);
+                      Navigator.of(context).pop(dish); // When popped, the dish is wrapped in a Future
+                      // object which is returned by this _addDishDialog().
+                    }
+
                   },
                   child: new Text("Add")),
             ],
@@ -361,6 +385,8 @@ class _AddStallCardState extends State<AddStallCard> {
                               // particular stall. This addStallCard widget is rebuilt with the
                               // newly added dish.
                               Dish dish = await _addDishDialog();
+
+                              if (dish == null) return;
 
                               // update our orderModel
                               widget.stall.dishes.add(dish);

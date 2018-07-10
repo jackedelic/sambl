@@ -98,7 +98,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
             children: <Widget>[
             // 'Closing time' element
               new Flexible(
-                  flex: 2,
+                  flex: 3,
                   child: new Container(
                     alignment: Alignment.center,
                     padding: new EdgeInsets.all(10.0 ),
@@ -110,15 +110,18 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                     // This is the closing time button that shows time picker onpressed.
                     child: new ScopedModelDescendant<Info>(
                       builder: (context, child, info){
-                          return new FlatButton(
-                            onPressed: () async {
+                          return new GestureDetector(
+                            onTap: () async {
                               print("tapped order closing time");
                               _showTimePicker(Detail.CLOSINGTIME, context, info);
                             },
                             child: new Text(
                               info.closingTime != null ?
-                              ("${info.closingTime?.hour ?? DateTime.now().hour}:${info.closingTime.minute  ?? DateTime.now().minute}") :
+                              ("Closing at ${info.closingTime?.hour ?? DateTime.now().hour}:${info.closingTime.minute  ?? DateTime.now().minute}") :
                               "Order Closing time",
+                              style: new TextStyle(
+                                fontSize: 20.0
+                              ),
                             ),
                           );
                       }
@@ -134,10 +137,9 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
 
               // 'ETA' element
               new Flexible(
-                  flex: 1,
+                  flex: 2,
                   child: new Container(
-                      padding: new EdgeInsets.only(
-                          bottom: 10.0, left: 10.0, right: 10.0),
+                      padding: new EdgeInsets.all(10.0),
                       decoration: new BoxDecoration(
                           border: new Border.all(
                               color: MyColors.borderGrey, width: 1.8),
@@ -146,16 +148,19 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                       // This is the eta button that shows time picker on pressed.
                       child: new ScopedModelDescendant<Info>(
                         builder: (context, child, info){
-                          return new FlatButton(
-                              onPressed: () async {
+                          return new GestureDetector(
+                              onTap: () async {
                                 print("tapped order ETA");
                                 _showTimePicker(Detail.ETA, context, info);
                               },
                               child: new Text(
-                                info.eta != null ?
-                                ("${info.eta?.hour ?? DateTime.now().hour}:${info.eta.minute  ?? DateTime.now().minute}") :
-                                "eta",
-                              )
+                                      info.eta != null ?
+                                      ("ETA: ${info.eta?.hour ?? DateTime.now().hour}:${info.eta.minute  ?? DateTime.now().minute}") :
+                                      "eta",
+                                    style: new TextStyle(
+                                      fontSize: 18.0
+                                    ),
+                                  )
                           );
                         },
                       ),
@@ -193,38 +198,44 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
   }
 
   void _showTimePicker(Detail detail, context, Info info) async {
+    int initialIndex = DateTime.now().hour * 4 + (DateTime.now().minute / 15).floor();
+    FixedExtentScrollController controller = new FixedExtentScrollController(initialItem: initialIndex);
+
     await showModalBottomSheet(
         context: context,
         builder: (context) {
           return new Container(
-                height: 200.0,
+                height: 250.0,
                 child: new Row(
                     children: <Widget>[
                       //select hour
                       new Flexible(
                         flex: 1,
                         child: new CupertinoPicker(
+                          scrollController: controller,
                           itemExtent: 40.0,
                           onSelectedItemChanged: (index){
+                            int hour = (index / 4).floor();
+                            int min = (index % 4) * 15;
                             print("selected index is $index");
                             switch (detail) {
                               case Detail.CLOSINGTIME:
                                 print("time picker for closing time");
-                                info.editInfo(closingTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, index, info?.closingTime?.minute ?? DateTime.now().minute));
+                                info.editInfo(closingTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, hour, min));
                                 break;
                               case Detail.ETA:
                                 print("time picker for eta");
-                                info.editInfo(eta: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, index, info?.eta?.minute ?? DateTime.now().minute));
+                                info.editInfo(eta: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, hour, min));
                                 break;
                             }
                           },
-                          children: Iterable.generate(24, (index){
+                          children: Iterable.generate(96, (index){
+                            int hour = (index / 4).floor();
+                            int min = (index % 4) * 15;
                             return new Container(
-                                padding: new EdgeInsets.all(0.0),
-                                margin: new EdgeInsets.only(left: 150.0),
-                                child: new Text("$index",
+                                child: new Text("$hour : ${min == 0 ? '00' : min}",
                                   style: new TextStyle(
-                                    fontSize: 20.0,
+                                    fontSize: 30.0,
                                   ),
 
                                 )
@@ -234,39 +245,6 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                         ),
                       ),
 
-                      // Select minute
-                      new Flexible(
-                        flex: 1,
-                        child: new CupertinoPicker(
-                          diameterRatio: 1.0,
-                          itemExtent: 40.0,
-                          onSelectedItemChanged: (index){
-                            print("selected index is $index");
-                            switch (detail) {
-                              case Detail.CLOSINGTIME:
-                                print("info is " + info.toString());
-                                info.editInfo(closingTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, info?.closingTime?.hour ?? DateTime.now().hour, index * 15));
-                                print("time picker for closing time");
-                                break;
-                              case Detail.ETA:
-                                print("time picker for eta");
-                                info.editInfo(eta: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, info?.eta?.hour ?? DateTime.now().hour, index * 15));
-                                break;
-                            }
-                          },
-                          children: Iterable.generate(4, (index){
-                            return new Container(
-                                padding: new EdgeInsets.all(0.0),
-                                margin: new EdgeInsets.only(right: 150.0),
-                                child: new Text("${index*15}",
-                                  style: new TextStyle(
-                                    fontSize: 20.0,
-                                  ),
-                                )
-                            );
-                          }).toList(),
-                        ),
-                      ),
                     ]
                 ),
               );

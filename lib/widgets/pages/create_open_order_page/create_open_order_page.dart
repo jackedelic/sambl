@@ -53,45 +53,86 @@ Info info;
     super.initState();
     _tabController = new TabController(length: 3, vsync: this);
     _tabController.addListener(() {
+      print("tab changes");
         info.notifyListeners(); // update the scopedModelDescendants on any new info.
         setState(() {}); // change the state of the icon button
     });
 
-    //scopedmodel
+    //our scopedmodel
     info = new Info();
   }
 
   /// button to navigate to the next tab. In the last tab (tab controller's index == 2), the button when pressed
 ///  brings deliverer to 'delivery subscribers' page.
   Widget _buildNextButton() {
+    if (_tabController.index != 2) {
+      return new Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new FlatButton(
+              onPressed: (){
+                _tabController.animateTo((_tabController.index + 1) % 3);
 
-    return new Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        new FlatButton(
-                onPressed: (){
-                  _tabController.index != 2 ? _tabController.animateTo((_tabController.index + 1) % 3) :
-                      Navigator.popAndPushNamed(context, '/OrdererListPage');
-                  },
-                 child: _tabController.index != 2 ? new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,) :
-                    new Container(
-                      decoration: new BoxDecoration(
-                        border: new Border.all(width: 1.0, color: MyColors.mainRed),
-                        borderRadius: new BorderRadius.circular(8.0)
+              },
+              child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,)
 
-                      ),
-                      padding: new EdgeInsets.all(6.0),
-                      child: new Text("Confirm",
-                        style: new TextStyle(
-                          color: MyColors.mainRed,
-                          fontSize: 17.0
-                        ),
-                      ),
-                    )
-                )
-              ],
+          )
+        ],
+      );
+    }
+
+    return Container(height: 0.0, width: 0.0,);
+
+
+  }
+
+  Widget _buildConfirmButton() {
+    if (_tabController.index == 2) {
+      return new ScopedModelDescendant<Info>(
+        builder: (context, child , info){
+          return new GestureDetector(
+            onTap: () async {
+              if (info.closingTime == null || info.eta == null) {
+                await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return new AlertDialog(
+                      title: new Text("Missing something?"),
+                      content: new Text("${info.closingTime == null && info.eta == null ?
+                      'you did not specify closing time and estimated time of arrival.' :
+                      (info.closingTime == null ? 'Don\'t forget closing time.' : 'Don\'t forget estimated time of arrival.')
+                      }"),
+                    );
+                  }
+                );
+              } else {
+                Navigator.popAndPushNamed(context, '/OrdererListPage');
+              }
+
+            },
+            child: new Container(
+              margin: new EdgeInsets.only(top: 12.0),
+              decoration: new BoxDecoration(
+                  color: info.closingTime == null && info.eta == null ? Colors.grey : MyColors.mainRed,
+                  borderRadius: new BorderRadius.vertical(bottom: new Radius.circular(20.0))
+              ),
+              width: 344.0,
+              height: 50.0,
+              child: new Center(
+                  child: new Text("Confirm",
+                    style: new TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0
+                    ),
+                  )
+              ),
+            ),
           );
+        },
+      );
+    }
 
+    return Container(height: 0.0, width: 0.0,);
   }
 
 @override
@@ -130,6 +171,7 @@ Info info;
                 ),
 
                 // TabBarViews for the layouts - main, remark
+                
                 new Container(
                   height: 320.0,
                   child: new TabBarView(
@@ -163,7 +205,7 @@ Info info;
 
                 // some space btwn 'arrow button' and 'bottom icon'
                 new Padding(
-                  padding: new EdgeInsets.all(10.0),
+                  padding: new EdgeInsets.all(5.0),
                 ),
 
                 // The bottom icons
@@ -172,8 +214,10 @@ Info info;
                   children: <Widget>[
                     new BottomIcon(pageNum: _tabController.index + 2),
                   ],
-                )
+                ),
 
+                // This is the confirm button that only appears in the last tab
+                _buildConfirmButton()
 
               ],
             )

@@ -92,7 +92,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                                 content: "closing in",
                               ),
                               quantity: new QuantityDisplayElement(
-                                  content: "${info.closingTime.difference(DateTime.now()).inMinutes}"
+                                  content: "${info.closingTime?.difference(DateTime.now())?.inMinutes ?? 'X'}"
                               ),
                               tail: new QuantityDisplayElement(
                                   content: "min"
@@ -106,7 +106,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                                 content: "ETA",
                               ),
                               quantity: new QuantityDisplayElement(
-                                  content: "${info.eta.difference(DateTime.now()).inMinutes}"
+                                  content: "${info.eta?.difference(DateTime.now())?.inMinutes ?? 'X'}"
                               ),
                               tail: new QuantityDisplayElement(
                                   content: "min"

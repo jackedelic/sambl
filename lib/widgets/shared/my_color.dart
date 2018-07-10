@@ -20,6 +20,13 @@ class MyColors {
         800: const Color(0xFFC62828),
         900: const Color(0xFFB71C1C),
       });
+  static const MaterialColor semiTransparent = const MaterialColor(
+      0x38FFFFFF,
+      const <int, Color> {
+        50: const Color(0x38FFFFFF),
+        100: const Color(0x58FFFFFF)
+      }
+  );
 
   /// This is the background color.
   static Color mainBackground = new Color(0xFFEBEBEB);
