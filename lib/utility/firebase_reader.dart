@@ -56,7 +56,7 @@ Future<Order> orderReader(DocumentReference reference) async {
   return reference.get()
     .then((snapshot) async {
       OrderDetail detail = await orderDetailReader(snapshot['orderDetail']);
-      return new Order(await stallListReader(snapshot['stalls']),detail);
+      return new Order(await stallListReader(snapshot['stalls']),detail,isPaid: snapshot.data['isPaid']);
     });
 }
 
@@ -67,11 +67,13 @@ Future<String> ordererUidReader(DocumentReference reference) async {
 enum DeliveryListType {
   pending,
   approved,
+  paid
 }
 
 const Map<DeliveryListType,String> collectionName = {
   DeliveryListType.pending: 'pending',
-  DeliveryListType.approved: 'approved'
+  DeliveryListType.approved: 'approved',
+  DeliveryListType.paid: 'approved'
 };
 
 Future<DeliveryList> deliveryListReader(DocumentReference reference, DeliveryListType type) async {
@@ -83,6 +85,11 @@ Future<DeliveryList> deliveryListReader(DocumentReference reference, DeliveryLis
           .asyncMap<MapEntry<String,Order>>((order) async => 
             new MapEntry(order.documentID, 
             await orderReader(order['reference'])))
+          .where((entry) {
+            return (type == DeliveryListType.pending || 
+              ((type == DeliveryListType.approved && !entry.value.isPaid) || 
+              (type == DeliveryListType.paid && entry.value.isPaid)));
+          })
           .toList()),
         detail: await orderDetailReader(await reference.get()
           .then((snapshot) => snapshot['detail'])));

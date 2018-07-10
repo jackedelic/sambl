@@ -23,26 +23,32 @@ class DeliveryList {
 class CombinedDeliveryList {
   final DeliveryList pending;
   final DeliveryList approved;
+  final DeliveryList paid;
   final Optional<OrderDetail> deliveryDetail;
   
   CombinedDeliveryList({
     @required this.pending,
     @required this.approved,
+    @required this.paid,
     @required Optional<OrderDetail> detail
   }): this.deliveryDetail = detail;
 
   CombinedDeliveryList.absent(): 
-    this.pending = new DeliveryList.absent(), this.approved = new DeliveryList.absent(),
+    this.pending = new DeliveryList.absent(), 
+    this.approved = new DeliveryList.absent(),
+    this.paid = new DeliveryList.absent(),
     this.deliveryDetail = Optional<OrderDetail>.absent();
 
   CombinedDeliveryList copyWith({
     DeliveryList pending,
     DeliveryList approved,
+    DeliveryList paid,
     OrderDetail detail,
   }) {
     return new CombinedDeliveryList(
       pending: pending ?? this.pending,
       approved: approved ?? this.approved,
+      paid: paid ?? this.paid,
       detail: Optional.fromNullable(detail) ?? this.deliveryDetail
     );
   }
@@ -50,6 +56,7 @@ class CombinedDeliveryList {
   Map<String,dynamic> toJson() => {
     'pending': this.pending.toJson(),
     'approved': this.approved.toJson(),
+    'paid': this.paid.toJson(),
     'detail': this.deliveryDetail.transform((detail) => detail.toJson()).orNull
   };
 

@@ -23,7 +23,9 @@ CombinedSubscriber toCurrentDeliverySubscription(DocumentReference delivery, Sto
   subscriptions.add(name: 'approvedDeliverySubscription', subscription: delivery.collection('approved')
     .snapshots().listen((querySnapshot) async {
       store.dispatch(new WriteCurrentDeliveryAction(store.state.currentDeliveryList
-        .copyWith(pending: await deliveryListReader(delivery, DeliveryListType.approved))));
+        .copyWith(approved: await deliveryListReader(delivery, DeliveryListType.approved))));
+      store.dispatch(new WriteCurrentDeliveryAction(store.state.currentDeliveryList
+        .copyWith(paid: await deliveryListReader(delivery, DeliveryListType.paid))));
     }));
   
   subscriptions.add(name: 'orderDetailSubscription', subscription:  delivery.snapshots()
