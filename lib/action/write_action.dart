@@ -10,23 +10,24 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/subscribers/combined_subscriber.dart';
 import 'package:sambl/subscribers/subscription_converter.dart';
 
-class WriteAction {
-  
+abstract class WriteAction {
+  final toWrite;
 }
 
-class WriteAvailableHawkerCenterAction extends WriteAction {
+class WriteAvailableHawkerCenterAction implements WriteAction {
   final List<HawkerCenter> toWrite;
 
   WriteAvailableHawkerCenterAction(List<HawkerCenter> list): this.toWrite = list;
 }
 
-class WriteAvailableOpenOrderAction extends WriteAction{
+class WriteAvailableOpenOrderAction implements WriteAction {
   final List<OrderDetail> toWrite;
 
   WriteAvailableOpenOrderAction(List<OrderDetail> list): this.toWrite = list;
 }
 
-class SelectHawkerCenterAction implements RunnableAction {
+class SelectHawkerCenterAction implements RunnableAction, WriteAction {
+  final bool reduceable = true;
   final HawkerCenter toWrite;
 
   SelectHawkerCenterAction(HawkerCenter center): this.toWrite = center;
@@ -40,20 +41,24 @@ class SelectHawkerCenterAction implements RunnableAction {
   }
 }
 
-class WriteCurrentDeliveryAction {
+class WriteCurrentDeliveryAction implements WriteAction {
   final CombinedDeliveryList toWrite;
 
   WriteCurrentDeliveryAction(CombinedDeliveryList deliveryList): this.toWrite = deliveryList;
 }
 
-class WriteCurrentOrderAction {
+class WriteCurrentOrderAction implements WriteAction {
   final Order toWrite;
 
   WriteCurrentOrderAction(Order order): this.toWrite = order;
  }
 
-class ChangeAppStatusAction {
+class ChangeAppStatusAction implements WriteAction {
   final AppStatusFlags toWrite;
 
   ChangeAppStatusAction(AppStatusFlags newFlag): this.toWrite = newFlag;
+}
+
+class ClearPendingOrderAction implements WriteAction {
+  void toWrite;
 }

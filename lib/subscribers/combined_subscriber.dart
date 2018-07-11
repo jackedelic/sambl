@@ -16,24 +16,28 @@ class CombinedSubscriber {
   void remove({@required String name}) {
     _subscriptions[name].cancel();
     _subscriptions.remove(name);
+    print('current list of subscriptions' + _subscriptions.keys.toString());
   }
 
   void removeAll() {
     _subscriptions.forEach((name,sub) => sub.cancel());
-    _subscriptions.removeWhere((k,v) => true);
+    _subscriptions = {};
   }
 
   void add({@required String name, @required StreamSubscription subscription}) {
-    assert(!_subscriptions.containsKey(name));
+    // assert(!_subscriptions.containsKey(name));
     _subscriptions.putIfAbsent(name, () => subscription);
+    print('current list of subscriptions' + _subscriptions.keys.toString());
   }
 
   void addAll({@required CombinedSubscriber subscriptions}) {
     _subscriptions.addEntries(subscriptions.toList());
+    print('current list of subscriptions' + _subscriptions.keys.toString());
   }
 
   void removeWhere(bool test(String name, StreamSubscription sub)) {
     _subscriptions.removeWhere(test);
+    print('current list of subscriptions' + _subscriptions.keys.toString());
   }
 
   StreamSubscription get({@required String name}) {

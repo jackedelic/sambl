@@ -49,9 +49,9 @@ class AppState {
       currentUser: currentUser ?? this.currentUser,
       currentAppStatus: currentAppStatus ?? this.currentAppStatus,
       availableHawkerCenter: availableHawkerCenter ?? this.availableHawkerCenter,
-      currentHawkerCenter: Optional.fromNullable(currentHawkerCenter) ?? this.currentHawkerCenter,
+      currentHawkerCenter: currentHawkerCenter ?? this.currentHawkerCenter.orNull,
       openOrderList: openOrderList ?? this.openOrderList,
-      currentOrder: Optional.fromNullable(currentOrder) ?? this.currentOrder,
+      currentOrder: currentOrder ?? this.currentOrder.orNull,
       currentDeliveryList: currentDeliveryList ?? this.currentDeliveryList
     );
   }
@@ -60,16 +60,16 @@ class AppState {
     @required User currentUser,
     @required AppStatusFlags currentAppStatus,
     @required List<HawkerCenter> availableHawkerCenter,
-    @required Optional<HawkerCenter> currentHawkerCenter,
+    @required HawkerCenter currentHawkerCenter,
     @required List<OrderDetail> openOrderList,
-    @required Optional<Order> currentOrder,
+    @required Order currentOrder,
     @required CombinedDeliveryList currentDeliveryList
   }): this.currentUser = currentUser,
     this.currentAppStatus = currentAppStatus,
     this.availableHawkerCenter = availableHawkerCenter,
-    this.currentHawkerCenter = currentHawkerCenter,
+    this.currentHawkerCenter = Optional.fromNullable(currentHawkerCenter),
     this.openOrderList = openOrderList,
-    this.currentOrder = currentOrder,
+    this.currentOrder = Optional.fromNullable(currentOrder),
     this.currentDeliveryList = currentDeliveryList;
 
   AppState.initial():

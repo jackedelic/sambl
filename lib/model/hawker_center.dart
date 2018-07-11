@@ -42,7 +42,7 @@ class HawkerCenter {
   
   @override
   String toString() {
-      return json.encode(this.toJson());
+    return json.encode(this.toJson());
   }
   
 }

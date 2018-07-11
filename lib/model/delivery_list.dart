@@ -60,4 +60,9 @@ class CombinedDeliveryList {
     'detail': this.deliveryDetail.transform((detail) => detail.toJson()).orNull
   };
 
+  @override
+  String toString() {
+    return this.toJson().toString();
+  }
+
 }

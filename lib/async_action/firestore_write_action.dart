@@ -8,6 +8,7 @@ import 'package:sambl/middleware/runnabl_action_middleware.dart';
 import 'package:sambl/state/app_state.dart';
 
 class PlaceOrderAction implements RunnableAction {
+  final bool reduceable = false;
   final Order toWrite;
 
   PlaceOrderAction(Order order): toWrite = order;
@@ -25,6 +26,7 @@ class PlaceOrderAction implements RunnableAction {
 }
 
 class CreateOpenOrderAction implements RunnableAction {
+  final bool reduceable = false;
   final OrderDetail toWrite;
 
   CreateOpenOrderAction(OrderDetail detail): toWrite = detail;
@@ -35,12 +37,16 @@ class CreateOpenOrderAction implements RunnableAction {
 }
 
 class CloseOpenOrderAction implements RunnableAction {
+  final bool reduceable = false;
+
   void run(Store<AppState> store) {
+    store.dispatch(new ClearPendingOrderAction());
     CloudFunctions.instance.call(functionName: "closeOpenOrder");
   }
 }
 
 class ApproveOrderAction implements RunnableAction {
+  final bool reduceable = false;
   final String toWrite;
   
   ApproveOrderAction(String id): toWrite = id;
@@ -51,6 +57,7 @@ class ApproveOrderAction implements RunnableAction {
 }
 
 class RejectOrderAction implements RunnableAction {
+  final bool reduceable = false;
   final String toWrite;
   
   RejectOrderAction(String id): toWrite = id;
@@ -61,6 +68,7 @@ class RejectOrderAction implements RunnableAction {
 }
 
 class ReportDeliveryAction implements RunnableAction {
+  final bool reduceable = false;
   final String toWrite;
   
   ReportDeliveryAction(String id): toWrite = id;

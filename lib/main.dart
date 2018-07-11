@@ -20,18 +20,18 @@ import 'package:sambl/middleware/runnabl_action_middleware.dart';
 
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-
-import 'package:haversine/haversine.dart';
+import 'package:sambl/middleware/write_logger_middleware.dart';
 
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.
 
 
+
 final Store<AppState> store = new Store<AppState>(
   primaryReducer, /* Function defined in the reducers file */
   initialState: new AppState.initial(),
-  middleware: [thunkMiddleware,runnableActionMiddleware],
+  middleware: [thunkMiddleware,runnableActionMiddleware,writeLoggerMiddleware],
 );
 
 void main() {

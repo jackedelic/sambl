@@ -5,6 +5,10 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/async_action/google_authentication.dart';
 import 'package:sambl/state/app_state.dart';
 
+import 'package:sambl/action/write_action.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sambl/async_action/sign_out.dart';
 
 class SignInPage extends StatelessWidget {
 
@@ -16,7 +20,7 @@ class SignInPage extends StatelessWidget {
       return store.state.currentAppStatus;
     },
     builder: (context,status) {
-      if (status != AppStatusFlags.unauthenticated) {
+      if (false/*status != AppStatusFlags.unauthenticated*/) {
         Navigator.of(context).popUntil(ModalRoute.withName('/'));
         return defaultPage(status);
       } else {
@@ -52,7 +56,35 @@ class SignInPage extends StatelessWidget {
                       children: <Widget>[
                         new StoreConnector<AppState,VoidCallback>(
                           converter: (store) => () async {
-                            store.dispatch(signInWithGoogleAction);
+                            // store.dispatch(signInWithGoogleAction);
+                            // store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[0]));
+                            // print(store.state.currentHawkerCenter.value);
+                            store.dispatch(new CreateOpenOrderAction(new OrderDetail(
+                              maxNumberofDishes: 7,
+                              closingTime: new DateTime.now().add(new Duration(hours: 2,minutes: 15)),
+                              eta: new DateTime.now().add(new Duration(hours: 3)),
+                              pickupPoint: new GeoPoint(1.4, 103.02547),
+                              remarks: "first order to be submitted",
+                              hawkerCenter: store.state.currentHawkerCenter.value
+                            )));
+                            // store.dispatch(new CloseOpenOrderAction());
+                            // store.dispatch(signOutAction);
+                            // print(store.state.currentAppStatus);
+
+                            // store.dispatch(PlaceOrderAction(new 
+                            //   Order.empty(store.state.openOrderList[0])
+                            //   .addDish(new Dish.withPrice("Salted egg chicken rice", 4.5)
+                            //     , store.state.currentHawkerCenter.value.stallList[0])
+                            //   .addDish(new Dish.withPrice("Sweet and sour fish rice", 5.0)
+                            //     , store.state.currentHawkerCenter.value.stallList[0])
+                            //   .addDish(new Dish.withPrice("Egg Prata", 2.5)
+                            //     , store.state.currentHawkerCenter.value.stallList[1])
+                            //     ));
+
+                            // store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.pending.orders.keys.toList()[0]));
+                            // store.dispatch(new ReportDeliveryAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
+
+                            print(store.state.currentDeliveryList);
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(

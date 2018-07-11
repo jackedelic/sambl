@@ -4,6 +4,7 @@ import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
 
 Widget defaultPage(AppStatusFlags flag) {
+  return new SignInPage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
