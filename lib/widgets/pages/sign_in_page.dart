@@ -56,19 +56,19 @@ class SignInPage extends StatelessWidget {
                       children: <Widget>[
                         new StoreConnector<AppState,VoidCallback>(
                           converter: (store) => () async {
-                            // store.dispatch(signInWithGoogleAction);
+                            store.dispatch(signInWithGoogleAction);
                             // store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[0]));
                             // print(store.state.currentHawkerCenter.value);
-                            store.dispatch(new CreateOpenOrderAction(new OrderDetail(
-                              maxNumberofDishes: 7,
-                              closingTime: new DateTime.now().add(new Duration(hours: 2,minutes: 15)),
-                              eta: new DateTime.now().add(new Duration(hours: 3)),
-                              pickupPoint: new GeoPoint(1.4, 103.02547),
-                              remarks: "first order to be submitted",
-                              hawkerCenter: store.state.currentHawkerCenter.value
-                            )));
+                            // store.dispatch(new CreateOpenOrderAction(new OrderDetail(
+                            //   maxNumberofDishes: 7,
+                            //   closingTime: new DateTime.now().add(new Duration(hours: 2,minutes: 15)),
+                            //   eta: new DateTime.now().add(new Duration(hours: 3)),
+                            //   pickupPoint: new GeoPoint(1.4, 103.02547),
+                            //   remarks: "first order to be submitted",
+                            //   hawkerCenter: store.state.currentHawkerCenter.value
+                            // )));
                             // store.dispatch(new CloseOpenOrderAction());
-                            // store.dispatch(signOutAction);
+                            //store.dispatch(signOutAction);
                             // print(store.state.currentAppStatus);
 
                             // store.dispatch(PlaceOrderAction(new 
@@ -84,7 +84,7 @@ class SignInPage extends StatelessWidget {
                             // store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.pending.orders.keys.toList()[0]));
                             // store.dispatch(new ReportDeliveryAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
 
-                            print(store.state.currentDeliveryList);
+                            // print(store.state.currentDeliveryList);
                           },
                           builder: (context,callback) => new FlatButton(
                             child: Container(

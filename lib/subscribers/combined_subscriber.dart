@@ -19,9 +19,12 @@ class CombinedSubscriber {
     print('current list of subscriptions' + _subscriptions.keys.toString());
   }
 
-  void removeAll() {
-    _subscriptions.forEach((name,sub) => sub.cancel());
-    _subscriptions = {};
+  Future<void> removeAll() async {
+    return Stream.fromIterable(_subscriptions.values).asyncMap((sub) async => await sub.cancel())
+      .toList().then((_) {
+        _subscriptions = {};
+        return;
+      });
   }
 
   void add({@required String name, @required StreamSubscription subscription}) {

@@ -8,7 +8,7 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/subscribers/combined_subscriber.dart';
 
   final ThunkAction<AppState> signOutAction = (Store<AppState> store) async {
-    CombinedSubscriber.instance().removeAll();
+    await CombinedSubscriber.instance().removeAll();
     
     FirebaseAuth.instance.currentUser().then((user){
       GoogleSignIn _googleSignIn = new GoogleSignIn(
