@@ -90,3 +90,6 @@ flutter:
     - family: Indie Flower
       fonts:
         - asset: assets/fonts/IndieFlower.ttf
+    - family: Futura
+      fonts:
+        - asset: assets/fonts/FuturaHeavyItalicFont.ttf

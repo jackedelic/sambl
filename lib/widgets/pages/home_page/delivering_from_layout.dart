@@ -6,7 +6,7 @@ class DeliveringFromLayout extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return new Container(
         padding: new EdgeInsets.symmetric(vertical: 15.0),
-        margin: new EdgeInsets.only(bottom: 20.0),
+        margin: new EdgeInsets.only(bottom: 21.0, top: 22.0),
         width:  screenWidth,
         decoration: new BoxDecoration(
           color: new Color(0x38FFFFFF),
@@ -48,7 +48,7 @@ class DeliveringFromLayout extends StatelessWidget {
             new Flexible(
               flex: 1,
               child: new IconButton(
-                icon: new Icon(Icons.chevron_right),
+                icon: new Icon(Icons.chevron_right, color: Colors.white,),
                 onPressed: () {
                   Navigator.of(context).pushNamed("/CreateOpenOrderPage");
                 }),

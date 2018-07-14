@@ -30,6 +30,8 @@ import 'package:sambl/async_action/get_delivery_list.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+import 'package:sambl/widgets/shared/my_color.dart';
+
 class SignInPage extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -41,7 +43,7 @@ class SignInPage extends StatelessWidget {
       return store.state.currentAppStatus;
     },
     builder: (context,status) {
-      if (false ) {
+      if (true || status == AppStatusFlags.unauthenticated ) {
         Navigator.of(context).popUntil(ModalRoute.withName('/'));
         return defaultPage(status);
       } else {
@@ -53,7 +55,7 @@ class SignInPage extends StatelessWidget {
                 color: Colors.black,  
                 child: new Image(   
                   colorBlendMode: BlendMode.darken,
-                  color: Colors.black38,       
+                  color: Colors.black38,
                   image: AssetImage('assets/images/sign_in_page_background.jpg'),
                   fit: BoxFit.fitHeight,
                   width: double.infinity,
@@ -61,101 +63,134 @@ class SignInPage extends StatelessWidget {
                   alignment: new FractionalOffset(0.0, 0.0),
                 ),
               ),
-              new Container (
-                
-                alignment: Alignment.bottomCenter,
-                child: new AspectRatio(
-                  aspectRatio: 2.5,
-                  child: new Container(
-                    alignment: Alignment.bottomCenter,
-                    color: Colors.white,
-                    width: MediaQuery.of(context).size.width,
-                    child: new Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisSize: MainAxisSize.max,
-                      children: <Widget>[
-                        new StoreConnector<AppState,VoidCallback>(
-                          converter: (store) => () async {
-                            // get hawker centers
-                            //store.dispatch(getAvailableHawkerCenterAction);
 
-                            // select
-                            // print(store.state.currentHawkerCenter);
-                            //store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[1]));
-                            //print(store.state.currentHawkerCenter);
-
-                            //print(store.state.currentHawkerCenter.value.uid);
-                            //store.dispatch(getOpenOrderList);
-                            //print(store.state.openOrderList.toString());
-
-                            // store.dispatch(PlaceOrderAction(new 
-                            //   Order.empty(store.state.openOrderList[0])
-                            //   .addDish(new Dish.withPrice("Salted egg chicken rice", 4.5)
-                            //     , store.state.currentHawkerCenter.value.stallList[0])
-                            //   .addDish(new Dish.withPrice("Sweet and sour fish rice", 5.0)
-                            //     , store.state.currentHawkerCenter.value.stallList[0])
-                            //   .addDish(new Dish.withPrice("Egg Prata", 2.5)
-                            //     , store.state.currentHawkerCenter.value.stallList[1])
-                            //     ));
-
-                            // store.dispatch(new CreateOpenOrderAction(new OrderDetail(
-                            //   maxNumberofDishes: 7,
-                            //   closingTime: new DateTime.now().add(new Duration(hours: 2,minutes: 15)),
-                            //   eta: new DateTime.now().add(new Duration(hours: 3)),
-                            //   pickupPoint: new GeoPoint(1.4, 103.02547),
-                            //   remarks: "first order to be submitted",
-                            //   hawkerCenter: store.state.currentHawkerCenter.value
-                            // )));
-
-                            store.dispatch(signInWithGoogleAction);
-
-
-                            //store.dispatch();
-                            //print(store.state.currentOrder.value.toJson());
-                            
-                            //store.dispatch(signOutAction);
-                      
-                            //store.dispatch(getDeliveryListAction);
-                            //print(store.state.currentDeliveryList.toJson());
-                            //store.dispatch(new FinalizeDeliveryAction());
-
-                            //store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
-
-                            //store.dispatch(registerUserAction);
-
-                            if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
-                              print("inside sign in page: not authenticated");
-
-                            } else if (store.state.currentAppStatus == AppStatusFlags.authenticated){
-                              print("authenticated! going to home page");
-
-                              store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));
-                              print("print: store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));");
-
-                              if (store.state.currentHawkerCenter.isPresent && store.state.openOrderList.isEmpty) {
-                                store.dispatch(getOpenOrderList);
-                                print("getOpenOrderList dispatched");
-                              }
-
-                              print("inside sign in page, list is ${store.state.openOrderList}");
-                              Navigator.pushNamed(context, '/HomePage');
-                            } else {
-                               print("${store.state.currentAppStatus}");
-                            }
-                          },
-                          builder: (context,callback) => new FlatButton(
-                            child: Container(
-                              color: Colors.red,
-                              height: 100.0,
-                              width: double.infinity,
-                            ),
-                            onPressed: callback
-                          )
-
-                        )
-                      ],
-                    )
+              // SamBl title
+              new Positioned(
+                top: 150.0,
+                left: 50.0,
+                right: 50.0,
+                child: new Center(
+                  child: new Text("Sambl",
+                    style: new TextStyle(
+                      color: Colors.white,
+                      fontSize: 80.0
+                    ),
                   ),
+                )
+              ),
+              // Sign In With Google button
+              new Positioned(
+                bottom: 50.0,
+                left: 50.0,
+                right: 50.0,
+                child: new Container(
+                  height: 60.0,
+                  decoration: BoxDecoration(
+                    color:  MyColors.mainRed,
+                    borderRadius: new BorderRadius.circular(30.0)
+                  ),
+                  child: new StoreConnector<AppState,VoidCallback>(
+                    converter: (store) => () async {
+                      // get hawker centers
+                      //store.dispatch(getAvailableHawkerCenterAction);
+
+                      // select
+                      // print(store.state.currentHawkerCenter);
+                      //store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[1]));
+                      //print(store.state.currentHawkerCenter);
+
+                      //print(store.state.currentHawkerCenter.value.uid);
+                      //store.dispatch(getOpenOrderList);
+                      //print(store.state.openOrderList.toString());
+
+                      // store.dispatch(PlaceOrderAction(new
+                      //   Order.empty(store.state.openOrderList[0])
+                      //   .addDish(new Dish.withPrice("Salted egg chicken rice", 4.5)
+                      //     , store.state.currentHawkerCenter.value.stallList[0])
+                      //   .addDish(new Dish.withPrice("Sweet and sour fish rice", 5.0)
+                      //     , store.state.currentHawkerCenter.value.stallList[0])
+                      //   .addDish(new Dish.withPrice("Egg Prata", 2.5)
+                      //     , store.state.currentHawkerCenter.value.stallList[1])
+                      //     ));
+
+                      // store.dispatch(new CreateOpenOrderAction(new OrderDetail(
+                      //   maxNumberofDishes: 7,
+                      //   closingTime: new DateTime.now().add(new Duration(hours: 2,minutes: 15)),
+                      //   eta: new DateTime.now().add(new Duration(hours: 3)),
+                      //   pickupPoint: new GeoPoint(1.4, 103.02547),
+                      //   remarks: "first order to be submitted",
+                      //   hawkerCenter: store.state.currentHawkerCenter.value
+                      // )));
+
+                      store.dispatch(signInWithGoogleAction);
+
+
+                      //store.dispatch();
+                      //print(store.state.currentOrder.value.toJson());
+
+                      //store.dispatch(signOutAction);
+
+                      //store.dispatch(getDeliveryListAction);
+                      //print(store.state.currentDeliveryList.toJson());
+                      //store.dispatch(new FinalizeDeliveryAction());
+
+                      //store.dispatch(new ApproveOrderAction(store.state.currentDeliveryList.approved.orders.keys.toList()[0]));
+
+                      //store.dispatch(registerUserAction);
+
+                      if (store.state.currentAppStatus == AppStatusFlags.unauthenticated) {
+                        print("inside sign in page: not authenticated");
+
+                      } else if (store.state.currentAppStatus == AppStatusFlags.authenticated){
+                        print("authenticated! going to home page");
+
+                        store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));
+                        print("print: store.dispatch(new SelectHawkerCenterAction(await hawkerCenterReader((Firestore.instance.collection('hawker_centers').document('64ceajXT6dpCHIf6J9pQ')))));");
+
+                        if (store.state.currentHawkerCenter.isPresent && store.state.openOrderList.isEmpty) {
+                          store.dispatch(getOpenOrderList);
+                          print("getOpenOrderList dispatched");
+                        }
+
+                        print("inside sign in page, list is ${store.state.openOrderList}");
+                        Navigator.pushNamed(context, '/HomePage');
+                      } else {
+                         print("${store.state.currentAppStatus}");
+                      }
+                    },
+                    builder: (context,callback) => new GestureDetector(
+                      child: new Center(
+                        child: new Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Text("G",
+                              style: const TextStyle(
+                                fontFamily: "Futura",
+                                fontSize: 40.0,
+                                color: Colors.white
+                              ),
+                            ),
+                            // vertical divider
+                            new Container(
+                              margin: new EdgeInsets.symmetric(horizontal: 10.0),
+                              height: 40.0,
+                              width: 1.5,
+                              color: Colors.white,
+                            ),
+                            const Text("SIGN IN WITH GOOGLE",
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                      onTap: callback
+                    )
+
+                  )
                 ),
               )
             ],

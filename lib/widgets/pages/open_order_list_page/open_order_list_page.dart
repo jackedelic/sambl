@@ -53,33 +53,28 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
             new Expanded(
                 child: new ListView(
                   children: <Widget>[
-                    new OpenOrderListWidget(new OrderDetail()),
-                    new OpenOrderListWidget(new OrderDetail()),
-                    new OpenOrderListWidget(new OrderDetail())
+                    new OpenOrderListWidget(
+                      new OrderDetail(
+                        hawkerCenter: new HawkerCenter(
+                            new GeoPoint(1.314891217509645, 103.7642318178891),
+                            "Clementi Mall food Court",
+                            <HawkerCenterStall>[new HawkerCenterStall(name: "Mixed Rice")],
+                            "64ceajXT6dpCHIf6J9pQ"
+                          ),
+                        pickupPoint: new GeoPoint(1.22, 12.3),
+                        closingTime: DateTime.now(),
+                        eta: DateTime.now().add(new Duration(minutes: 45)),
+                        delivererUid: "2uaFyuY2P8TMgBfBO2IspiqmUV82",
+                        maxNumberofDishes: 4,
+                      ),
+                    ),
                   ],
                 ),
             ),
 
             // We trigger 'getDeliveryListAction', and then build a list of 'open orders' based on what the
             // openOrderList in our new appState.
-            new StoreConnector<AppState, Store<AppState>>(
-              builder: (_, store) {
-                store.dispatch(getDeliveryListAction);
-                return new Expanded(
-                  child: new ListView.builder(
-                    itemCount: store.state.openOrderList.length,
-                    itemBuilder: (_, int n) {
-                      new OpenOrderListWidget(store.state.openOrderList[n]);
-                    }
-                  )
-
-                );
-
-              },
-              converter: (store) {
-                return store;
-              }
-            ),
+//
 
             //Below will be the real list of items, more specifically a stream of items (since we're
               // using StreamBuilder).

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sambl/widgets/pages/available_hawker_center_page/available_hawker_center_page.dart';
 
 class OrderLayout extends StatelessWidget {
   @override
@@ -28,11 +29,19 @@ class OrderLayout extends StatelessWidget {
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Text("From: ",
-                        style: new TextStyle(
-                            fontSize: 17.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white
+                      new GestureDetector(
+                        onTap:() {
+                          print("You tapped 'From: ... ' box");
+                          Navigator.push(context,
+                              new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
+                          );
+                        },
+                        child: new Text("From: ",
+                          style: new TextStyle(
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white
+                          ),
                         ),
                       )
                     ],
@@ -55,12 +64,15 @@ class OrderLayout extends StatelessWidget {
                           onTap: () {
 
                           },
-                          child: new Text("Tap to select your location",
-                              style: new TextStyle(
-                                  fontSize: 13.0,
-                                  fontWeight: FontWeight.bold,
-                                color: Colors.white
-                              )
+                          child: new GestureDetector(
+                            onTap:(){},
+                            child: new Text("Tap to select your location",
+                                style: new TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.bold,
+                                  color: Colors.white
+                                )
+                            ),
                           ),
                         ),
                       ),
@@ -81,7 +93,7 @@ class OrderLayout extends StatelessWidget {
                           },
                           child: new Row(
                             children: <Widget>[
-                              new Icon(Icons.place),
+                              new Icon(Icons.place, color: Colors.white,),
                               new Expanded(
                                 child: new Text("Use my location",
                                   style: new TextStyle(
@@ -106,7 +118,7 @@ class OrderLayout extends StatelessWidget {
             new Expanded(
                 flex: 1,
                 child: new IconButton(
-                  icon: new Icon(Icons.chevron_right),
+                  icon: new Icon(Icons.chevron_right, color: Colors.white,),
                   onPressed: () {
                     Navigator.of(context).pushNamed("/OpenOrderListPage");
                   }),

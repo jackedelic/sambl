@@ -3,6 +3,9 @@ import 'delivering_from_layout.dart';
 import 'order_layout.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
+import 'package:sambl/main.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:sambl/state/app_state.dart';
 /*
 * This is the first page a signed in user sees when opening the app.
 * It has two big buttons, 1) letting user to choose whether to deliver food for others
@@ -66,7 +69,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           child: new Text(
                             'SamBl',
                             style: new TextStyle(
-                              fontSize: 60.0,
+                              fontSize: 70.0,
                               fontFamily: "Indie Flower", // Just a dummy fontfamily
                               color: MyColors.mainRed,
                             ),
@@ -176,15 +179,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   child: new Text('J'),
                   backgroundColor: Color.fromRGBO(247, 64, 106, 1.0),
                 ),
-              
+
             ),
             new ListTile(
               title: new Text("Profile"),
-              
-            ), 
+
+            ),
             new ListTile(
               title: new Text("Settings"),
-              
+
             ),
             new ListTile(
               title: new Text("Account"),

@@ -4,11 +4,13 @@ import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
+import 'package:sambl/widgets/shared/quantity_display.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
 class OpenOrderListWidget extends StatefulWidget {
   final OrderDetail orderDetail;
-
+  /// In the open_order_list_page (the prev page), we pass in orderDetail for this
+  /// particular open order.
   OpenOrderListWidget(this.orderDetail);
 
   @override
@@ -33,13 +35,17 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
         margin: new EdgeInsets.only(top: 5.0, bottom: 5.0),
         color: Colors.white,
         child: new ExpansionTile(
+          trailing: Container(width: 0.0,),
           backgroundColor: Colors.white,
+
+
           title: new Container(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
             child: new Row(
               children: <Widget>[
                 // This is the left item - the name of deliverer
-                new Container(
-                  width: 200.0,
+                new Expanded(
+                  flex: 2,
                   child: new Text("${widget.orderDetail.delivererUid}",
                     style: new TextStyle(
                         fontSize: 20.0,
@@ -47,18 +53,61 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                   ),
                 ),
                 // This is the right items - the closing time, eta, num of dishes
-                new Row(
-                  children: <Widget>[
-                    new Column(
-                      children: <Widget>[
-                        new Text("25",
-                          style: new TextStyle(
-                              fontSize: 20.0
-                          ),
+                new Expanded(
+                  flex: 4,
+                  child: new Row(
+                    children: <Widget>[
+
+                      // Closing in x mins
+                      new QuantityDisplay(
+                        head: new QuantityDisplayElement(
+                          fontSize: 12.0,
+                          content: "Closing in",
+                        ),
+                        quantity: new QuantityDisplayElement(
+                          fontSize: 30.0,
+                          content: "${widget.orderDetail.closingTime.difference(DateTime.now()).inMinutes}"
+                        ),
+                        tail: new QuantityDisplayElement(
+                          fontSize: 12.0,
+                          content: "mins"
                         )
-                      ],
-                    )
-                  ],
+                      ),
+
+                      // Arriving in y mins
+                      new QuantityDisplay(
+                          head: new QuantityDisplayElement(
+                            fontSize: 12.0,
+                            content: "Arriving in",
+                          ),
+                          quantity: new QuantityDisplayElement(
+                              fontSize: 30.0,
+                              content: "${widget.orderDetail.eta.difference(DateTime.now()).inMinutes}"
+                          ),
+                          tail: new QuantityDisplayElement(
+                            fontSize: 12.0,
+                              content: "mins"
+                          )
+                      ),
+
+                      // Carrying x dishes
+                      new QuantityDisplay(
+                          head: new QuantityDisplayElement(
+                            fontSize: 12.0,
+                            content: "Carrying",
+                          ),
+                          quantity: new QuantityDisplayElement(
+                              fontSize: 30.0,
+                              content: "${widget.orderDetail.maxNumberofDishes}"
+                          ),
+                          tail: new QuantityDisplayElement(
+                            fontSize: 12.0,
+                              content: "dishes"
+                          )
+                      ),
+
+                    ],
+                  ),
                 )
               ],
             ),
@@ -66,21 +115,32 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
 
           // The items to display when the tile expands
           children: <Widget>[
-            new Column(
-              children: <Widget>[
-                new Text("Pick up location: ${widget.orderDetail.pickupPoint}"),
-
-                // This container holds only the place order button
-                new Container(
-                  margin: new EdgeInsets.only(top: 50.0, bottom: 10.0, right: 15.0),
-                  child: new Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      new PlaceOrderButton(orderModel), // custom button, defined below this class.
-                    ],
+            new Container(
+              padding: const EdgeInsets.only(top: 20.0),
+              child: new Column(
+                children: <Widget>[
+                  new Text("Pick up location: ${widget.orderDetail.pickupPoint}",
+                    style: const TextStyle(
+                      fontSize: 18.0
+                    ),
                   ),
-                )
-              ],
+
+                  // This container holds only the place order button
+                  new Container(
+                    margin: new EdgeInsets.only(top: 50.0, bottom: 20.0, right: 15.0),
+                    child: new Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        new ScopedModelDescendant<OrderModel>(
+                          builder: (context, child, orderModel) {
+                            return new PlaceOrderButton(orderModel);
+                          }
+                        ), // custom button, defined below this class.
+                      ],
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),

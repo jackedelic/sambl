@@ -11,6 +11,8 @@ import 'package:sambl/main.dart'; // To access our store (which contains our cur
 import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_widget.dart';
+import 'package:sambl/widgets/pages/placed_order_summary_page/placed_order_summary_page.dart';
+
 
 class PlaceOrderPage extends StatefulWidget {
   final OrderModel orderModel;
@@ -80,7 +82,33 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
     }
     return null;
   }
-
+  /// This validates the entire order (all the stalls and their assoiated dishes)
+  Future<bool> _validateOrder(OrderModel orderModel) async {
+    if (orderModel.order.stalls.isEmpty) {
+      await showDialog<bool>(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: new Text("No stall added."),
+              content: new Text("Add the stall from which you want to order. Click the +Add button below."),
+            );
+          }
+      );
+      return false;
+    } else if ( orderModel.order.stalls.any((stall)=>stall.dishes.isEmpty)) {
+      await showDialog<bool>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: new Text("Stall added but no dish added."),
+            content: new Text("Add the dish you want to order. Click the +Add dish button from within the stall card."),
+          );
+        }
+      );
+      return false;
+    }
+    return true;
+  }
   @override
   Widget build(BuildContext context) {
     // Inside this widget tree, we have three buttons that trigger some Action -
@@ -157,7 +185,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                           // Update orderModel, then notify all descendants.
                           // Bad practice since I accessed order field directly.
                           orderModel.order.stalls.add(stall);
-                          orderModel.editOrderModel(order: orderModel);
+                          orderModel.editOrderModel(order: orderModel.order);
 
                           // TRIGGER AddStallAction action, which takes in our newly created stall.
                           // The reducer will add this newly created stall and add it to our existing list
@@ -191,28 +219,48 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                 child: new StoreConnector<AppState, Store<AppState>>(
                   converter: (store) => store,
                   builder: (_, store){
-                    return new FlatButton(
-                      padding: new EdgeInsets.all(10.0),
-                      onPressed: (){
-                        //TRIGGER SubmitOrderAction.
-                        Optional<Order> newOrder = store.state.currentOrder;
-                        // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                        store.dispatch(new OrderAction(order: newOrder));
+                    return new ScopedModelDescendant<OrderModel>(
+                      builder: (context, child, orderModel) {
+                        return new FlatButton(
+                          padding: new EdgeInsets.all(10.0),
+                          onPressed: () async {
+                            // Check if all inputs (added stalls and associated dishes) are correct before placing the order.
+                            bool orderIsValid = await _validateOrder(orderModel);
+                            if (!orderIsValid) return;
+                            //TRIGGER SubmitOrderAction.
+                            Optional<Order> newOrder = store.state.currentOrder;
+                            // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                            //store.dispatch(new OrderAction(order: newOrder));
+                            print("Order placed.");
 
-                        // Navigate to a page to view ur order
+                            // Navigate to a page to view ur order
 
-                        print("Order placed.");
-                      },
-                      child: new Container(
-                        width: MediaQuery.of(context).size.width,
-                        child: new Text("Place Order",
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                              color: Colors.green,
-                              fontSize: 17.0
+                            print("orderModel in placeorderpage is ${widget.orderModel}");
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) {
+                                      return new PlacedOrderSummaryPage(widget.orderModel);
+                                    }
+                                )
+                            );
+
+
+
+
+                          },
+                          child: new Container(
+                            width: MediaQuery.of(context).size.width,
+                            child: new Text("Place Order",
+                              textAlign: TextAlign.center,
+                              style: new TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 17.0
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      },
                     );
                   },
 
@@ -303,113 +351,130 @@ class _AddStallCardState extends State<AddStallCard> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreProvider<AppState>(
-      store: store,
-      child: new Container(
-        // bottom padding for the card
-        padding: new EdgeInsets.only(bottom: 15.0),
-        child: new Column(
-          children: <Widget>[
+    return new ScopedModelDescendant<OrderModel>(
+      builder: (context, child, orderModel) {
+        return new Container(
+          // bottom padding for the card
+          padding: new EdgeInsets.only(bottom: 15.0),
+          child: new Column(
+            children: <Widget>[
 
-            // The title of the card, which is the stall name
-            new Container(
-              color: new Color(0xFF9A9A9A),
-              padding: new EdgeInsets.all(15.0),
-              child: new Row(
-                children: <Widget>[
-                  new Text(widget.stall.identifier.name,
-                    // The grey part of the card
-                    style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 17.0
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // The white part of the card.
-            new Container(
-              color: Colors.white,
-              padding: new EdgeInsets.all(10.0),
-              // dishes for this particular stall. Remember each card represents one stall.
-              child: new Column(
-                children: <Widget>[
-                  // The ListView wraps all dishes in this card. Remember each card represents one stall.
-                  new Container(
-                    height: 150.0,
-                    child: new ScopedModelDescendant<OrderModel>(
-
-                      builder: (context, child, orderModel) {
-                        print("inside list of dishes, dishes.length is ${widget.stall.dishes?.length}");
-                        return new ListView.builder(
-                            itemCount: widget.stall.dishes?.length ?? 0,
-                            itemBuilder: (BuildContext context, int index) {
-                              // A column consists of the string for stall name and a divider.
-                              return new Column(
-                                children: <Widget>[
-                                  new Row(
-                                    children: <Widget>[
-                                      new Expanded(
-                                        child: new Container(
-                                          padding: new EdgeInsets.all(10.0) ,
-                                          child: new Text(widget.stall.dishes[index].name,
-                                            style: new TextStyle(fontSize: 20.0,),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  new Divider(
-                                    color: Colors.black,
-                                    height: 3.0,
-                                  )
-                                ],
-                              );
-
-                            }
-                        );
-                      },
-                    ),
-                  ),
-
-                  // This is the +Add dish button
-                  new Row(
+              // The title of the card, which is the stall name
+              new Container(
+                color: new Color(0xFF9A9A9A),
+                padding: new EdgeInsets.all(15.0),
+                child: new GestureDetector(
+                  onTap: () {
+                    print("fuck");
+                  },
+                  onDoubleTap: () {
+                    print("double tapped title");
+                  },
+                  onLongPress: () {
+                    orderModel.order.stalls.removeWhere((stall) => stall.identifier == widget.stall.identifier);
+                    orderModel.notifyListeners();
+                    for (int i = 0; i < orderModel.order.stalls.length; i++) {
+                      print("remaining dish: " + orderModel.order.stalls[i].toString());
+                    }
+                  },
+                  child: new Row(
                     children: <Widget>[
-                      new Padding(padding: new EdgeInsets.all(16.0)), // Just some space to the left.
-                      new ScopedModelDescendant<OrderModel>(
-                        builder: (context, child, orderModel){
-                          return new FlatButton(
-                            padding: new EdgeInsets.all(10.0),
-                            onPressed: () async {
-                              // AddDishAction is dispatched. Create a new dish and add it to this
-                              // particular stall. This addStallCard widget is rebuilt with the
-                              // newly added dish.
-                              Dish dish = await _addDishDialog();
-
-                              if (dish == null) return;
-
-                              // update our orderModel
-                              widget.stall.dishes.add(dish);
-                              print("indise add dish button, this particular stall's dish lengh is ${widget.stall.dishes.length}");
-                              orderModel.editOrderModel(order: orderModel); // notify
-
-                              // The reducer shd create new state w a new Order obj w new stall w one more dish.
-                              //store.dispatch(new AddDishAction(stall: widget.stall, dish: dish));
-
-                              print("dish added: " + dish.name);
-                            },
-                            child: new Text("+ Add dish"),
-                          );
-                        },
+                      new Text(widget.stall.identifier.name,
+                        // The grey part of the card
+                        style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 17.0
+                        ),
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+
+              // The white part of the card.
+              new Container(
+                color: Colors.white,
+                padding: new EdgeInsets.all(10.0),
+                // dishes for this particular stall. Remember each card represents one stall.
+                child: new Column(
+                  children: <Widget>[
+                    // The ListView wraps all dishes in this card. Remember each card represents one stall.
+                    new Container(
+                      height: 150.0,
+                      child: new ScopedModelDescendant<OrderModel>(
+
+                        builder: (context, child, orderModel) {
+                          print("inside list of dishes, dishes.length is ${widget.stall.dishes.isEmpty ? 0 :  widget.stall.dishes.length}");
+                          return new ListView.builder(
+                              itemCount: widget.stall.dishes?.length ?? 0,
+                              itemBuilder: (BuildContext context, int index) {
+                                // A column consists of the string for stall name and a divider.
+                                return new Column(
+                                  children: <Widget>[
+                                    new Row(
+                                      children: <Widget>[
+                                        new Expanded(
+                                          child: new Container(
+                                            padding: new EdgeInsets.all(10.0) ,
+                                            child: new Text(widget.stall.dishes[index].name,
+                                              style: new TextStyle(fontSize: 20.0,),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    new Divider(
+                                      color: Colors.black,
+                                      height: 3.0,
+                                    )
+                                  ],
+                                );
+
+                              }
+                          );
+                        },
+                      ),
+                    ),
+
+                    // This is the +Add dish button
+                    new Row(
+                      children: <Widget>[
+                        new Padding(padding: new EdgeInsets.all(16.0)), // Just some space to the left.
+                        new ScopedModelDescendant<OrderModel>(
+                          builder: (context, child, orderModel){
+                            return new FlatButton(
+                              padding: new EdgeInsets.all(10.0),
+                              onPressed: () async {
+                                // AddDishAction is dispatched. Create a new dish and add it to this
+                                // particular stall. This addStallCard widget is rebuilt with the
+                                // newly added dish.
+                                Dish dish = await _addDishDialog();
+
+                                if (dish == null) return;
+
+                                // update our orderModel
+                                widget.stall.dishes.add(dish);
+                                print("indise add dish button, this particular stall's dish lengh is ${widget.stall.dishes.length}");
+                                orderModel.editOrderModel(order: orderModel.order); // notify
+                                print("indise add dish button, this particular stall's dish lengh is ${orderModel.order.stalls[0].dishes.length}");
+                                // The reducer shd create new state w a new Order obj w new stall w one more dish.
+                                //store.dispatch(new AddDishAction(stall: widget.stall, dish: dish));
+
+                                print("dish added: " + dish.name);
+                              },
+                              child: new Text("+ Add dish"),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

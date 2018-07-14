@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 ///     mins
 ///
 /// The default font size of the number is ~2x larger than the words to make it conspicuous.
+///
+/// Note that the constructed object is an Expanded widget. Place it in a Row or Col.
 class QuantityDisplay extends StatefulWidget {
   /// The word(s) in the first row
   QuantityDisplayElement _head;
@@ -55,7 +57,7 @@ class QuantityDisplayState extends State<QuantityDisplay> {
 
           new Text("${widget._tail.content}",
             style: new TextStyle(
-                fontSize: widget._quantity.fontSize ?? 16.0
+                fontSize: widget._tail.fontSize ?? 16.0
             ),
           )
         ],

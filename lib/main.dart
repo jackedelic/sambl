@@ -41,7 +41,7 @@ void main() {
 }
 
 Widget defaultPage(AppStatusFlags flag) {
-  return new HomePage();
+//  return new HomePage();
   switch (flag) {
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
@@ -77,6 +77,7 @@ class MyApp extends StatelessWidget {
       child: new MaterialApp(
         title: 'Flutter Demo',
         theme: new ThemeData(
+          fontFamily: "",
           primaryColor: MyColors.mainRed,
           primarySwatch: MyColors.mainRedSwatches, // When ExpansionTile expands, the text turns this color
           inputDecorationTheme: new InputDecorationTheme( // TextField deco color (baseline, labelText etc)
