@@ -43,7 +43,7 @@ class SignInPage extends StatelessWidget {
       return store.state.currentAppStatus;
     },
     builder: (context,status) {
-      if (true || status == AppStatusFlags.unauthenticated ) {
+      if (status != AppStatusFlags.unauthenticated) {
         Navigator.of(context).popUntil(ModalRoute.withName('/'));
         return defaultPage(status);
       } else {

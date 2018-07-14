@@ -23,7 +23,7 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
 
 
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  //final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
 
   @override
