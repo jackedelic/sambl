@@ -32,7 +32,8 @@ class SelectHawkerCenterAction implements RunnableAction, WriteAction {
 
   SelectHawkerCenterAction(HawkerCenter center): this.toWrite = center;
 
-  void run(Store<AppState> store) {
+  void run(Store<AppState> store) async {
+    await CombinedSubscriber.instance().remove(name: 'openOrderListSubscription');
     CombinedSubscriber.instance().add(
       name: 'openOrderListSubscription', 
       subscription: toOpenOrderListSubscription(

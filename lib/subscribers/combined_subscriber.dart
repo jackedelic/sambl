@@ -13,10 +13,11 @@ class CombinedSubscriber {
 
   CombinedSubscriber(): this._subscriptions = new Map<String,StreamSubscription>();
 
-  void remove({@required String name}) {
-    _subscriptions[name].cancel();
-    _subscriptions.remove(name);
-    print('current list of subscriptions' + _subscriptions.keys.toString());
+  Future<void> remove({@required String name}) async {
+    return await _subscriptions[name].cancel().then((_) {
+      _subscriptions.remove(name);
+      print('current list of subscriptions' + _subscriptions.keys.toString());
+    });
   }
 
   Future<void> removeAll() async {
