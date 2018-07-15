@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:quiver/core.dart';
 import 'package:sambl/widgets/pages/available_hawker_center_page/available_hawker_center_page.dart';
+import 'package:sambl/state/app_state.dart';
 
 class OrderLayout extends StatelessWidget {
   @override
@@ -32,22 +35,30 @@ class OrderLayout extends StatelessWidget {
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Expanded(
-                        child: new GestureDetector(
-                          onTap:() {
-                            print("You tapped 'From: ... ' box");
-                            Navigator.push(context,
-                                new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
-                            );
-                          },
-                          child: new Text("From: ",
-                            style: new TextStyle(
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
+                      StoreConnector<AppState, AppState>( //
+                        converter: (store) => store.state,
+
+                        builder: (_, appState) {
+                          return new Expanded(
+                            child: new GestureDetector(
+                              onTap:() {
+                                print("You tapped 'From: ... ' box");
+                                print("in order layout, openOrderList is ${appState.openOrderList}");
+                                Navigator.push(context,
+                                    new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
+                                );
+                              },
+                              child: new Text("Delivering from: ${appState.currentHawkerCenter.isPresent ? appState.currentHawkerCenter.value.name : "Press to select a hawker center"}",
+                                style: new TextStyle(
+                                    fontSize: 17.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        }
+
                       )
                     ],
                   ),

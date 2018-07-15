@@ -32,7 +32,6 @@ class _AvailableHawkerCenterPageState extends State<AvailableHawkerCenterPage> {
           converter: (store) => store.state.availableHawkerCenter,
           builder: (_, availableHawkerCenter) {
             print("currently app state's hawker center list is $availableHawkerCenter");
-            print("currently app state's current hawker center is ${store.state.currentHawkerCenter}");
             return RefreshIndicator(
               onRefresh: _refreshList,
               child: ListView.builder(
@@ -65,47 +64,53 @@ class _HawkerCenterTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 5.0),
       child: Material(
         color: Colors.white,
-        child: InkWell(
-          splashColor: MyColors.mainBackground,
-          onTap: () {
-            print("tapped the card of hawker center: ${this.hawkerCenter}");
-            store.dispatch(new SelectHawkerCenterAction(this.hawkerCenter));
-            print('''hawker center ${this.hawkerCenter.name} selected. 
-            ''');
-            Navigator.of(context).pop();
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
-            child: new Row(
-              children: <Widget>[
-                // name of this particular hawker center
+        child: StoreConnector<AppState, Store<AppState>>(
+          converter: (store) => store,
+          builder: (_, store) {
+            return InkWell(
+              splashColor: MyColors.mainBackground,
+              onTap: () {
+                print("tapped the card of hawker center: ${this.hawkerCenter}");
+                // subtle diff between this store and that store
+                store.dispatch(new SelectHawkerCenterAction(this.hawkerCenter));
+                print('''current hawker center is ${store.state.currentHawkerCenter} . 
+              ''');
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 15.0),
+                child: new Row(
+                  children: <Widget>[
+                    // name of this particular hawker center
 
 
-                new Expanded(
-                  flex: 4,
-                  child: new Center(
-                    child: new Text("${this.hawkerCenter.name}",
-                      style: const TextStyle(
-                        fontSize: 20.0
+                    new Expanded(
+                      flex: 4,
+                      child: new Center(
+                        child: new Text("${this.hawkerCenter.name}",
+                          style: const TextStyle(
+                              fontSize: 20.0
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+
+                    // distance from user
+                    new Expanded(
+                      flex: 1,
+                      child: new Center(
+                        child: new Text(" KM",
+                          style: const TextStyle(
+                              fontSize: 20.0
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-
-                // distance from user
-                new Expanded(
-                  flex: 1,
-                  child: new Center(
-                    child: new Text(" KM",
-                      style: const TextStyle(
-                        fontSize: 20.0
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );

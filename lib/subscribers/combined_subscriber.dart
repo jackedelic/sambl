@@ -44,9 +44,13 @@ class CombinedSubscriber {
     print('current list of subscriptions' + _subscriptions.keys.toString());
   }
 
-  void removeWhere(bool test(String name, StreamSubscription sub)) {
-    _subscriptions.removeWhere(test);
-    print('current list of subscriptions' + _subscriptions.keys.toString());
+  Future<void> removeWhere(bool test(String name, StreamSubscription sub)) {
+    return Stream.fromIterable(_subscriptions.entries.where((entry) => test(entry.key,entry.value)))
+        .asyncMap((entry) => entry.value.cancel())
+        .toList()
+        .then((_) {
+      _subscriptions.removeWhere(test);
+    });
   }
 
   StreamSubscription get({@required String name}) {
