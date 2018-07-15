@@ -1,24 +1,24 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_redux/flutter_redux.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:quiver/core.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 
-import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/async_action/verify_user.dart';
+import 'package:sambl/subscribers/subscription_converter.dart';
+import 'package:sambl/subscribers/combined_subscriber.dart';
+
 
 
   final ThunkAction<AppState> signInWithGoogleAction = (Store<AppState> store) async {
     print("inside google_authentication.dart, gonna handle google sign in");
     await _handleGoogleSignIn()
       .then((user) {
-      print("gonna dispatch verify user");
-        store.dispatch(new VerifyUserAction(user));
-        print("finished dispatching");
+
+        CombinedSubscriber.instance().add(name: "userSubscription", 
+          subscription: toUserSubscription(user,store));
+
       })
       .catchError((error) => print(error));
   };

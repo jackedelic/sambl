@@ -1,11 +1,17 @@
+import 'dart:core';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'delivering_from_layout.dart';
 import 'order_layout.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
 import 'package:sambl/main.dart';
+
+import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/state/app_state.dart';
+import 'package:sambl/async_action/sign_out.dart';
+
 /*
 * This is the first page a signed in user sees when opening the app.
 * It has two big buttons, 1) letting user to choose whether to deliver food for others
@@ -53,148 +59,125 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return new Scaffold(
       backgroundColor: MyColors.mainBackground,
       body: new Container(
-              decoration: new BoxDecoration(
-                image: new DecorationImage(
-                    image: new AssetImage("assets/images/home_page_background.jpg"),
-                    fit: BoxFit.cover,
-                    )
+          decoration: new BoxDecoration(
+              image: new DecorationImage(
+                image: new AssetImage("assets/images/home_page_background.jpg"),
+                fit: BoxFit.cover,
+              )
+          ),
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+
+              new Padding(
+                padding: new EdgeInsets.only(bottom: 50.0),
+                child: new Text(
+                  'SamBl',
+                  style: new TextStyle(
+                    fontSize: 70.0,
+                    fontFamily: "Indie Flower", // Just a dummy fontfamily
+                    color: MyColors.mainRed,
+                  ),
+
+                ),
               ),
-              child: new Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
 
-                        new Padding(
-                          padding: new EdgeInsets.only(bottom: 50.0),
-                          child: new Text(
-                            'SamBl',
-                            style: new TextStyle(
-                              fontSize: 70.0,
-                              fontFamily: "Indie Flower", // Just a dummy fontfamily
-                              color: MyColors.mainRed,
-                            ),
+              // The center layout when orderbutton is selected.
+              _centerLayout,
 
-                          ),
+
+              // This row contains two radio buttons "order" and "deliver"
+
+              new Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+
+                  // 'Order' button
+                  new Container(
+                    child: new FlatButton(
+                      child: new Container(
+                        child:  new Text("Order",
+                          style: new TextStyle(color: Colors.white),
                         ),
-
-                        // The center layout when orderbutton is selected.
-                        _centerLayout,
-
-
-                      // This row contains two radio buttons "order" and "deliver"
-
-                       new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-
-                          // 'Order' button
-                          new Container(
-                            child: new FlatButton(
-                              child: new Container(
-                                child:  new Text("Order",
-                                  style: new TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              onPressed: (){
-                                setState(() {
-                                  if (_orderButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
-                                  _orderButtonColor = MyColors.mainRed;
-                                  _deliverButtonColor = MyColors.semiTransparent[100];
-                                  _centerLayout = new OrderLayout();
-                                  //_toggleFontColor();
-                                });
-                              },
-                            ),
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.only(topLeft: new Radius.circular(10.0), bottomLeft: new Radius.circular(10.0)),
-                              color: _orderButtonColor,
-                            ),
-                          ),
-
-                          // Invisible divider between 'order' and 'Delievries' buttons
-
-                          // 'Deliveries' button
-                          new Container(
-                            child: new FlatButton(
-                              child: new Container(
-                                child:  new Text("Deliveries",
-                                  style: new TextStyle(color: Colors.white),
-                                ),
-                                color: Colors.transparent,
-                              ),
-                              onPressed: (){
-                                setState(() {
-                                  if (_deliverButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
-                                  _deliverButtonColor = MyColors.mainRed;
-                                  _orderButtonColor = MyColors.semiTransparent[100];
-                                  _centerLayout = new DeliveringFromLayout();
-                                 // _toggleFontColor();
-
-                                });
-                              },
-
-                            ),
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.only(topRight: new Radius.circular(10.0), bottomRight: new Radius.circular(10.0)),
-                              color: _deliverButtonColor,
-                            ),
-                          ),
-
-                        ],
                       ),
+                      onPressed: (){
+                        setState(() {
+                          if (_orderButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
+                          _orderButtonColor = MyColors.mainRed;
+                          _deliverButtonColor = MyColors.semiTransparent[100];
+                          _centerLayout = new OrderLayout();
+                          //_toggleFontColor();
+                        });
+                      },
+                    ),
+                    decoration: new BoxDecoration(
+                      borderRadius: new BorderRadius.only(topLeft: new Radius.circular(10.0), bottomLeft: new Radius.circular(10.0)),
+                      color: _orderButtonColor,
+                    ),
+                  ),
+
+                  // Invisible divider between 'order' and 'Delievries' buttons
+
+                  // 'Deliveries' button
+                  new Container(
+                    child: new FlatButton(
+                      child: new Container(
+                        child:  new Text("Deliveries",
+                          style: new TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.transparent,
+                      ),
+                      onPressed: (){
+                        setState(() {
+                          if (_deliverButtonColor == MyColors.mainRed) return; // prevent the following lines from executing
+                          _deliverButtonColor = MyColors.mainRed;
+                          _orderButtonColor = MyColors.semiTransparent[100];
+                          _centerLayout = new DeliveringFromLayout();
+                          // _toggleFontColor();
+
+                        });
+                      },
+
+                    ),
+                    decoration: new BoxDecoration(
+                      borderRadius: new BorderRadius.only(topRight: new Radius.circular(10.0), bottomRight: new Radius.circular(10.0)),
+                      color: _deliverButtonColor,
+                    ),
+                  ),
+
+                ],
+              ),
 
 
 
 
-                       // Button that navigates to another route
-                        new Container(
-                          margin: new EdgeInsets.only(top: 150.0  ),
-                          child: new FlatButton(
-                            onPressed: (){
-                              if (_orderButtonColor == MyColors.mainRed) {
-                                Navigator.pushNamed(context, "/OpenOrderListPage");
-                              } else if (_deliverButtonColor == MyColors.mainRed) {
-                                Navigator.pushNamed(context, "/CreateOpenOrderPage");
-                              }
-                            },
-                            child: new Icon(Icons.arrow_forward_ios, color: Colors.white,),
+              // Button that navigates to another route
+              new Container(
+                margin: new EdgeInsets.only(top: 150.0  ),
+                child: new FlatButton(
+                  onPressed: (){
+                    if (_orderButtonColor == MyColors.mainRed) {
+                      Navigator.pushNamed(context, "/OpenOrderListPage");
+                    } else if (_deliverButtonColor == MyColors.mainRed) {
+                      Navigator.pushNamed(context, "/CreateOpenOrderPage");
+                    }
+                  },
+                  child: new Icon(Icons.arrow_forward_ios, color: Colors.white,),
 
-                          ),
-                          decoration: new BoxDecoration(
-                            borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
-                            color: MyColors.semiTransparent,
-                          ),
-
-
-                        )
-
-                      ],
-                    )
-            ),
-      drawer: new Drawer(
-        child: new ListView(
-          children: <Widget>[
-            new DrawerHeader(
-                child: new CircleAvatar(
-                  child: new Text('J'),
-                  backgroundColor: Color.fromRGBO(247, 64, 106, 1.0),
+                ),
+                decoration: new BoxDecoration(
+                  borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
+                  color: MyColors.semiTransparent,
                 ),
 
-            ),
-            new ListTile(
-              title: new Text("Profile"),
 
-            ),
-            new ListTile(
-              title: new Text("Settings"),
+              )
 
-            ),
-            new ListTile(
-              title: new Text("Account"),
-            )
-          ],
-        ),
+            ],
+          )
       ),
+
     );
   }
 }

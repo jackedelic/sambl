@@ -7,7 +7,6 @@ import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/order_action.dart';
 import 'package:sambl/main.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -24,10 +23,7 @@ import 'package:numberpicker/numberpicker.dart';
 /// home page.
 class CreateOpenOrderMainLayout extends StatefulWidget {
 
-  /// Constructor that receives the OpenOrder obj.
-  CreateOpenOrderMainLayout() {
-
-  }
+  CreateOpenOrderMainLayout();
 
   @override
   _CreateOpenOrderMainLayoutState createState() =>
@@ -35,6 +31,7 @@ class CreateOpenOrderMainLayout extends StatefulWidget {
 }
 
 class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
+
   TextEditingController pickUpPtController = new TextEditingController();
 
 
@@ -107,6 +104,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                             color: MyColors.borderGrey, width: 1.8),
                         borderRadius:
                             new BorderRadius.all(new Radius.circular(15.0))),
+
                     // This is the closing time button that shows time picker onpressed.
                     child: new ScopedModelDescendant<Info>(
                       builder: (context, child, info){
@@ -145,6 +143,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                               color: MyColors.borderGrey, width: 1.8),
                           borderRadius:
                               new BorderRadius.all(new Radius.circular(15.0))),
+
                       // This is the eta button that shows time picker on pressed.
                       child: new ScopedModelDescendant<Info>(
                         builder: (context, child, info){
@@ -170,6 +169,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                 ],
               ),
             ),
+
 
         // Just some space btwn the two rows
         new Padding(

@@ -1,12 +1,7 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:sambl/model/hawker_center.dart';
 import 'package:sambl/model/order_detail.dart';
 
 export 'package:sambl/model/hawker_center.dart';
-
 
 class Dish {
   bool isPriceSpecified;
@@ -103,9 +98,12 @@ class Order {
 
   final List<Stall> stalls;
   final OrderDetail orderDetail;
-  Order(List<Stall> list, OrderDetail detail): this.stalls = list, this.orderDetail = detail;
+  final bool isPaid;
+  Order(List<Stall> list, OrderDetail detail,{bool isPaid = false}): 
+    this.stalls = list, this.orderDetail = detail, this.isPaid = isPaid;
   
-  Order.empty(OrderDetail detail): this.orderDetail = detail, this.stalls = new List<Stall>();
+  Order.empty(OrderDetail detail): 
+    this.orderDetail = detail, this.stalls = new List<Stall>(), this.isPaid = false;
 
 
   Order addDish(Dish dish, HawkerCenterStall stallIdentifier) {

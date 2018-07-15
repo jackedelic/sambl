@@ -5,15 +5,18 @@ import 'package:quiver/core.dart';
 import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
-import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/order_action.dart'; // Action
+import 'package:sambl/state/app_state.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
+
 import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_widget.dart';
 import 'package:sambl/widgets/pages/placed_order_summary_page/placed_order_summary_page.dart';
 
-
+import 'package:sambl/action/write_action.dart';
+import 'package:sambl/model/order.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 class PlaceOrderPage extends StatefulWidget {
   final OrderModel orderModel;
 
@@ -37,41 +40,41 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
   Future<Stall> _addStallDialog() {
     TextEditingController textEditingController = new TextEditingController();
     return showDialog<Stall>(
-      context: context,
-      builder: (BuildContext context) {
-        return new AlertDialog(
-          title: new Text("Stall Name"),
-          content: new Form(
-            key: _addStallFormKey,
-            child: new TextFormField(
-              controller: textEditingController,
-              autofocus: true,
-              decoration: new InputDecoration(
-                errorMaxLines: 2,
-                labelText: 'stall name',
-                hintText: 'eg. Wakanda stall'
+        context: context,
+        builder: (BuildContext context) {
+          return new AlertDialog(
+            title: new Text("Stall Name"),
+            content: new Form(
+              key: _addStallFormKey,
+              child: new TextFormField(
+                controller: textEditingController,
+                autofocus: true,
+                decoration: new InputDecoration(
+                    errorMaxLines: 2,
+                    labelText: 'stall name',
+                    hintText: 'eg. Wakanda stall'
+                ),
+                validator: _validateAddStallForm,
               ),
-              validator: _validateAddStallForm,
             ),
-          ),
-          actions: <Widget>[
-            new FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: new Text("Cancel")),
-            new FlatButton(
-              onPressed: () {
-                if (_addStallFormKey.currentState.validate()) {
-                  Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text), dishes: new List<Dish>());
-                  Navigator.of(context).pop(stall);
-                }
+            actions: <Widget>[
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: new Text("Cancel")),
+              new FlatButton(
+                  onPressed: () {
+                    if (_addStallFormKey.currentState.validate()) {
+                      Stall stall = new Stall(identifier: new HawkerCenterStall(name: textEditingController.text), dishes: new List<Dish>());
+                      Navigator.of(context).pop(stall);
+                    }
 
-              },
-              child: new Text("Add")),
-          ],
-        );
-      }
+                  },
+                  child: new Text("Add")),
+            ],
+          );
+        }
     );
   }
 
@@ -97,13 +100,13 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
       return false;
     } else if ( orderModel.order.stalls.any((stall)=>stall.dishes.isEmpty)) {
       await showDialog<bool>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: new Text("Stall added but no dish added."),
-            content: new Text("Add the dish you want to order. Click the +Add dish button from within the stall card."),
-          );
-        }
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: new Text("Stall added but no dish added."),
+              content: new Text("Add the dish you want to order. Click the +Add dish button from within the stall card."),
+            );
+          }
       );
       return false;
     }
@@ -318,9 +321,9 @@ class _AddStallCardState extends State<AddStallCard> {
                 controller: textEditingController,
                 autofocus: true,
                 decoration: new InputDecoration(
-                  errorMaxLines: 2,
-                  labelText: "What's the dish you want to order?",
-                  hintText: 'eg. butter chicken rice. Extra rice. '
+                    errorMaxLines: 2,
+                    labelText: "What's the dish you want to order?",
+                    hintText: 'eg. butter chicken rice. Extra rice. '
                 ),
                 validator: _validateAddDishForm,
               ),
@@ -480,4 +483,3 @@ class _AddStallCardState extends State<AddStallCard> {
 
 
 }
-

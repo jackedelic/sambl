@@ -1,4 +1,10 @@
+import 'package:quiver/core.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
+import 'package:sambl/main.dart';
+import 'package:sambl/state/app_state.dart';
+
 
 class DeliveringFromLayout extends StatelessWidget {
   @override
@@ -20,6 +26,7 @@ class DeliveringFromLayout extends StatelessWidget {
               child: new Container(width: 1.0, height: 0.0,),
             ),
 
+
             new Flexible(
               flex: 4,
               child: new Column(
@@ -28,12 +35,19 @@ class DeliveringFromLayout extends StatelessWidget {
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Text("Delivering from: ",
-                        style: new TextStyle(
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white
-                        ),
+                      StoreConnector<AppState, Optional<HawkerCenter>>(
+                        converter: (store) => store.state.currentHawkerCenter,
+                        builder: (_, currentHawkerCenter) {
+                          return new Text("Delivering from: ${currentHawkerCenter.value?.name ?? "Press to select a hawker center"}",
+                            style: new TextStyle(
+
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                            ),
+                          );
+                        },
+                        
                       )
                     ],
                   ),

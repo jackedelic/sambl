@@ -6,7 +6,6 @@ import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/order_action.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
 import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:scoped_model/scoped_model.dart';

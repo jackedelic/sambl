@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'dart:core';
-import 'package:sambl/model/order_detail.dart';
-import 'package:sambl/model/hawker_center.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/main.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/quantity_display.dart';
-import 'package:scoped_model/scoped_model.dart';
+
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
+
 /// This class constructs the layout for confirmation page for creating open order. This layout
 /// would be the last tabbarview child in the 'create open order page'.
 /// This layout gives a summary of the open order created by the user and wrap all the information
 /// provided in the previous two tabs (tabbarview children) in [OrderDetail].
 /// This layout uses redux to dispatch DeliverAction with OpenOrder obj.
 class CreateOpenOrderConfirmLayout extends StatefulWidget {
+
+
 
   CreateOpenOrderConfirmLayout() {
 
@@ -48,6 +51,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
 
             new Padding(padding: new EdgeInsets.symmetric(vertical: 10.0)),
             // The summary body
+
             new ScopedModelDescendant<Info>(
               builder: (context, child, info){
                 return new Container(
@@ -76,6 +80,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                         ),
                       ),
 
+
                       // some space between 'pickup pt' row and 'other details' row
                       new Padding(
                         padding: new EdgeInsets.symmetric(vertical: 10.0),
@@ -98,6 +103,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                                   content: "min"
                               ),
                             ),
+
 
 
                             // This wid rep eta
@@ -171,6 +177,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                 );
               },
             ),
+
 
           ],
         )

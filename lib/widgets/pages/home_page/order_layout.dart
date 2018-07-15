@@ -21,26 +21,31 @@ class OrderLayout extends StatelessWidget {
               child: new Container(width: 1.0, height: 0.0,),
             ),
 
+
             new Flexible(
               flex: 4,
               child: new Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
+
+                  // This is the 'From ... ' row.
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new GestureDetector(
-                        onTap:() {
-                          print("You tapped 'From: ... ' box");
-                          Navigator.push(context,
-                              new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
-                          );
-                        },
-                        child: new Text("From: ",
-                          style: new TextStyle(
-                              fontSize: 17.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
+                      new Expanded(
+                        child: new GestureDetector(
+                          onTap:() {
+                            print("You tapped 'From: ... ' box");
+                            Navigator.push(context,
+                                new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
+                            );
+                          },
+                          child: new Text("From: ",
+                            style: new TextStyle(
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white
+                            ),
                           ),
                         ),
                       )
@@ -122,6 +127,7 @@ class OrderLayout extends StatelessWidget {
                   onPressed: () {
                     Navigator.of(context).pushNamed("/OpenOrderListPage");
                   }),
+
             )
 
 

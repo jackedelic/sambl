@@ -1,10 +1,10 @@
+import 'dart:convert';
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location/location.dart';
 
 import 'package:sambl/utility/geo_point_utilities.dart';
-
-import 'dart:convert';
-
-
 
 class HawkerCenterStall {
   String name;
@@ -41,10 +41,16 @@ class HawkerCenter {
     'location': geoPointToMap(this.location),
     'stalls': this.stallList.map<Map<String,dynamic>>((stall) => stall.toJson()).toList()
   };
+
+  Future<double> distance() async {
+    return Location().getLocation
+      .then(mapToGeoPoint)
+      .then((here) => getDistance(here,this.location));
+  }
   
   @override
   String toString() {
-      return json.encode(this.toJson());
+    return json.encode(this.toJson());
   }
   
 }

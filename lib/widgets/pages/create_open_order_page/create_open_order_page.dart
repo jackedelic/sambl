@@ -8,7 +8,6 @@ import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/order_action.dart'; // Action
 import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_app_bar.dart';
@@ -19,8 +18,11 @@ import 'create_open_order_remark_layout.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
 import 'create_open_order_confirm_layout.dart';
 
+
 // temporary model used only within create_order_page folder
 import 'package:sambl/model/order_detail.dart';
+
+import 'package:sambl/state/app_state.dart';
 /*
 * TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
 * TODO: from The Terrace'.
@@ -46,6 +48,7 @@ class CreateOpenOrderPage extends StatefulWidget {
 }
 
 class _CreateOpenOrderPageState extends State<CreateOpenOrderPage> with SingleTickerProviderStateMixin {
+
 TabController _tabController;
 Info info;
   @override
@@ -133,9 +136,10 @@ Info info;
     }
 
     return Container(height: 0.0, width: 0.0,);
+
   }
 
-@override
+  @override
   Widget build(BuildContext context) {
     return new ScopedModel<Info>(
       model: info,
@@ -191,6 +195,7 @@ Info info;
                 ),
 
 
+
                 // Some space in between the list of 'nearby places' above and the arrow button
                 // This Padding widget may have diff padding value than the next page - 'create_open_order_remark_page'
                 // for the purpose of fixing the arrow button and icons at the bottom to the same
@@ -206,6 +211,7 @@ Info info;
                 // some space btwn 'arrow button' and 'bottom icon'
                 new Padding(
                   padding: new EdgeInsets.all(5.0),
+
                 ),
 
                 // The bottom icons
@@ -216,8 +222,10 @@ Info info;
                   ],
                 ),
 
+
                 // This is the confirm button that only appears in the last tab
                 _buildConfirmButton()
+
 
               ],
             )
@@ -259,6 +267,7 @@ class Info extends Model {
     );
   }
 
+
   void editInfo({pickupPoint, hawkerCenter, delivererUid, closingTime, eta, remarks, maxNumberofDishes, remainingNumberofDishes, openOrderUid }){
     this.pickupPoint = pickupPoint ?? this.pickupPoint;
     this.hawkerCenter = hawkerCenter ?? this.hawkerCenter;
@@ -272,4 +281,5 @@ class Info extends Model {
 
     notifyListeners();
   }
+
 }

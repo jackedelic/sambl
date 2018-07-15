@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
+
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
+
 import 'package:sambl/widgets/shared/quantity_display.dart';
 /// This class is widget class wrapping the JioEntry obj. The resulting widget is what is gonna
 /// be displayed onto our jio list page. We wrap it in an Expansion tile.
@@ -48,7 +50,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                   flex: 2,
                   child: new Text("${widget.orderDetail.delivererUid}",
                     style: new TextStyle(
-                        fontSize: 20.0,
+                      fontSize: 20.0,
                     ),
                   ),
                 ),
@@ -60,18 +62,18 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
 
                       // Closing in x mins
                       new QuantityDisplay(
-                        head: new QuantityDisplayElement(
-                          fontSize: 12.0,
-                          content: "Closing in",
-                        ),
-                        quantity: new QuantityDisplayElement(
-                          fontSize: 30.0,
-                          content: "${widget.orderDetail.closingTime.difference(DateTime.now()).inMinutes}"
-                        ),
-                        tail: new QuantityDisplayElement(
-                          fontSize: 12.0,
-                          content: "mins"
-                        )
+                          head: new QuantityDisplayElement(
+                            fontSize: 12.0,
+                            content: "Closing in",
+                          ),
+                          quantity: new QuantityDisplayElement(
+                              fontSize: 30.0,
+                              content: "${widget.orderDetail.closingTime.difference(DateTime.now()).inMinutes}"
+                          ),
+                          tail: new QuantityDisplayElement(
+                              fontSize: 12.0,
+                              content: "mins"
+                          )
                       ),
 
                       // Arriving in y mins
@@ -85,7 +87,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                               content: "${widget.orderDetail.eta.difference(DateTime.now()).inMinutes}"
                           ),
                           tail: new QuantityDisplayElement(
-                            fontSize: 12.0,
+                              fontSize: 12.0,
                               content: "mins"
                           )
                       ),
@@ -101,7 +103,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                               content: "${widget.orderDetail.maxNumberofDishes}"
                           ),
                           tail: new QuantityDisplayElement(
-                            fontSize: 12.0,
+                              fontSize: 12.0,
                               content: "dishes"
                           )
                       ),
@@ -121,7 +123,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                 children: <Widget>[
                   new Text("Pick up location: ${widget.orderDetail.pickupPoint}",
                     style: const TextStyle(
-                      fontSize: 18.0
+                        fontSize: 18.0
                     ),
                   ),
 
@@ -132,9 +134,9 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         new ScopedModelDescendant<OrderModel>(
-                          builder: (context, child, orderModel) {
-                            return new PlaceOrderButton(orderModel);
-                          }
+                            builder: (context, child, orderModel) {
+                              return new PlaceOrderButton(orderModel);
+                            }
                         ), // custom button, defined below this class.
                       ],
                     ),
@@ -163,12 +165,12 @@ class PlaceOrderButton extends StatelessWidget {
         onPressed: () {
           // Tell 'PlaceOrderPage' about this delivererUid
           Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return new PlaceOrderPage(orderModel);
-              }
-            )
+              context,
+              MaterialPageRoute(
+                  builder: (context) {
+                    return new PlaceOrderPage(orderModel);
+                  }
+              )
           );
         },
         child: new Container(
@@ -194,4 +196,5 @@ class OrderModel extends Model {
     this.order = order;
     notifyListeners();
   }
+
 }

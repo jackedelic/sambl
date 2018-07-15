@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:sambl/state/app_state.dart';
 
 class AuthenticationAction {
@@ -20,18 +21,4 @@ class LoginAction extends AuthenticationAction {
 
   LoginAction(this.user);
 
-}
-
-class LoginWhileOrderingAction extends LoginAction {
-  final Order order;
-
-  LoginWhileOrderingAction(User user, Order order) : this.order = order, super(user);
-
-}
-
-class LoginWhileDeliveringAction extends LoginAction {
-  final CombinedDeliveryList deliveryList;
-
-  LoginWhileDeliveringAction(User user, CombinedDeliveryList deliveryList) : 
-    this.deliveryList = deliveryList, super(user);
 }

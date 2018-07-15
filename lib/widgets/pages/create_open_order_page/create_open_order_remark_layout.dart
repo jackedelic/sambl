@@ -7,7 +7,6 @@ import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/action/order_action.dart';
 import 'package:sambl/main.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
@@ -18,10 +17,8 @@ import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_pag
 
 class CreateOpenOrderRemarkLayout extends StatefulWidget {
 
-  /// Constructor that receives the OpenOrder.
-  CreateOpenOrderRemarkLayout() {
 
-  }
+  CreateOpenOrderRemarkLayout();
 
   @override
   _CreateOpenOrderRemarkLayoutState createState() => _CreateOpenOrderRemarkLayoutState();
@@ -72,6 +69,7 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                         // The Increment button
                         new Expanded(
                           flex: 5,
+
                           child: new ScopedModelDescendant<Info>(
                             builder: (context, child, info) {
                               return new IconButton(
@@ -81,6 +79,7 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                                   info.editInfo(maxNumberofDishes: ++_numOfDishes);
                                 },
                               );
+
                             },
                           ),
                         ),
@@ -103,6 +102,7 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                         // The decrement button
                         new Expanded(
                           flex: 5,
+
                           child: new ScopedModelDescendant<Info>(
                             builder: (context, child, info){
                               return new IconButton(

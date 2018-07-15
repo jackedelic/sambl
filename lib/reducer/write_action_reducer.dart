@@ -8,20 +8,25 @@ final Reducer<AppState> writeActionReducer = combineReducers([
   TypedReducer<AppState,WriteAvailableOpenOrderAction>(_writeAvailableOpenOrderReducer),
   TypedReducer<AppState,SelectHawkerCenterAction>(_selectHawkerCenterReducer),
   TypedReducer<AppState,WriteCurrentDeliveryAction>((state,action) => 
-    AppState.delivering(state.currentUser,action.toWrite)),
+    state.copyWith(currentDeliveryList: action.toWrite)),
   TypedReducer<AppState,WriteCurrentOrderAction>((state,action) => 
-    AppState.ordering(state.currentUser, action.toWrite)),
+    state.copyWith(currentOrder: action.toWrite)),
+  TypedReducer<AppState,ChangeAppStatusAction>((state,action) =>
+    state.copyWith(currentAppStatus: action.toWrite)),
+  TypedReducer<AppState,ClearPendingOrderAction>((state,action) => 
+    state.copyWith(currentDeliveryList: state.currentDeliveryList
+      .copyWith(pending: new DeliveryList.absent())))
 ]);
 
 final Reducer<AppState> _writeAvailableHawkerCenterReducer = (state,action) {
-  print(action.toWrite);
-  return state.modify(AppStateFields.availableHawkerCenter, action.toWrite);
+  return state.copyWith(availableHawkerCenter: action.toWrite);
 };
 
 final Reducer<AppState> _writeAvailableOpenOrderReducer = (state,action) {
-  return state.modify(AppStateFields.openOrderList, action.toWrite);
+  return state.copyWith(openOrderList: action.toWrite);
 };
 
 final Reducer<AppState> _selectHawkerCenterReducer = (state,action) {
-  return state.modify(AppStateFields.currentHawkerCenter,action.toWrite);
+  print('selecting hawker center');
+  return state.copyWith(currentHawkerCenter: action.toWrite);
 };
