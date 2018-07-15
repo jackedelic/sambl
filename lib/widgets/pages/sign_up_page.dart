@@ -107,10 +107,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
                      } else if (store.state.currentAppStatus == AppStatusFlags.authenticated){
                        print("authenticated! going to home page");
-
-
-
-
                        print("inside sign in page (going to homepage), list is ${store.state.openOrderList}");
                        Navigator.pushNamed(context, '/HomePage');
                      } else {

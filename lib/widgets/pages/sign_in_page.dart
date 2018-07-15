@@ -25,8 +25,8 @@ class SignInPage extends StatelessWidget {
     builder: (context,status) {
       if (status != AppStatusFlags.unauthenticated) {
         print("in sign in page, unauthenticated.");
-        Navigator.of(context).popUntil(ModalRoute.withName('/'));
-        return defaultPage(status);
+        //Navigator.of(context).popUntil(ModalRoute.withName('/'));
+        //return defaultPage(status);
       } else {
         return new Scaffold(
           key: _formKey,
@@ -103,10 +103,6 @@ class SignInPage extends StatelessWidget {
 
                       } else if (store.state.currentAppStatus == AppStatusFlags.authenticated){
                         print("authenticated! going to home page");
-
-
-
-
                         print("inside sign in page (going to homepage), list is ${store.state.openOrderList}");
                         Navigator.pushNamed(context, '/HomePage');
                       } else {

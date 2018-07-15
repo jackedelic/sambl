@@ -14,10 +14,15 @@ class CombinedSubscriber {
   CombinedSubscriber(): this._subscriptions = new Map<String,StreamSubscription>();
 
   Future<void> remove({@required String name}) async {
-    return _subscriptions[name].cancel().then((_) {
-      _subscriptions.remove(name);
-      print('current list of subscriptions' + _subscriptions.keys.toString());
-    });
+    if (_subscriptions.containsKey(name)) {
+      return this._subscriptions[name].cancel().then((_) {
+        _subscriptions.remove(name);
+        print('current list of subscriptions' + _subscriptions.keys.toString());
+
+      });
+    } else {
+      return new Future(() {return ;});
+    }
   }
 
   Future<void> removeAll() async {

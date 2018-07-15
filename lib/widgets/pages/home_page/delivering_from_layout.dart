@@ -42,7 +42,7 @@ class DeliveringFromLayout extends StatelessWidget {
                             child: Container(
                               child: InkWell(
                                 onTap: () {
-                                  print("You tapped 'From: ... ' box");
+                                  print("You tapped 'From: ... ' box, currentHawkerCenter is present: ${currentHawkerCenter.isPresent}");
                                   Navigator.push(context,
                                       new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
                                   );
