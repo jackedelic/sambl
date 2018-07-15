@@ -4,7 +4,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter/material.dart';
 import 'package:sambl/main.dart';
 import 'package:sambl/state/app_state.dart';
-
+import 'package:sambl/widgets/pages/available_hawker_center_page/available_hawker_center_page.dart';
 
 class DeliveringFromLayout extends StatelessWidget {
   @override
@@ -38,12 +38,24 @@ class DeliveringFromLayout extends StatelessWidget {
                       StoreConnector<AppState, Optional<HawkerCenter>>(
                         converter: (store) => store.state.currentHawkerCenter,
                         builder: (_, currentHawkerCenter) {
-                          return new Text("Delivering from: ${currentHawkerCenter.value?.name ?? "Press to select a hawker center"}",
-                            style: new TextStyle(
+                          return Expanded(
+                            child: Container(
+                              child: InkWell(
+                                onTap: () {
+                                  print("You tapped 'From: ... ' box");
+                                  Navigator.push(context,
+                                      new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
+                                  );
+                                },
+                                child: new Text("Delivering from: ${currentHawkerCenter.isPresent ? currentHawkerCenter.value.name : "Press to select a hawker center"}",
+                                  style: new TextStyle(
 
-                                fontSize: 17.0,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white
+                                      fontSize: 17.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white
+                                  ),
+                                ),
+                              ),
                             ),
                           );
                         },
