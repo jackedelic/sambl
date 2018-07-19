@@ -23,6 +23,12 @@ class _AvailableHawkerCenterPageState extends State<AvailableHawkerCenterPage> {
     setState((){});
     return null;
   }
+
+  Widget _displayCircularProgressIndicator() {
+    print("circular progressing in available_hawker_center_page");
+    return Center(child: new CircularProgressIndicator());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,16 +38,21 @@ class _AvailableHawkerCenterPageState extends State<AvailableHawkerCenterPage> {
           converter: (store) => store.state.availableHawkerCenter,
           builder: (_, availableHawkerCenter) {
             print("currently app state's hawker center list is $availableHawkerCenter");
-            return RefreshIndicator(
-              onRefresh: _refreshList,
-              child: ListView.builder(
-                padding: const EdgeInsets.only(top: 5.0),
-                itemCount: availableHawkerCenter.length,
-                itemBuilder: (_, index) {
-                  return _HawkerCenterTile(availableHawkerCenter[index]);
-                }
-              ),
-            );
+            if (availableHawkerCenter.length > 0) {
+              return RefreshIndicator(
+                onRefresh: _refreshList,
+                child: ListView.builder(
+                    padding: const EdgeInsets.only(top: 5.0),
+                    itemCount: availableHawkerCenter.length,
+                    itemBuilder:  (_, index) {
+                      return _HawkerCenterTile(availableHawkerCenter[index]);
+                    }
+                )
+              );
+            } else {
+              return _displayCircularProgressIndicator();
+            }
+
           },
         )
     );
@@ -73,7 +84,7 @@ class _HawkerCenterTile extends StatelessWidget {
                 print("tapped the card of hawker center: ${this.hawkerCenter}");
                 // subtle diff between this store and that store
                 store.dispatch(new SelectHawkerCenterAction(this.hawkerCenter));
-                print('''current hawker center is ${store.state.currentHawkerCenter} . 
+                print('''current hawker center is ${store.state.currentHawkerCenter}. 
               ''');
                 Navigator.of(context).pop();
               },

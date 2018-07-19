@@ -17,6 +17,7 @@ import 'create_open_order_main_layout.dart';
 import 'create_open_order_remark_layout.dart';
 import 'package:sambl/widgets/shared/bottom_icon.dart';
 import 'create_open_order_confirm_layout.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
 
 
 // temporary model used only within create_order_page folder
@@ -63,6 +64,7 @@ Info info;
 
     //our scopedmodel
     info = new Info();
+
   }
 
   /// button to navigate to the next tab. In the last tab (tab controller's index == 2), the button when pressed
@@ -91,45 +93,59 @@ Info info;
 
   Widget _buildConfirmButton() {
     if (_tabController.index == 2) {
-      return new ScopedModelDescendant<Info>(
-        builder: (context, child , info){
-          return new GestureDetector(
-            onTap: () async {
-              if (info.closingTime == null || info.eta == null) {
-                await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return new AlertDialog(
-                      title: new Text("Missing something?"),
-                      content: new Text("${info.closingTime == null && info.eta == null ?
-                      'you did not specify closing time and estimated time of arrival.' :
-                      (info.closingTime == null ? 'Don\'t forget closing time.' : 'Don\'t forget estimated time of arrival.')
-                      }"),
+      return StoreConnector<AppState, Optional<HawkerCenter>>(
+        converter: (store) => store.state.currentHawkerCenter,
+        builder: (_, currentHawkerCenter) {
+          return new ScopedModelDescendant<Info>(
+            builder: (context, child , info){
+              return new GestureDetector(
+                onTap: () async {
+                  if (info.closingTime == null || info.eta == null) {
+                    await showDialog(
+                        context: context,
+                        builder: (context) {
+                          return new AlertDialog(
+                            title: new Text("Missing something?"),
+                            content: new Text("${info.closingTime == null && info.eta == null ?
+                            'you did not specify closing time and estimated time of arrival.' :
+                            (info.closingTime == null ? 'Don\'t forget closing time.' : 'Don\'t forget estimated time of arrival.')
+                            }"),
+                          );
+                        }
                     );
+                  } else {
+                    store.dispatch(new CreateOpenOrderAction(new OrderDetail(
+                        maxNumberofDishes: info.maxNumberofDishes,
+                        closingTime: info.closingTime,
+                        eta: info.eta,
+                        pickupPoint: info.pickupPoint,
+                        remarks: "first order to be submitted",
+                        hawkerCenter: currentHawkerCenter.value
+                    )));
+                    print("inside create_open_order_page, pressed confirm already. ");
+                    Navigator.popAndPushNamed(context, '/OrdererListPage');
                   }
-                );
-              } else {
-                Navigator.popAndPushNamed(context, '/OrdererListPage');
-              }
 
+                },
+                child: new Container(
+                  margin: new EdgeInsets.only(top: 12.0),
+                  decoration: new BoxDecoration(
+                      color: info.closingTime == null && info.eta == null ? Colors.grey : MyColors.mainRed,
+                      borderRadius: new BorderRadius.vertical(bottom: new Radius.circular(20.0))
+                  ),
+                  width: 344.0,
+                  height: 50.0,
+                  child: new Center(
+                      child: new Text("Confirm",
+                        style: new TextStyle(
+                            color: Colors.white,
+                            fontSize: 20.0
+                        ),
+                      )
+                  ),
+                ),
+              );
             },
-            child: new Container(
-              margin: new EdgeInsets.only(top: 12.0),
-              decoration: new BoxDecoration(
-                  color: info.closingTime == null && info.eta == null ? Colors.grey : MyColors.mainRed,
-                  borderRadius: new BorderRadius.vertical(bottom: new Radius.circular(20.0))
-              ),
-              width: 344.0,
-              height: 50.0,
-              child: new Center(
-                  child: new Text("Confirm",
-                    style: new TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0
-                    ),
-                  )
-              ),
-            ),
           );
         },
       );
@@ -162,12 +178,24 @@ Info info;
                   child: new Row(
                     children: <Widget>[
                       new Expanded(
-                        child: new Text("Delivering from:",
-                          textAlign: TextAlign.center,
-                          style: new TextStyle(
-                              fontSize: 20.0
-                          ),
+                        child: StoreConnector<AppState, Optional<HawkerCenter>>(
+                          converter: (store) => store.state.currentHawkerCenter,
+                          builder: (_, currentHawkerCenter) {
+                            if (currentHawkerCenter.isPresent) {
+                              return new Text("Delivering from: ${currentHawkerCenter.value.name}",
+                                textAlign: TextAlign.center,
+                                style: new TextStyle(
+                                    fontSize: 18.0
+                                ),
 
+                              );
+                            } else {
+                              // display a text along the lines of "Select a fucking hawker center'
+                              // but it is unnecessary since deliverer will not get to this page
+                              // in the first place if he does not select a fucking hawker center.
+                            }
+
+                          },
                         ),
                       )
                     ],

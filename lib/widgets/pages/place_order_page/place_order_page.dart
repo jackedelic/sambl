@@ -17,6 +17,7 @@ import 'package:sambl/action/write_action.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:sambl/action/write_action.dart';
 class PlaceOrderPage extends StatefulWidget {
   final OrderModel orderModel;
 
@@ -98,7 +99,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
           }
       );
       return false;
-    } else if ( orderModel.order.stalls.any((stall)=>stall.dishes.isEmpty)) {
+    } else if (orderModel.order.stalls.any((stall)=>stall.dishes.isEmpty)) {
       await showDialog<bool>(
           context: context,
           builder: (context) {
@@ -131,11 +132,26 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                 children: <Widget>[
                   new Padding(
                     padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                    child:  new Text("Delivering from",
-                      style: new TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child:  StoreConnector<AppState, HawkerCenter>(
+                      converter: (store) => store.state.currentHawkerCenter.isPresent ? store.state.currentHawkerCenter.value
+                          : null,
+                      builder: (_, hawkerCenter) {
+                        if (hawkerCenter == null) {
+                          return new Text("No hawker center selected",
+                            style: new TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        } else {
+                          return new Text("Delivering from ${hawkerCenter.name}",
+                            style: new TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        }
+                      }
                     ),
                   )
                 ],
@@ -232,9 +248,11 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                             if (!orderIsValid) return;
                             //TRIGGER SubmitOrderAction.
                             Optional<Order> newOrder = store.state.currentOrder;
-                            // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                            //store.dispatch(new OrderAction(order: newOrder));
-                            print("Order placed.");
+//                             The reducer shd create a new state w new Order. Then inform Firebase (async).
+
+                             store.dispatch(PlaceOrderAction(orderModel.order));
+                            print("Order placed. appstate's currentorder is ${store.state.currentOrder}");
+
 
                             // Navigate to a page to view ur order
 

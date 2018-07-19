@@ -19,7 +19,14 @@ class OpenOrderListPage extends StatefulWidget {
   _OpenOrderListPageState createState() => new _OpenOrderListPageState();
 }
 
+
 class _OpenOrderListPageState extends State<OpenOrderListPage> {
+
+  Widget _displayCircularProgressIndicator() {
+    print("circular progressing in open_order_list_page");
+    return Center(child: new CircularProgressIndicator());
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -36,11 +43,28 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
                     children: <Widget>[
                       new Padding(
                         padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                        child:  new Text("Delivering from",
-                          style: new TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        child:  StoreConnector<AppState, HawkerCenter>(
+                          converter: (store) => store.state.currentHawkerCenter.isPresent ? store.state.currentHawkerCenter.value
+                              : null,
+                          builder: (_, hawkerCenter) {
+                            if (hawkerCenter == null) {
+                              return new Text("No hawker center selected",
+                                style: new TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            } else {
+                              return new Text("Delivering from ${hawkerCenter.name}",
+                                style: new TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              );
+                            }
+
+                          },
+
                         ),
                       )
                     ],
@@ -48,27 +72,26 @@ class _OpenOrderListPageState extends State<OpenOrderListPage> {
                   color: Colors.white,
                 ),
 
-                // These are dummies expansion tiles
-                new Expanded(
-                  child: new ListView(
-                    children: <Widget>[
-                      new OpenOrderListWidget(
-                        new OrderDetail(
-                          hawkerCenter: new HawkerCenter(
-                              new GeoPoint(1.314891217509645, 103.7642318178891),
-                              "Clementi Mall food Court",
-                              <HawkerCenterStall>[new HawkerCenterStall(name: "Mixed Rice")],
-                              "64ceajXT6dpCHIf6J9pQ"
-                          ),
-                          pickupPoint: new GeoPoint(1.22, 12.3),
-                          closingTime: DateTime.now(),
-                          eta: DateTime.now().add(new Duration(minutes: 45)),
-                          delivererUid: "2uaFyuY2P8TMgBfBO2IspiqmUV82",
-                          maxNumberofDishes: 4,
-                        ),
-                      ),
-                    ],
-                  ),
+                // These are the list of open orders/ order details for this particular hawker center
+                StoreConnector<AppState, List<OrderDetail>>(
+                  converter: (store) => store.state.openOrderList,
+                  builder: (_, openOrderList) {
+                    if (openOrderList.length > 0) {
+                      return new Expanded(
+                        child: new ListView.builder(
+                            itemCount: openOrderList.length,
+                            itemBuilder: (_, index) {
+                              return new OpenOrderListWidget(openOrderList[index]);
+                            }
+                        )
+                        ,
+                      );
+                    } else {
+                      return _displayCircularProgressIndicator();
+                    }
+
+                  }
+
                 ),
 
               ],

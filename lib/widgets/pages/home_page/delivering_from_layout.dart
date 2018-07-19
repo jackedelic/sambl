@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:quiver/core.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -7,6 +9,29 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/widgets/pages/available_hawker_center_page/available_hawker_center_page.dart';
 
 class DeliveringFromLayout extends StatelessWidget {
+
+  Future<Null> _displayDialog(BuildContext context) {
+    return showDialog<Null>(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: const Text("Missing something..."),
+          content: const Text('''Did you forget to select the hawker 
+center you want to deliver from? ''',
+            style: const TextStyle(
+              fontSize: 16.0
+            ),
+          ),
+          actions: <Widget>[
+            new FlatButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: new Text("Yes I did")
+            )
+          ],
+        );
+      }
+    );
+  }
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -71,13 +96,24 @@ class DeliveringFromLayout extends StatelessWidget {
             ),
 
             // This is the arrow button
-            new Flexible(
-              flex: 1,
-              child: new IconButton(
-                icon: new Icon(Icons.chevron_right, color: Colors.white,),
-                onPressed: () {
-                  Navigator.of(context).pushNamed("/CreateOpenOrderPage");
-                }),
+            new StoreConnector<AppState, Optional<HawkerCenter>>(
+              converter: (store) => store.state.currentHawkerCenter,
+              builder: (_, currentHawkerCenter) {
+                return new Flexible(
+                  flex: 1,
+                  child: new IconButton(
+                      icon: new Icon(Icons.chevron_right, color: Colors.white,),
+                      onPressed: () {
+                        if (currentHawkerCenter.isPresent) {
+                          Navigator.of(context).pushNamed("/CreateOpenOrderPage");
+                        } else {
+                          return _displayDialog(context);
+                        }
+
+                      }),
+                );
+              },
+
             )
 
 
