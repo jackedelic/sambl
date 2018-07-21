@@ -5,7 +5,7 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/main.dart';
 import 'package:sambl/state/app_state.dart';
-import 'package:sambl/async_action/register_user_action.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/async_action/google_authentication.dart';
 import 'package:sambl/action/write_action.dart';

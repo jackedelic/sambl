@@ -30,8 +30,8 @@ class CombinedDeliveryList {
     @required this.pending,
     @required this.approved,
     @required this.paid,
-    @required Optional<OrderDetail> detail
-  }): this.deliveryDetail = detail;
+    @required OrderDetail detail
+  }): this.deliveryDetail = Optional.fromNullable(detail);
 
   CombinedDeliveryList.absent(): 
     this.pending = new DeliveryList.absent(), 
@@ -49,7 +49,7 @@ class CombinedDeliveryList {
       pending: pending ?? this.pending,
       approved: approved ?? this.approved,
       paid: paid ?? this.paid,
-      detail: Optional.fromNullable(detail) ?? this.deliveryDetail
+      detail: detail ?? this.deliveryDetail.orNull
     );
   }
 

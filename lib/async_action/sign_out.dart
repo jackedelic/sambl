@@ -7,6 +7,11 @@ import 'package:sambl/action/authentication_action.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/subscribers/combined_subscriber.dart';
 
+  final ThunkAction<AppState> cancelSignupAction = (Store<AppState> store) async {
+    // call some function
+    store.dispatch(signOutAction);
+  };
+
   final ThunkAction<AppState> signOutAction = (Store<AppState> store) async {
     await CombinedSubscriber.instance().removeAll();
     

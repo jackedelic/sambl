@@ -26,6 +26,12 @@ class WriteAvailableOpenOrderAction implements WriteAction {
   WriteAvailableOpenOrderAction(List<OrderDetail> list): this.toWrite = list;
 }
 
+class WriteChatMessagesAction implements WriteAction {
+  final Map<String,Conversation> toWrite;
+
+  WriteChatMessagesAction(Map<String,Conversation> chats): this.toWrite = chats;
+}
+
 class SelectHawkerCenterAction implements RunnableAction, WriteAction {
   final bool reduceable = true;
   final HawkerCenter toWrite;
@@ -42,10 +48,18 @@ class SelectHawkerCenterAction implements RunnableAction, WriteAction {
   }
 }
 
-class WriteCurrentDeliveryAction implements WriteAction {
-  final CombinedDeliveryList toWrite;
+class WriteCurrentDeliveryAction {
+  final DeliveryList pending;
+  final DeliveryList approved;
+  final DeliveryList paid;
+  final OrderDetail detail;
 
-  WriteCurrentDeliveryAction(CombinedDeliveryList deliveryList): this.toWrite = deliveryList;
+  WriteCurrentDeliveryAction({
+    this.pending,
+    this.approved,
+    this.paid,
+    this.detail
+  });
 }
 
 class WriteCurrentOrderAction implements WriteAction {

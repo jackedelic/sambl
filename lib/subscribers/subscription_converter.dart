@@ -11,29 +11,51 @@ import 'package:sambl/subscribers/combined_subscriber.dart';
 import 'package:sambl/utility/firebase_reader.dart';
 import 'package:sambl/utility/sort_hawker_center.dart';
 
-CombinedSubscriber toCurrentDeliverySubscription(DocumentReference delivery, Store<AppState> store) {
+Future<CombinedSubscriber> toCurrentDeliverySubscription(DocumentReference delivery, Store<AppState> store) async {
   CombinedSubscriber subscriptions = new CombinedSubscriber();
 
   subscriptions.add(name: 'pendingDeliverySubscription', subscription: delivery.collection('pending')
     .snapshots().listen((querySnapshot) async {
-      store.dispatch(new WriteCurrentDeliveryAction(store.state.currentDeliveryList
-        .copyWith(pending: await deliveryListReader(delivery, DeliveryListType.pending))));
+      store.dispatch(new WriteCurrentDeliveryAction(pending: await deliveryListReader(delivery, DeliveryListType.pending)));
     }));
 
   subscriptions.add(name: 'approvedDeliverySubscription', subscription: delivery.collection('approved')
     .snapshots().listen((querySnapshot) async {
-      store.dispatch(new WriteCurrentDeliveryAction(store.state.currentDeliveryList
-        .copyWith(approved: await deliveryListReader(delivery, DeliveryListType.approved))));
-      store.dispatch(new WriteCurrentDeliveryAction(store.state.currentDeliveryList
-        .copyWith(paid: await deliveryListReader(delivery, DeliveryListType.paid))));
+      store.dispatch(new WriteCurrentDeliveryAction(approved: await deliveryListReader(delivery, DeliveryListType.approved)));
+      store.dispatch(new WriteCurrentDeliveryAction(paid: await deliveryListReader(delivery, DeliveryListType.paid)));
     }));
   
-  subscriptions.add(name: 'orderDetailSubscription', subscription:  delivery.snapshots()
-    .listen((document) async {
-      store.dispatch(new WriteCurrentDeliveryAction(store.state.currentDeliveryList
-        .copyWith(detail: await orderDetailReader(document.data['detail']))));
-    }));
+  subscriptions.add(name: 'orderDetailSubscription', subscription: await delivery.get().then((snapshot) async {
+    final DocumentReference detail = snapshot.data['detail'];
+    return detail.snapshots().listen((document) async {
+      print("order_detail_sub: " + document.data.toString());
+      OrderDetail detail = await orderDetailReader(document.reference);
+      store.dispatch(new WriteCurrentDeliveryAction(detail: detail));
+      store.dispatch(new SelectHawkerCenterAction(detail.hawkerCenter));
+    });
+  }));
 
+
+  subscriptions.add(name: 'delivererChatSubscription', subscription: await delivery.get().then((snapshot) async {
+    final DocumentReference detail = snapshot.data['detail'];
+    return detail.collection('chat').snapshots().listen((querySnapshot) async {
+      print('test');
+      Map<String,Conversation> results = {};
+      querySnapshot.documents.forEach((thread) {
+        List<dynamic> messages = thread.data['messages'];
+        Conversation conversation = messages.map((message) {
+          if (message['sender'] == "deliverer") {
+            return new Message.fromDeliverer(message['message']);
+          } else if (message['sender'] == "orderer") {
+            return new Message.fromOrderer(message['message']);
+          }
+        }).fold(Conversation.empty(), (Conversation combined,message) => combined.append(message));
+        print("conversation is: " + conversation.toString());
+        results.putIfAbsent(thread.documentID, () => conversation);
+      });
+      store.dispatch(new WriteChatMessagesAction(results));
+    });
+  }));
   return subscriptions;
 }
 
@@ -59,15 +81,35 @@ StreamSubscription toOpenOrderListSubscription(DocumentReference hawkerCenter, S
   });
 }
 
-StreamSubscription toCurrentOrderSubscription(DocumentReference order, Store<AppState> store) {
-  return order.snapshots().listen((document) async {
+Future<CombinedSubscriber> toCurrentOrderSubscription(DocumentReference order, Store<AppState> store) async {
+  CombinedSubscriber subscriptions = new CombinedSubscriber();
+
+  subscriptions.add(name: 'currentOrderSubscription', subscription: order.snapshots().listen((document) async {
       store.dispatch(new WriteCurrentOrderAction(
         Order(await stallListReader(document.data['stalls']), 
           await orderDetailReader(document.data['orderDetail']))
         ));
-  });
-}
+  }));
+  
 
+  subscriptions.add(name:'ordererChatSubscription', subscription: await order.get().then((order) {
+    DocumentReference ref = order.data['orderDetail'].collection('chat').document(order.documentID);
+    return ref.snapshots().listen((thread) {
+        Map<String,Conversation> results = {};
+        List<dynamic> messages = thread.data['messages'];
+        Conversation conversation = messages.map((message) {
+          if (message['sender'] == "deliverer") {
+            return new Message.fromDeliverer(message['message']);
+          } else if (message['sender'] == "orderer") {
+            return new Message.fromOrderer(message['message']);
+          }
+        }).fold(Conversation.empty(), (Conversation combined,message) => combined.append(message));
+        results.putIfAbsent(thread.documentID, () => conversation);
+        store.dispatch(new WriteChatMessagesAction(results));
+    });
+  }));
+  return subscriptions;
+}
 StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store<AppState> store) {
   return Firestore.instance.collection('users').document(user.uid).snapshots()
     .listen((snapshot) async {
@@ -77,25 +119,27 @@ StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store
           CombinedSubscriber.instance().removeWhere((name,sub) => [
             'availableHawkerCenterSubscription',
             'openOrderListSubscription'].contains(name));
-          CombinedSubscriber.instance().add(name: 'currentOrderSubscription',
-            subscription: toCurrentOrderSubscription(snapshot.data['currentOrder'], store));
+          CombinedSubscriber.instance()
+            .addAll(subscriptions: await toCurrentOrderSubscription(snapshot.data['currentOrder'], store));
         } else if (snapshot.data['isDelivering']) {       
           store.dispatch(new ChangeAppStatusAction(AppStatusFlags.delivering));
           CombinedSubscriber.instance().removeWhere((name,sub) => [
             'availableHawkerCenterSubscription',
-            'openOrderListSubscription'].contains(name));
+            'openOrderListSubscription'
+            'ordererChatSubscription'].contains(name));
           CombinedSubscriber.instance().addAll(subscriptions: 
-            toCurrentDeliverySubscription(snapshot.data['currentDelivery'], store));
+            await toCurrentDeliverySubscription(snapshot.data['currentDelivery'], store));
         } else {
           if (store.state.currentAppStatus == AppStatusFlags.delivering) {
             CombinedSubscriber.instance().removeWhere((name,sub) => [
               'pendingDeliverySubscription',
               'approvedDeliverySubscription',
-              'orderDetailSubscription'].contains(name));
+              'orderDetailSubscription',
+              'delivererChatSubscription'].contains(name));
           } else if (store.state.currentAppStatus == AppStatusFlags.ordering) {
             CombinedSubscriber.instance().remove(name: 'currentOrderSubscription');
           }
-          store.dispatch(new LoginAction(new User(user)));
+          store.dispatch(new LoginAction(new User(user,snapshot.data['balance'])));
           CombinedSubscriber.instance().add(
             name: 'availableHawkerCenterSubscription',
             subscription: toAvailableHawkerCenterSubscription(store),

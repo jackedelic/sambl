@@ -15,6 +15,7 @@ class OrderDetail {
   int maxNumberofDishes;
   final int remainingNumberofDishes;
   final String openOrderUid;
+  final String delivererName;
 
   OrderDetail({
     @required this.pickupPoint,
@@ -25,7 +26,8 @@ class OrderDetail {
     this.remarks = "",
     @required this.maxNumberofDishes,
     this.remainingNumberofDishes = 0,
-    this.openOrderUid = ""
+    this.openOrderUid = "",
+    this.delivererName
   });
 
   Map<String,dynamic> toJson() => {

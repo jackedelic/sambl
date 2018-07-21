@@ -47,7 +47,8 @@ Future<OrderDetail> orderDetailReader(DocumentReference reference) async {
       pickupPoint: snapshot['pickupPoint'],
       remainingNumberofDishes: snapshot['remainingNumberofDishes'],
       remarks: snapshot['remarks'],
-      openOrderUid: snapshot.documentID
+      openOrderUid: snapshot.documentID,
+      delivererName: snapshot['delivererName'],
     )
   );
 }
@@ -56,7 +57,7 @@ Future<Order> orderReader(DocumentReference reference) async {
   return reference.get()
     .then((snapshot) async {
       OrderDetail detail = await orderDetailReader(snapshot['orderDetail']);
-      return new Order(await stallListReader(snapshot['stalls']),detail,isPaid: snapshot.data['isPaid']);
+      return new Order(await stallListReader(snapshot['stalls']),detail,isPaid: snapshot.data['isPaid'],name: snapshot['name']);
     });
 }
 
