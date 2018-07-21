@@ -112,12 +112,16 @@ class Order {
   final List<Stall> stalls;
   final OrderDetail orderDetail;
   final bool isPaid;
+  final bool isApproved;
+  final int price;
   final String ordererName;
-  Order(List<Stall> list, OrderDetail detail,{bool isPaid = false, String name = ""}): 
-    this.stalls = list, this.orderDetail = detail, this.isPaid = isPaid, this.ordererName = name;
+  Order(List<Stall> list, OrderDetail detail,{bool isPaid = false, String name = "", bool isApproved = false, int price = 0}): 
+    this.stalls = list, this.orderDetail = detail, this.isPaid = isPaid, this.ordererName = name,
+      this.isApproved = isApproved, this.price = price;
   
   Order.empty(OrderDetail detail): 
-    this.orderDetail = detail, this.stalls = new List<Stall>(), this.isPaid = false, this.ordererName = "";
+    this.orderDetail = detail, this.stalls = new List<Stall>(), this.isPaid = false, this.ordererName = "",
+      this.isApproved = false, this.price = 0;
 
 
   Order addDish(Dish dish, HawkerCenterStall stallIdentifier) {
