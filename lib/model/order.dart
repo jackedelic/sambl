@@ -9,7 +9,7 @@ class Dish {
   final String name;
 
 
-  //Constructor
+  //Constructor deprecated
   Dish({this.name, this.price}) {
     isPriceSpecified = this.price == null ? false : true;
   }

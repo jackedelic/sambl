@@ -203,7 +203,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                           if (stall == null) return;
                           // Update orderModel, then notify all descendants.
                           // Bad practice since I accessed order field directly.
-                          orderModel.order.stalls.add(stall);
+                          orderModel.order.stalls.add(stall); // make it more functional.
                           orderModel.editOrderModel(order: orderModel.order);
 
                           // TRIGGER AddStallAction action, which takes in our newly created stall.
@@ -357,7 +357,7 @@ class _AddStallCardState extends State<AddStallCard> {
                   onPressed: () {
                     // check if input is valid
                     if (_addDishFormKey.currentState.validate()) {
-                      Dish dish = new Dish(name: textEditingController.text);
+                      Dish dish = Dish.withOutPrice(textEditingController.text);
                       Navigator.of(context).pop(dish); // When popped, the dish is wrapped in a Future
                       // object which is returned by this _addDishDialog().
                     }
@@ -469,12 +469,12 @@ class _AddStallCardState extends State<AddStallCard> {
                                 // AddDishAction is dispatched. Create a new dish and add it to this
                                 // particular stall. This addStallCard widget is rebuilt with the
                                 // newly added dish.
-                                Dish dish = await _addDishDialog();
+                                Dish dish = await _addDishDialog(); // WithPrice, WithoutPrice Constructor
 
                                 if (dish == null) return;
 
                                 // update our orderModel
-                                widget.stall.dishes.add(dish);
+                                widget.stall.dishes.add(dish); // uses the orderModel to add Dish
                                 print("indise add dish button, this particular stall's dish lengh is ${widget.stall.dishes.length}");
                                 orderModel.editOrderModel(order: orderModel.order); // notify
                                 print("indise add dish button, this particular stall's dish lengh is ${orderModel.order.stalls[0].dishes.length}");

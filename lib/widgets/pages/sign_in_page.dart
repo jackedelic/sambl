@@ -12,7 +12,7 @@ import 'package:sambl/async_action/sign_out.dart';
 
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/model/hawker_center.dart';
-
+import 'package:sambl/async_action/register_user_action.dart';
 class SignInPage extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -69,7 +69,8 @@ class SignInPage extends StatelessWidget {
                   height: 60.0,
                   child: new StoreConnector<AppState,VoidCallback>(
                     converter: (store) => () async {
-                      store.dispatch(signInWithGoogleAction);
+                      store.dispatch(SignInWithGoogleAction);
+
                       // store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[0]));
                       // print(store.state.currentHawkerCenter.value);
                       // store.dispatch(new CreateOpenOrderAction(new OrderDetail(
