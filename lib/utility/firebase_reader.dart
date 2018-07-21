@@ -56,11 +56,11 @@ Future<OrderDetail> orderDetailReader(DocumentReference reference) async {
 Future<Order> orderReader(DocumentReference reference) async {
   return reference.get()
     .then((snapshot) async {
-      OrderDetail detail = await orderDetailReader(snapshot['orderDetail']);
-      return new Order(await stallListReader(snapshot['stalls']),detail,
+      OrderDetail detail = await orderDetailReader(snapshot.data['orderDetail']);
+      return new Order(await stallListReader(snapshot.data['stalls']),detail,
         isPaid: snapshot.data['isPaid'],
         name: snapshot.data['ordererName'],
-        isApproved:  snapshot.data['isPaid'],
+        isApproved: snapshot.data['isPaid'],
         price: snapshot.data['price']);
     });
 }

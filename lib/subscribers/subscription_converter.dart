@@ -87,7 +87,11 @@ Future<CombinedSubscriber> toCurrentOrderSubscription(DocumentReference order, S
   subscriptions.add(name: 'currentOrderSubscription', subscription: order.snapshots().listen((document) async {
       store.dispatch(new WriteCurrentOrderAction(
         Order(await stallListReader(document.data['stalls']), 
-          await orderDetailReader(document.data['orderDetail']))
+          await orderDetailReader(document.data['orderDetail']),
+          isPaid: document.data['isPaid'],
+          name: document.data['ordererName'],
+          isApproved: document.data['isPaid'],
+          price: document.data['price'])
         ));
   }));
   
