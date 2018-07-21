@@ -59,7 +59,7 @@ Future<Order> orderReader(DocumentReference reference) async {
       OrderDetail detail = await orderDetailReader(snapshot['orderDetail']);
       return new Order(await stallListReader(snapshot['stalls']),detail,
         isPaid: snapshot.data['isPaid'],
-        name: snapshot.data['name'],
+        name: snapshot.data['ordererName'],
         isApproved:  snapshot.data['isPaid'],
         price: snapshot.data['price']);
     });
