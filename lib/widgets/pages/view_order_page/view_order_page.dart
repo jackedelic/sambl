@@ -15,11 +15,8 @@ import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/quantity_display.dart';
 
 class ViewOrderPage extends StatefulWidget {
-  OrderModel orderModel;// when first navigated to this page, we use the orderModel
-  // passed from placed_order_summary_page. When the real order from the database changes,
-  // we replace the orderModel with the real order.
 
-  ViewOrderPage(this.orderModel);
+  ViewOrderPage();
 
   @override
   _ViewOrderPageState createState() => _ViewOrderPageState();
@@ -28,49 +25,59 @@ class ViewOrderPage extends StatefulWidget {
 class _ViewOrderPageState extends State<ViewOrderPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar().build(context),
-      backgroundColor: MyColors.mainBackground,
-      body: new Column(
-        children: <Widget>[
-          // This is the title 'Delivering from: ...'
-          new Container(
-            margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
-            color: Colors.white,
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Padding(
-                  padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child:  new Text("Delivering from",
-                    style: new TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
+    return StoreConnector<AppState, Optional<Order>>(
+      converter: (store) => store.state.currentOrder,
+      builder: (_, currentOrder) {
+        return Scaffold(
+          appBar: MyAppBar().build(context),
+          backgroundColor: MyColors.mainBackground,
+          body: new Column(
+            children: <Widget>[
+              // This is the title 'Delivering from: ...'
+              new Container(
+                margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
+                color: Colors.white,
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Padding(
+                      padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child:  StoreConnector<AppState, Optional<HawkerCenter>>(
+                        converter: (store) => store.state.currentHawkerCenter,
+                        builder: (_, currentHawkerCenter) {
+                          return new Text(currentHawkerCenter.isPresent ? "Delivering from ${currentHawkerCenter.value.name}" : "unspecified",
+                            style: new TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ),
+              ),
 
-          // This is the list of stalls
-          // Each stall has a list of dishes.
+              // This is the list of stalls
+              // Each stall has a list of dishes.
 
 
-          new Expanded(
-              child: new ListView.builder(
-                  itemCount: widget.orderModel.order.stalls?.length ?? 0,
-                  itemBuilder: (BuildContext context, int n) {
-                    print("inside stall card of view order page, stall[$n] is ${widget.orderModel.order.stalls[n]}");
-                    return new StallCard( widget.orderModel.order.stalls[n]);
-
-                  }
+              new Expanded(
+                  child: new ListView.builder(
+                      itemCount: currentOrder.isPresent ? currentOrder.value.stalls?.length ?? 0 : 0,
+                      itemBuilder: (BuildContext context, int n) {
+                        print("inside stall card of view order page, stall[$n] is ${currentOrder.value.stalls[n]}");
+                        return new StallCard(currentOrder.value.stalls[n]);
+                      }
+                  )
               )
-          )
 
 
-        ],
-      ),
+            ],
+          ),
+        );
+      },
+
     );
   }
 }
@@ -114,11 +121,7 @@ class StallCard extends StatelessWidget {
                 // The ListView wraps all dishes in this card. Remember each card represents one stall.
                   new Container(
                     height: 150.0,
-                    child: new ScopedModelDescendant<OrderModel>(
-
-                      builder: (context, child, orderModel) {
-                        print("inside list of dishes, dishes.length is ${stall.dishes.isEmpty ? 0 :  stall.dishes.length}");
-                        return new ListView.builder(
+                    child: new ListView.builder(
                           itemCount: stall.dishes?.length ?? 0,
                           itemBuilder: (BuildContext context, int index) {
                           // A column consists of the string for stall name and a divider.
@@ -144,9 +147,9 @@ class StallCard extends StatelessWidget {
                             );
 
                           }
-                        );
-                      },
-                    ),
+                        ),
+
+
                   ),
                 ]
               )

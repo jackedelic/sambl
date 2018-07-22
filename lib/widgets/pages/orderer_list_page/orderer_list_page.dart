@@ -49,7 +49,16 @@ class _OrdererListPageState extends State<OrdererListPage> {
             ],
           ),
         ),
-        appBar: new MyAppBar().build(context),
+        appBar: new MyAppBar(
+          leading: new IconButton(
+            icon: const Icon(Icons.menu),
+            color: MyColors.mainRedSwatches,
+            onPressed: () {
+
+            },
+          ),
+
+        ).build(context),
         backgroundColor: MyColors.mainBackground,
         body: new Column(
           children: <Widget>[
@@ -76,20 +85,71 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
             // This is the list of users who subscribe to the deliverer's delivery.
 
-            new Expanded(
-                child: new ListView.builder(
-                    itemBuilder: (_, int n) {
-                      return new ExpansionTile(
-                        title: new Text("hei"),
-                        children: <Widget>[
-                          new Text("hi there i am jack")
-                        ],
-                      );
-                    }
-                )
+            // pending delivery list
+            StoreConnector<AppState, DeliveryList>(
+              converter: (store) => store.state.currentDeliveryList.pending,
+              builder: (_, pendingDeliveryList) {
+                return new Expanded(
+                    child: new ListView.builder(
+                      itemCount: pendingDeliveryList.orders.length,
+                        itemBuilder: (_, int n) {
+                          return new ExpansionTile(
+                            title: new Text("hei"),
+                            trailing: new Text("Pending"),
+                            children: <Widget>[
+                              new Text("hi there i am jack")
+                            ],
+                          );
+                        }
+                    )
 
-            )
+                );
+              },
+            ),
 
+            // approved delivery list
+            StoreConnector<AppState, DeliveryList>(
+              converter: (store) => store.state.currentDeliveryList.approved,
+              builder: (_, approvedDeliveryList) {
+                return new Expanded(
+                    child: new ListView.builder(
+                        itemCount: approvedDeliveryList.orders.length,
+                        itemBuilder: (_, int n) {
+                          return new ExpansionTile(
+                            title: new Text("hei"),
+                            trailing: new Text("Approved"),
+                            children: <Widget>[
+                              new Text("hi there i am jack")
+                            ],
+                          );
+                        }
+                    )
+
+                );
+              },
+            ),
+
+            // paid delivery list
+            StoreConnector<AppState, DeliveryList>(
+              converter: (store) => store.state.currentDeliveryList.paid,
+              builder: (_, paidDeliveryList) {
+                return new Expanded(
+                    child: new ListView.builder(
+                        itemCount: paidDeliveryList.orders.length,
+                        itemBuilder: (_, int n) {
+                          return new ExpansionTile(
+                            title: new Text("hello"),
+                            trailing: new Text("Paid"),
+                            children: <Widget>[
+                              new Text("")
+                            ],
+                          );
+                        }
+                    )
+
+                );
+              },
+            ),
 
 
           ],

@@ -57,10 +57,23 @@ class Stall {
     return new Stall(identifier: this.identifier, dishes: this.dishes + [dish]);
   }
 
-  Stall removeDish(Dish dish) {
-    return new Stall(identifier: this.identifier, dishes: this.dishes.where((currentDish) => !currentDish.equals(dish)));
+  bool contains(Dish dish) {
+    return dishes.any((item) => item.equals(dish));
   }
 
+  Stall removeDish(Dish dish) {
+    if (this.contains(dish)) {
+      final int index = this.dishes.indexWhere((item) => item.equals(dish));
+      final List<Dish> res = this.dishes.sublist(0,index) + this.dishes.sublist(index + 1, dishes.length);
+      return new Stall(identifier: this.identifier, dishes: res);
+    } else {
+      return this;
+    }
+  }
+
+  bool validatePrice() {
+    return dishes.every((dish) => dish.isPriceSpecified);
+  }
   bool notEmpty() {
     return this.dishes.isNotEmpty;
   }
@@ -99,11 +112,16 @@ class Order {
   final List<Stall> stalls;
   final OrderDetail orderDetail;
   final bool isPaid;
-  Order(List<Stall> list, OrderDetail detail,{bool isPaid = false}): 
-    this.stalls = list, this.orderDetail = detail, this.isPaid = isPaid;
+  final bool isApproved;
+  final int price;
+  final String ordererName;
+  Order(List<Stall> list, OrderDetail detail,{bool isPaid = false, String name = "", bool isApproved = false, int price = 0}): 
+    this.stalls = list, this.orderDetail = detail, this.isPaid = isPaid, this.ordererName = name,
+      this.isApproved = isApproved, this.price = price;
   
   Order.empty(OrderDetail detail): 
-    this.orderDetail = detail, this.stalls = new List<Stall>(), this.isPaid = false;
+    this.orderDetail = detail, this.stalls = new List<Stall>(), this.isPaid = false, this.ordererName = "",
+      this.isApproved = false, this.price = 0;
 
 
   Order addDish(Dish dish, HawkerCenterStall stallIdentifier) {
@@ -117,11 +135,15 @@ class Order {
   }
 
   Order removeDish(Dish dish, HawkerCenterStall stallIdentifier) {
-    return new Order(this.stalls.map<Stall>((stall){
-      return ((stall.identifier.equals(stallIdentifier)) ? stall.removeDish(dish) : stall);
-    }).where((stall) => stall.notEmpty()), this.orderDetail);
+    return new Order(this.stalls.map<Stall>((stall) {
+        return ((stall.identifier.equals(stallIdentifier)) ? stall.removeDish(dish) : stall);
+      }).where((stall) => stall.notEmpty()), this.orderDetail);
   }
-  
+
+  bool validatePrice() {
+    return stalls.every((stall) => stall.validatePrice());
+  } 
+
   double getDeliveryfee() {
     return baseDeliveryfee + stalls.fold<double>(0.0,(sum,current) => sum + current.getDeliveryfee()) - deliveryFeePerExtraStall;
   }

@@ -26,11 +26,13 @@ class CombinedSubscriber {
   }
 
   Future<void> removeAll() async {
-    return Stream.fromIterable(_subscriptions.values).asyncMap((sub) async => await sub.cancel())
-      .toList().then((_) {
-        _subscriptions = {};
-        return;
-      });
+    return Stream.fromIterable(_subscriptions.entries).asyncMap((sub) async {
+      print(sub.key + " " + sub.value.toString());
+      return await sub.value.cancel();
+    }).toList().then((_) {
+      this._subscriptions = {};
+      return;
+    });
   }
 
   void add({@required String name, @required StreamSubscription subscription}) {
@@ -42,6 +44,7 @@ class CombinedSubscriber {
   void addAll({@required CombinedSubscriber subscriptions}) {
     _subscriptions.addEntries(subscriptions.toList());
     print('current list of subscriptions' + _subscriptions.keys.toString());
+    subscriptions.toList().forEach((entry) => print("Added: " + entry.key + " " + entry.value.toString()));
   }
 
   Future<void> removeWhere(bool test(String name, StreamSubscription sub)) {

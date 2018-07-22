@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:location/location.dart';
+
 import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/model/hawker_center.dart';
-import 'package:location/location.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 Future<List<HawkerCenter>> sortHawkerCenter(List<HawkerCenter> hawkerCenterList) {
   return Location().getLocation

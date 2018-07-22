@@ -1,6 +1,7 @@
 import 'package:quiver/core.dart';
 import 'package:meta/meta.dart';
 
+import 'package:sambl/model/conversation.dart';
 import 'package:sambl/model/delivery_list.dart';
 import 'package:sambl/model/hawker_center.dart';
 import 'package:sambl/model/order.dart';
@@ -8,6 +9,7 @@ import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/model/user.dart';
 import 'package:sambl/utility/app_status_flag.dart';
 
+export 'package:sambl/model/conversation.dart';
 export 'package:sambl/model/delivery_list.dart';
 export 'package:sambl/model/hawker_center.dart';
 export 'package:sambl/model/order.dart';
@@ -24,7 +26,6 @@ enum AppStateFields {
   currentDeliveryList
 }
 
-
 class AppState {
 
   final User currentUser;
@@ -34,7 +35,8 @@ class AppState {
   final Optional<HawkerCenter> currentHawkerCenter;
   final List<OrderDetail> openOrderList;
   final Optional<Order> currentOrder;
-  final CombinedDeliveryList currentDeliveryList;
+  final CombinedDeliveryList currentDeliveryList; // needed for deliverer
+  final Map<String,Conversation> chats; 
 
   AppState copyWith({
     User currentUser,
@@ -43,7 +45,8 @@ class AppState {
     HawkerCenter currentHawkerCenter,
     List<OrderDetail> openOrderList,
     Order currentOrder,
-    CombinedDeliveryList currentDeliveryList
+    CombinedDeliveryList currentDeliveryList,
+    Map<String,Conversation> chats
   }) {
     return new AppState._internal(
       currentUser: currentUser ?? this.currentUser,
@@ -52,7 +55,8 @@ class AppState {
       currentHawkerCenter: currentHawkerCenter ?? this.currentHawkerCenter.orNull,
       openOrderList: openOrderList ?? this.openOrderList,
       currentOrder: currentOrder ?? this.currentOrder.orNull,
-      currentDeliveryList: currentDeliveryList ?? this.currentDeliveryList
+      currentDeliveryList: currentDeliveryList ?? this.currentDeliveryList,
+      chats: chats ?? this.chats
     );
   }
 
@@ -63,14 +67,16 @@ class AppState {
     @required HawkerCenter currentHawkerCenter,
     @required List<OrderDetail> openOrderList,
     @required Order currentOrder,
-    @required CombinedDeliveryList currentDeliveryList
+    @required CombinedDeliveryList currentDeliveryList,
+    @required Map<String,Conversation> chats
   }): this.currentUser = currentUser,
     this.currentAppStatus = currentAppStatus,
     this.availableHawkerCenter = availableHawkerCenter,
     this.currentHawkerCenter = Optional.fromNullable(currentHawkerCenter),
     this.openOrderList = openOrderList,
     this.currentOrder = Optional.fromNullable(currentOrder),
-    this.currentDeliveryList = currentDeliveryList;
+    this.currentDeliveryList = currentDeliveryList,
+    this.chats = chats;
 
   AppState.initial():
       this.currentUser = new User.initial(),
@@ -79,5 +85,6 @@ class AppState {
       this.currentHawkerCenter = Optional<HawkerCenter>.absent(),
       this.openOrderList = new List<OrderDetail>(),
       this.currentOrder = Optional<Order>.absent(),
-      this.currentDeliveryList = new CombinedDeliveryList.absent();
+      this.currentDeliveryList = new CombinedDeliveryList.absent(),
+      this.chats = {};
 }

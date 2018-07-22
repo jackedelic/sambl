@@ -270,7 +270,7 @@ Info info;
 class Info extends Model {
 
 
-  GeoPoint pickupPoint;
+  GeoPoint pickupPoint = new GeoPoint(1.2869369, 103.8437092);
   HawkerCenter hawkerCenter;
   String delivererUid;
   DateTime closingTime;

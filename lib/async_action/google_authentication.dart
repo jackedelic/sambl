@@ -12,7 +12,6 @@ import 'package:sambl/subscribers/combined_subscriber.dart';
 
 
   final ThunkAction<AppState> signInWithGoogleAction = (Store<AppState> store) async {
-    print("inside google_authentication.dart, gonna handle google sign in");
     await _handleGoogleSignIn()
       .then((user) {
 

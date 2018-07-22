@@ -3,9 +3,10 @@ import 'package:quiver/core.dart';
 
 /// Encapsulates all necessary information about a user of the application.
 class User {
-  Optional<FirebaseUser> onlineUser;
+  final Optional<FirebaseUser> onlineUser;
+  final int balance;
 
-  User(FirebaseUser user): this.onlineUser = Optional.of(user);
+  User(FirebaseUser user, int balance): this.onlineUser = Optional.of(user), this.balance = balance;
 
-  User.initial(): this.onlineUser = Optional<FirebaseUser>.absent();
+  User.initial(): this.onlineUser = Optional<FirebaseUser>.absent(), this.balance = 0;
 }

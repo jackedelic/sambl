@@ -30,7 +30,8 @@ class PlacedOrderSummaryPage extends StatefulWidget {
 }
 
 class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
-  GlobalKey<RefreshIndicatorState> refreshKey = new GlobalKey<RefreshIndicatorState>();
+  GlobalKey<RefreshIndicatorState> refreshKey = new GlobalKey<
+      RefreshIndicatorState>();
 
   Future<Null> _updateETALabel() async {
     refreshKey.currentState.show();
@@ -40,277 +41,317 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
     print("updated ETA label");
 
 
-
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar().build(context),
-      backgroundColor: MyColors.mainBackground,
-      body: new Column(
-        children: <Widget>[
-          // This is the title 'Delivering from: ...'
-          new Container(
-            margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
-            color: Colors.white,
-            child: new Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                new Padding(
-                  padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                  child:  new Text("Delivering from",
-                    style: new TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
 
-          // This is the summary order placed by the current user.
-          new Expanded(
-            child: StoreConnector<AppState, Optional<Order>>(
-              converter: (store) => store.state.currentOrder,
-              builder: (_, currentOrder) {
-                return new Container(
-                  color: Colors.white,
-                  margin: new EdgeInsets.only(top: 5.0, bottom: 5.0),
-                  child: new RefreshIndicator(
-                    key: refreshKey,
-                    onRefresh: _updateETALabel,
-                    child: new ListView(
-                      children: <Widget>[
-                        // 'status' and 'view order button'
-                        new Row(
+      return Scaffold(
+        appBar: MyAppBar(
+          leading: new IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+
+              }
+            ),
+        ).build(context),
+        backgroundColor: MyColors.mainBackground,
+        body: new Column(
+            children: <Widget>[
+              // This is the title 'Delivering from: ...'
+              new Container(
+                margin: new EdgeInsets.only(top: 10.0, bottom: 5.0),
+                color: Colors.white,
+                child: new Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Padding(
+                      padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
+                      child: new Text("Delivering from",
+                        style: new TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // This is the summary order placed by the current user.
+              new Expanded(
+                child: StoreConnector<AppState, Optional<Order>>(
+                  converter: (store) => store.state.currentOrder,
+                  builder: (_, currentOrder) {
+                    return new Container(
+                      color: Colors.white,
+                      margin: new EdgeInsets.only(top: 5.0, bottom: 5.0),
+                      child: new RefreshIndicator(
+                        key: refreshKey,
+                        onRefresh: _updateETALabel,
+                        child: new ListView(
                           children: <Widget>[
-                            // 'e.g. Status: awaiting payment '
-                            new Expanded(
-                              flex: 5,
-                              child: new Container(
-                                padding: new EdgeInsets.only(left: 20.0),
-                                child: new Row(
-                                  children: <Widget>[
-                                    new Text("Status:",
-                                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700 ),
+                            // 'status' and 'view order button'
+                            new Row(
+                              children: <Widget>[
+                                // 'e.g. Status: awaiting payment '
+                                new Expanded(
+                                  flex: 5,
+                                  child: new Container(
+                                    padding: new EdgeInsets.only(left: 20.0),
+                                    child: new Row(
+                                      children: <Widget>[
+                                        new Text("Status:",
+                                          style: new TextStyle(fontSize: 20.0,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                        new Text("    ${currentOrder.isPresent
+                                            ? (currentOrder.value.isApproved
+                                            ? 'Approved'
+                                            : 'Awaiting payment')
+                                            : 'No order submitted'}",
+                                          style: new TextStyle(fontSize: 20.0),
+                                        )
+                                      ],
                                     ),
-                                    new Text("    ${currentOrder.isPresent ? currentOrder.value.orderDetail : 'No order submitted'}",
-                                      style: new TextStyle(fontSize: 20.0),
-                                    )
-                                  ],
+                                  ),
                                 ),
+
+                                // 'view order' button
+                                new Expanded(
+                                  flex: 2,
+                                  child: new Container(
+                                    margin: new EdgeInsets.only(
+                                        top: 15.0, bottom: 15.0, right: 20.0),
+                                    padding: new EdgeInsets.all(5.0),
+                                    decoration: new BoxDecoration(
+                                        borderRadius: new BorderRadius.circular(
+                                            10.0),
+                                        border: new Border.all(
+                                            color: MyColors.mainBackground,
+                                            width: 2.0)
+                                    ),
+                                    child: new FlatButton(
+                                      onPressed: () {
+                                        print(
+                                            "View order button tapped! order of orderModel in view_order_page is ${widget
+                                                .orderModel}");
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                                  return new ViewOrderPage();
+                                                }
+                                            )
+                                        );
+                                      },
+                                      child: new Center(
+                                          child: new Text("View order")),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+
+                            // some space betwn 'status' row and 'eta' row
+                            // just a space
+                            new Container(
+                              height: 10.0,
+                              color: new Color(0xFFEBEBEB),
+                            ),
+
+                            //ETA and PickUpLocation
+                            new Container(
+                              padding: new EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                              child: new Row(
+                                children: <Widget>[
+                                  //ETA
+                                  new Expanded(
+                                    flex: 1,
+                                    child: new Row(
+                                        children: <Widget>[
+                                          new QuantityDisplay(
+                                            head: new QuantityDisplayElement(
+                                                content: "ETA"),
+                                            quantity: new QuantityDisplayElement(
+                                                fontSize: 35.0,
+                                                content: "${currentOrder.isPresent
+                                                    ? currentOrder.value
+                                                    .orderDetail.eta
+                                                    .difference(DateTime.now())
+                                                    .inMinutes
+                                                    : 'X'}"),
+                                            //"${widget.orderModel.order.orderDetail.eta}"),
+                                            tail: new QuantityDisplayElement(
+                                                content: "mins"),
+                                          )
+                                        ]
+                                    ),
+                                  ),
+
+                                  // pickup location
+                                  new Expanded(
+                                    flex: 2,
+                                    child: new Column(
+                                      children: <Widget>[
+                                        new Text("Pick-up location",
+                                          style: new TextStyle(fontSize: 25.0),
+                                        ),
+                                        new Text(
+                                          "${currentOrder.isPresent ? currentOrder
+                                              .value.orderDetail.pickupPoint
+                                              .toString() : 'unspecified'}",
+                                          style: new TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 30.0),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+
+                                ],
                               ),
                             ),
 
-                            // 'view order' button
-                            new Expanded(
-                              flex: 2,
-                              child: new Container(
-                                margin: new EdgeInsets.only(top: 15.0, bottom: 15.0, right: 20.0),
-                                padding: new EdgeInsets.all(5.0),
-                                decoration: new BoxDecoration(
-                                    borderRadius: new BorderRadius.circular(10.0),
-                                    border: new Border.all(color: MyColors.mainBackground, width: 2.0)
-                                ),
-                                child: new FlatButton(
-                                  onPressed: () {
-                                    print("View order button tapped! order of orderModel in view_order_page is ${widget.orderModel}");
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) {
-                                              print("""
-                                            inside MaterialPageRoute builder for ViewOrderPage, 
-                                            orderModel to be passed to ViewOrderPage is ${widget.orderModel}""");
-                                              return new ViewOrderPage(widget.orderModel);
-                                            }
-                                        )
-                                    );
 
-                                  },
-                                  child: new Center(child: new Text("View order")),
-                                ),
-                              ),
-                            )
                           ],
                         ),
+                      ),
+                    );
+                  },
+                ),
+              ),
 
-                        // some space betwn 'status' row and 'eta' row
-                        // just a space
-                        new Container(
-                          height: 10.0,
-                          color: new Color(0xFFEBEBEB),
-                        ),
+              // Open Chat
+              new Center(
+                child: new Container(
+                  margin: new EdgeInsets.only(top: 130.0),
+                  color: Colors.white,
+                  // TRIGGER OpenChat Action
+                  child: new StoreConnector<AppState, Store<AppState>>(
+                    converter: (store) => store,
+                    builder: (_, store) {
+                      return new FlatButton(
+                        padding: new EdgeInsets.all(10.0),
+                        onPressed: () {
+                          //TRIGGER SubmitOrderAction.
+                          Optional<Order> newOrder = store.state.currentOrder;
+                          // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                          //store.dispatch(new OrderAction(order: newOrder));
+                          print("Opening Chat.");
 
-                        //ETA and PickUpLocation
-                        new Container(
-                          padding: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                          child: new Row(
-                            children: <Widget>[
-                              //ETA
-                              new Expanded(
-                                flex: 1,
-                                child: new Row(
-                                    children: <Widget>[
-                                      new QuantityDisplay(
-                                        head: new QuantityDisplayElement(content: "ETA"),
-                                        quantity: new QuantityDisplayElement(fontSize: 35.0,content: "${widget.orderModel.order.orderDetail.eta.difference(DateTime.now()).inMinutes}"),//"${widget.orderModel.order.orderDetail.eta}"),
-                                        tail: new QuantityDisplayElement(content: "mins"),
-                                      )
-                                    ]
-                                ),
-                              ),
+                          // Navigate to a page to chat page
+                          /*Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) {
+                                                return new ScopedModelDescendant<OrderModel>(
+                                                  builder: (context, child, orderModel) {
+                                                    return new PlacedOrderSummaryPage(orderModel);
+                                                  },
 
-                              // pickup location
-                              new Expanded(
-                                flex: 2,
-                                child: new Column(
-                                  children: <Widget>[
-                                    new Text("Pick-up location",
-                                      style: new TextStyle(fontSize: 25.0),
-                                    ),
-                                    new Text("Cinnamon College",
-                                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                                );
+                                              }
+                                          )
+                                      );*/
 
-                            ],
+
+                        },
+                        child: new Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          child: new Text("Open Chat",
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(
+                                color: Colors.green,
+                                fontSize: 17.0
+                            ),
                           ),
                         ),
+                      );
+                    },
 
-
-                      ],
-                    ),
                   ),
-                );
-              },
-            ),
-          ),
-
-          // Open Chat
-          new Center(
-            child: new Container(
-              margin: new EdgeInsets.only(top: 130.0),
-              color: Colors.white,
-              // TRIGGER OpenChat Action
-              child: new StoreConnector<AppState, Store<AppState>>(
-                converter: (store) => store,
-                builder: (_, store){
-                  return new FlatButton(
-                    padding: new EdgeInsets.all(10.0),
-                    onPressed: (){
-                      //TRIGGER SubmitOrderAction.
-                      Optional<Order> newOrder = store.state.currentOrder;
-                      // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                      //store.dispatch(new OrderAction(order: newOrder));
-                      print("Opening Chat.");
-
-                      // Navigate to a page to chat page
-                      /*Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) {
-                                              return new ScopedModelDescendant<OrderModel>(
-                                                builder: (context, child, orderModel) {
-                                                  return new PlacedOrderSummaryPage(orderModel);
-                                                },
-
-                                              );
-                                            }
-                                        )
-                                    );*/
 
 
-                    },
-                    child: new Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: new Text("Open Chat",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            color: Colors.green,
-                            fontSize: 17.0
-                        ),
-                      ),
-                    ),
-                  );
-                },
-
+                ),
               ),
 
-
-            ),
-          ),
-
-          // some space betwn 'Open Chat' row and 'Authorise Payment' row
-          // just a space
-          new Container(
-            height: 10.0,
-            color: new Color(0xFFEBEBEB),
-          ),
-
-          // Authorise Payment
-          new Center(
-            child: new Container(
-              color: Colors.white,
-              // TRIGGER OpenChat Action
-              child: new StoreConnector<AppState, Store<AppState>>(
-                converter: (store) => store,
-                builder: (_, store){
-                  return new FlatButton(
-                    padding: new EdgeInsets.all(10.0),
-                    onPressed: (){
-                      //TRIGGER SubmitOrderAction.
-                      Optional<Order> newOrder = store.state.currentOrder;
-                      // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                      //store.dispatch(new OrderAction(order: newOrder));
-                      print("Authorise Payment.");
-
-                      // Navigate to a page to chat page
-                      /*Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) {
-                                              return new ScopedModelDescendant<OrderModel>(
-                                                builder: (context, child, orderModel) {
-                                                  return new PlacedOrderSummaryPage(orderModel);
-                                                },
-
-                                              );
-                                            }
-                                        )
-                                    );*/
-
-
-                    },
-                    child: new Container(
-                      width: MediaQuery.of(context).size.width,
-                      child: new Text("Authorise Payment",
-                        textAlign: TextAlign.center,
-                        style: new TextStyle(
-                            color: MyColors.mainRed,
-                            fontSize: 17.0
-                        ),
-                      ),
-                    ),
-                  );
-                },
-
+              // some space betwn 'Open Chat' row and 'Authorise Payment' row
+              // just a space
+              new Container(
+                height: 10.0,
+                color: new Color(0xFFEBEBEB),
               ),
 
+              // Authorise Payment
+              new Center(
+                child: new Container(
+                  color: Colors.white,
+                  // TRIGGER OpenChat Action
+                  child: new StoreConnector<AppState, Store<AppState>>(
+                    converter: (store) => store,
+                    builder: (_, store) {
+                      return new FlatButton(
+                        padding: new EdgeInsets.all(10.0),
+                        onPressed: () {
+                          //TRIGGER SubmitOrderAction.
+                          Optional<Order> newOrder = store.state.currentOrder;
+                          // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                          //store.dispatch(new OrderAction(order: newOrder));
+                          print("Authorise Payment.");
 
-            ),
-          ),
+                          // Navigate to a page to chat page
+                          /*Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) {
+                                                return new ScopedModelDescendant<OrderModel>(
+                                                  builder: (context, child, orderModel) {
+                                                    return new PlacedOrderSummaryPage(orderModel);
+                                                  },
 
-        ]
-      ),
-    );
-  }
+                                                );
+                                              }
+                                          )
+                                      );*/
+
+
+                        },
+                        child: new Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          child: new Text("Authorise Payment",
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(
+                                color: MyColors.mainRed,
+                                fontSize: 17.0
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+
+                  ),
+
+
+                ),
+              ),
+
+            ]
+        ),
+      );
+    }
 
 
 }
+
+
+

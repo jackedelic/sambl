@@ -3,19 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
 import 'package:sambl/widgets/pages/placed_order_summary_page/placed_order_summary_page.dart';
+import 'package:sambl/widgets/pages/sign_up_page.dart';
+import 'package:sambl/widgets/pages/orderer_list_page/orderer_list_page.dart';
 
 Widget defaultPage(AppStatusFlags flag) {
   switch (flag) {
+    case AppStatusFlags.delivering:
+      return new OrdererListPage();
+      break;
+    case AppStatusFlags.ordering:
+      return new PlacedOrderSummaryPage();
+      break;
     case AppStatusFlags.unauthenticated:
       return new SignInPage();
+      break;
     case AppStatusFlags.authenticated:
       return new HomePage();
+      break;
     case AppStatusFlags.awaitingSignup:
-      return new SignInPage();
-    case AppStatusFlags.delivering:
-      return new PlacedOrderSummaryPage();
-    case AppStatusFlags.ordering:
-      return new SignInPage();
+      return new SignUpPage();
+      break;
+
   }
 }
 

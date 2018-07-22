@@ -4,15 +4,9 @@ import 'package:flutter_redux/flutter_redux.dart';
 
 import 'package:sambl/async_action/google_authentication.dart';
 import 'package:sambl/state/app_state.dart';
-
-import 'package:sambl/action/write_action.dart';
-import 'package:sambl/async_action/firestore_write_action.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sambl/async_action/sign_out.dart';
-
 import 'package:sambl/widgets/shared/my_color.dart';
-import 'package:sambl/model/hawker_center.dart';
-import 'package:sambl/async_action/register_user_action.dart';
+import 'package:sambl/widgets/pages/start_page.dart';
+
 class SignInPage extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -23,10 +17,10 @@ class SignInPage extends StatelessWidget {
       return store.state.currentAppStatus;
     },
     builder: (context,status) {
-      if (status != AppStatusFlags.unauthenticated) {
-        print("in sign in page, unauthenticated.");
+      if (status == AppStatusFlags.ordering) {
+        print("in sign in page, ordering, ");
         //Navigator.of(context).popUntil(ModalRoute.withName('/'));
-        //return defaultPage(status);
+        return defaultPage(status);
       } else {
         return new Scaffold(
           key: _formKey,
@@ -72,6 +66,7 @@ class SignInPage extends StatelessWidget {
 
                       store.dispatch(signInWithGoogleAction);
 
+
                       // store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[0]));
                       // print(store.state.currentHawkerCenter.value);
                       // store.dispatch(new CreateOpenOrderAction(new OrderDetail(
@@ -110,6 +105,7 @@ class SignInPage extends StatelessWidget {
                       } else {
                          print("inside sign in page, neither authenticated nor unauthenticated, status: ${store.state.currentAppStatus}");
                       }
+
                     },
                     builder: (context,callback) => Material(
                       borderRadius: new BorderRadius.circular(30.0),

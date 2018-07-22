@@ -70,7 +70,12 @@ class MyApp extends StatelessWidget {
             fillColor: MyColors.mainRed,
           )
         ),
-        home: new StartPage(),
+        home: StoreConnector<AppState, AppStatusFlags>(
+          converter: (store) => store.state.currentAppStatus,
+          builder: (_, currentAppStatus) {
+            return new StartPage();
+          },
+        ),
         routes: <String, WidgetBuilder> {
           "/CreateOpenOrderPageDeprecated" : (BuildContext context) => new CreateOpenOrderPageDeprecated(),
           "/HomePage" : (BuildContext context) => new HomePage(),
