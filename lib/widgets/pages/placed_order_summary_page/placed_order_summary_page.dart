@@ -21,8 +21,8 @@ class PlacedOrderSummaryPage extends StatefulWidget {
   // passed from place_order_page. When the real order from the database changes,
   // we replace the orderModel with the real order.
 
-  PlacedOrderSummaryPage(this.orderModel) {
-    print("inside PlaceOrderSummaryPage constructor ${orderModel.order.stalls}");
+  PlacedOrderSummaryPage() {
+    print("inside PlaceOrderSummaryPage constructor ");
   }
 
   @override
@@ -35,11 +35,11 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
   Future<Null> _updateETALabel() async {
     refreshKey.currentState.show();
     print("inside updateetalabel");
-    int diff = widget.orderModel.order.orderDetail.eta.difference(DateTime.now()).inMinutes;
+    //int diff = widget.orderModel.order.orderDetail.eta.difference(DateTime.now()).inMinutes;
 
     print("updated ETA label");
-    setState(() {
-    });
+
+
 
     return null;
   }
@@ -73,118 +73,123 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
 
           // This is the summary order placed by the current user.
           new Expanded(
-            child: new Container(
-              color: Colors.white,
-              margin: new EdgeInsets.only(top: 5.0, bottom: 5.0),
-              child: new RefreshIndicator(
-                key: refreshKey,
-                onRefresh: _updateETALabel,
-                child: new ListView(
-                  children: <Widget>[
-                    // 'status' and 'view order button'
-                    new Row(
+            child: StoreConnector<AppState, Optional<Order>>(
+              converter: (store) => store.state.currentOrder,
+              builder: (_, currentOrder) {
+                return new Container(
+                  color: Colors.white,
+                  margin: new EdgeInsets.only(top: 5.0, bottom: 5.0),
+                  child: new RefreshIndicator(
+                    key: refreshKey,
+                    onRefresh: _updateETALabel,
+                    child: new ListView(
                       children: <Widget>[
-                        // 'e.g. Status: awaiting payment '
-                        new Expanded(
-                          flex: 5,
-                          child: new Container(
-                            padding: new EdgeInsets.only(left: 20.0),
-                            child: new Row(
-                              children: <Widget>[
-                                new Text("Status:",
-                                  style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700 ),
+                        // 'status' and 'view order button'
+                        new Row(
+                          children: <Widget>[
+                            // 'e.g. Status: awaiting payment '
+                            new Expanded(
+                              flex: 5,
+                              child: new Container(
+                                padding: new EdgeInsets.only(left: 20.0),
+                                child: new Row(
+                                  children: <Widget>[
+                                    new Text("Status:",
+                                      style: new TextStyle(fontSize: 20.0, fontWeight: FontWeight.w700 ),
+                                    ),
+                                    new Text("    ${currentOrder.isPresent ? currentOrder.value.orderDetail : 'No order submitted'}",
+                                      style: new TextStyle(fontSize: 20.0),
+                                    )
+                                  ],
                                 ),
-                                new Text("    Awaiting payment",
-                                  style: new TextStyle(fontSize: 20.0),
-                                )
-                              ],
+                              ),
                             ),
+
+                            // 'view order' button
+                            new Expanded(
+                              flex: 2,
+                              child: new Container(
+                                margin: new EdgeInsets.only(top: 15.0, bottom: 15.0, right: 20.0),
+                                padding: new EdgeInsets.all(5.0),
+                                decoration: new BoxDecoration(
+                                    borderRadius: new BorderRadius.circular(10.0),
+                                    border: new Border.all(color: MyColors.mainBackground, width: 2.0)
+                                ),
+                                child: new FlatButton(
+                                  onPressed: () {
+                                    print("View order button tapped! order of orderModel in view_order_page is ${widget.orderModel}");
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) {
+                                              print("""
+                                            inside MaterialPageRoute builder for ViewOrderPage, 
+                                            orderModel to be passed to ViewOrderPage is ${widget.orderModel}""");
+                                              return new ViewOrderPage(widget.orderModel);
+                                            }
+                                        )
+                                    );
+
+                                  },
+                                  child: new Center(child: new Text("View order")),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+
+                        // some space betwn 'status' row and 'eta' row
+                        // just a space
+                        new Container(
+                          height: 10.0,
+                          color: new Color(0xFFEBEBEB),
+                        ),
+
+                        //ETA and PickUpLocation
+                        new Container(
+                          padding: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                          child: new Row(
+                            children: <Widget>[
+                              //ETA
+                              new Expanded(
+                                flex: 1,
+                                child: new Row(
+                                    children: <Widget>[
+                                      new QuantityDisplay(
+                                        head: new QuantityDisplayElement(content: "ETA"),
+                                        quantity: new QuantityDisplayElement(fontSize: 35.0,content: "${widget.orderModel.order.orderDetail.eta.difference(DateTime.now()).inMinutes}"),//"${widget.orderModel.order.orderDetail.eta}"),
+                                        tail: new QuantityDisplayElement(content: "mins"),
+                                      )
+                                    ]
+                                ),
+                              ),
+
+                              // pickup location
+                              new Expanded(
+                                flex: 2,
+                                child: new Column(
+                                  children: <Widget>[
+                                    new Text("Pick-up location",
+                                      style: new TextStyle(fontSize: 25.0),
+                                    ),
+                                    new Text("Cinnamon College",
+                                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                            ],
                           ),
                         ),
 
-                        // 'view order' button
-                        new Expanded(
-                          flex: 2,
-                          child: new Container(
-                            margin: new EdgeInsets.only(top: 15.0, bottom: 15.0, right: 20.0),
-                            padding: new EdgeInsets.all(5.0),
-                            decoration: new BoxDecoration(
-                              borderRadius: new BorderRadius.circular(10.0),
-                              border: new Border.all(color: MyColors.mainBackground, width: 2.0)
-                            ),
-                            child: new FlatButton(
-                              onPressed: () {
-                                print("View order button tapped! order of orderModel in view_order_page is ${widget.orderModel}");
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) {
-                                          print("""
-                                          inside MaterialPageRoute builder for ViewOrderPage, 
-                                          orderModel to be passed to ViewOrderPage is ${widget.orderModel}""");
-                                          return new ViewOrderPage(widget.orderModel);
-                                        }
-                                    )
-                                );
 
-                              },
-                              child: new Center(child: new Text("View order")),
-                            ),
-                          ),
-                        )
                       ],
                     ),
-
-                    // some space betwn 'status' row and 'eta' row
-                    // just a space
-                    new Container(
-                      height: 10.0,
-                      color: new Color(0xFFEBEBEB),
-                    ),
-
-                    //ETA and PickUpLocation
-                    new Container(
-                      padding: new EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-                      child: new Row(
-                        children: <Widget>[
-                          //ETA
-                          new Expanded(
-                            flex: 1,
-                            child: new Row(
-                              children: <Widget>[
-                                new QuantityDisplay(
-                                  head: new QuantityDisplayElement(content: "ETA"),
-                                  quantity: new QuantityDisplayElement(fontSize: 35.0,content: "${widget.orderModel.order.orderDetail.eta.difference(DateTime.now()).inMinutes}"),//"${widget.orderModel.order.orderDetail.eta}"),
-                                  tail: new QuantityDisplayElement(content: "mins"),
-                                )
-                              ]
-                            ),
-                          ),
-
-                          // pickup location
-                          new Expanded(
-                            flex: 2,
-                            child: new Column(
-                              children: <Widget>[
-                                new Text("Pick-up location",
-                                  style: new TextStyle(fontSize: 25.0),
-                                ),
-                                new Text("Cinnamon College",
-                                  style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 30.0),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-
-                        ],
-                      ),
-                    ),
-
-
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
           ),
 

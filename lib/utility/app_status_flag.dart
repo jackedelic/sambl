@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:sambl/widgets/pages/home_page/home_page.dart';
 import 'package:sambl/widgets/pages/sign_in_page.dart';
+import 'package:sambl/widgets/pages/placed_order_summary_page/placed_order_summary_page.dart';
 
 Widget defaultPage(AppStatusFlags flag) {
   switch (flag) {
@@ -12,7 +13,7 @@ Widget defaultPage(AppStatusFlags flag) {
     case AppStatusFlags.awaitingSignup:
       return new SignInPage();
     case AppStatusFlags.delivering:
-      return new SignInPage();
+      return new PlacedOrderSummaryPage();
     case AppStatusFlags.ordering:
       return new SignInPage();
   }

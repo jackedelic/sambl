@@ -261,7 +261,7 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) {
-                                      return new PlacedOrderSummaryPage(widget.orderModel);
+                                      return new PlacedOrderSummaryPage();
                                     }
                                 )
                             );

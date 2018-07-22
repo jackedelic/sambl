@@ -73,7 +73,8 @@ class _SignUpPageState extends State<SignUpPage> {
                height: 60.0,
                child: new StoreConnector<AppState,VoidCallback>(
                    converter: (store) => () async {
-                     store.dispatch(signInWithGoogleAction);
+
+                     store.dispatch(registerUserAction);
                      // store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[0]));
                      // print(store.state.currentHawkerCenter.value);
                      // store.dispatch(new CreateOpenOrderAction(new OrderDetail(

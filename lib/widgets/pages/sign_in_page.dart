@@ -69,7 +69,8 @@ class SignInPage extends StatelessWidget {
                   height: 60.0,
                   child: new StoreConnector<AppState,VoidCallback>(
                     converter: (store) => () async {
-                      store.dispatch(SignInWithGoogleAction);
+
+                      store.dispatch(signInWithGoogleAction);
 
                       // store.dispatch(new SelectHawkerCenterAction(store.state.availableHawkerCenter[0]));
                       // print(store.state.currentHawkerCenter.value);
