@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
       child: new MaterialApp(
         title: 'Flutter Demo',
         theme: new ThemeData(
-          fontFamily: "",
+          fontFamily: "Trebuchet",
           primaryColor: MyColors.mainRed,
           primarySwatch: MyColors.mainRedSwatches, // When ExpansionTile expands, the text turns this color
           inputDecorationTheme: new InputDecorationTheme( // TextField deco color (baseline, labelText etc)

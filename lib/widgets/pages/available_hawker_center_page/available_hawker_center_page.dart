@@ -18,15 +18,40 @@ class AvailableHawkerCenterPage extends StatefulWidget {
 }
 
 class _AvailableHawkerCenterPageState extends State<AvailableHawkerCenterPage> {
-
+  bool timeOut = false; // timeOut becomes true after an arbitrary amount of duration fetching the list.
+  
   Future<Null> _refreshList() async {
     setState((){});
+    timeOut = false;
     return null;
   }
 
   Widget _displayCircularProgressIndicator() {
     print("circular progressing in available_hawker_center_page");
-    return Center(child: new CircularProgressIndicator());
+    if (!timeOut) {
+      Future.delayed(const Duration(seconds: 10), () {
+        timeOut = true;
+        setState(() {
+
+        });
+      });
+    }
+    if (timeOut) {
+      return Expanded(
+        child: Center(
+          child: new Text(
+            '''There probably is no hawker center available nearby. 
+You may also stay on this page and wait. ''',
+            style: new TextStyle(
+              fontSize: 18.0,
+              color: MyColors.mainRed,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Expanded(child: Center(child: new CircularProgressIndicator()));
   }
 
   @override

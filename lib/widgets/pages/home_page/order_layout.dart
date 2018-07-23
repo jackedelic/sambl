@@ -74,7 +74,7 @@ center you want to order from? ''',
                                     new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
                                 );
                               },
-                              child: new Text("Delivering from: ${appState.currentHawkerCenter.isPresent ? appState.currentHawkerCenter.value.name : "Press to select a hawker center"}",
+                              child: new Text("Ordering from: ${appState.currentHawkerCenter.isPresent ? appState.currentHawkerCenter.value.name : "Press to select a hawker center"}",
                                 style: new TextStyle(
                                     fontSize: 17.0,
                                     fontWeight: FontWeight.bold,

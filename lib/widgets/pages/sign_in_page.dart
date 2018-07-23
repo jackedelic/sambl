@@ -21,6 +21,10 @@ class SignInPage extends StatelessWidget {
         print("in sign in page, ordering, ");
         //Navigator.of(context).popUntil(ModalRoute.withName('/'));
         return defaultPage(status);
+      } else if (status == AppStatusFlags.delivering){
+        print("in sign in page, delivering. ");
+
+        return defaultPage(status);
       } else {
         return new Scaffold(
           key: _formKey,

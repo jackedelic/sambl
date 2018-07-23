@@ -119,7 +119,7 @@ Info info;
                         closingTime: info.closingTime,
                         eta: info.eta,
                         pickupPoint: info.pickupPoint,
-                        remarks: "first order to be submitted",
+                        remarks: "${info.remarks}",
                         hawkerCenter: currentHawkerCenter.value
                     )));
                     print("inside create_open_order_page, pressed confirm already. ");
@@ -185,7 +185,7 @@ Info info;
                               return new Text("Delivering from: ${currentHawkerCenter.value.name}",
                                 textAlign: TextAlign.center,
                                 style: new TextStyle(
-                                    fontSize: 18.0
+                                    fontSize: 15.0
                                 ),
 
                               );

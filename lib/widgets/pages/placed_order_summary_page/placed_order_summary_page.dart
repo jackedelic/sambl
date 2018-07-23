@@ -14,7 +14,9 @@ import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/quantity_display.dart';
 import 'package:sambl/widgets/pages/view_order_page/view_order_page.dart';
-import 'dart:isolate';
+import 'package:sambl/async_action/sign_out.dart';
+import 'package:sambl/widgets/shared/my_drawer.dart';
+
 
 class PlacedOrderSummaryPage extends StatefulWidget {
   OrderModel orderModel; // when first navigated to this page, we use the orderModel
@@ -30,8 +32,8 @@ class PlacedOrderSummaryPage extends StatefulWidget {
 }
 
 class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
-  GlobalKey<RefreshIndicatorState> refreshKey = new GlobalKey<
-      RefreshIndicatorState>();
+  GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  GlobalKey<RefreshIndicatorState> refreshKey = new GlobalKey<RefreshIndicatorState>();
 
   Future<Null> _updateETALabel() async {
     refreshKey.currentState.show();
@@ -48,14 +50,18 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
   Widget build(BuildContext context) {
 
       return Scaffold(
+        key: _scaffoldKey,
         appBar: MyAppBar(
           leading: new IconButton(
-              icon: const Icon(Icons.menu),
+              icon: new Icon(Icons.menu,
+                color: MyColors.mainRed,
+              ),
               onPressed: () {
-
+                _scaffoldKey.currentState.openDrawer();
               }
             ),
         ).build(context),
+        drawer: MyDrawer(),
         backgroundColor: MyColors.mainBackground,
         body: new Column(
             children: <Widget>[

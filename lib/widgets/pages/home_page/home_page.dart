@@ -71,13 +71,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
             children: <Widget>[
 
               new Padding(
-                padding: new EdgeInsets.only(bottom: 50.0),
+                padding: new EdgeInsets.only(bottom: 30.0),
                 child: new Text(
                   'SamBl',
                   style: new TextStyle(
-                    fontSize: 70.0,
-                    fontFamily: "Indie Flower", // Just a dummy fontfamily
-                    color: MyColors.mainRed,
+                    fontSize: 70.0, // Just a dummy fontfamily
+                    color: Colors.white,
                   ),
 
                 ),
@@ -149,30 +148,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ],
               ),
 
-
-
-
-              // Button that navigates to another route
-              new Container(
-                margin: new EdgeInsets.only(top: 150.0  ),
-                child: new FlatButton(
-                  onPressed: (){
-                    if (_orderButtonColor == MyColors.mainRed) {
-                      Navigator.pushNamed(context, "/OpenOrderListPage");
-                    } else if (_deliverButtonColor == MyColors.mainRed) {
-                      Navigator.pushNamed(context, "/CreateOpenOrderPage");
-                    }
-                  },
-                  child: new Icon(Icons.arrow_forward_ios, color: Colors.white,),
-
-                ),
-                decoration: new BoxDecoration(
-                  borderRadius: new BorderRadius.all(const Radius.circular(10.0)),
-                  color: MyColors.semiTransparent,
-                ),
-
-
-              )
 
             ],
           )

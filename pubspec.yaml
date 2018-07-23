@@ -98,3 +98,6 @@ flutter:
     - family: Futura
       fonts:
         - asset: assets/fonts/FuturaHeavyItalicFont.ttf
+    - family: Trebuchet
+      fonts:
+        - asset: assets/fonts/TrebuchetMSBold.ttf

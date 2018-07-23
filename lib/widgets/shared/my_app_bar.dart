@@ -8,7 +8,7 @@ class MyAppBar extends StatelessWidget{
     child: new Text('Sambl',
       style: new TextStyle(
         color: MyColors.mainRed,
-        fontFamily: 'Indie Flower',
+        fontFamily: 'Trebuchet',
         fontSize: 25.0,
         fontWeight: FontWeight.bold,
       ),

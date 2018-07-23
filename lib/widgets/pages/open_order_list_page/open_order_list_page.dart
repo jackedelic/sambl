@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:sambl/model/order_detail.dart';
@@ -21,10 +23,41 @@ class OpenOrderListPage extends StatefulWidget {
 
 
 class _OpenOrderListPageState extends State<OpenOrderListPage> {
+  bool timeOut = false; // timeOut becomes true after an arbitrary amount of duration fetching the list.
 
   Widget _displayCircularProgressIndicator() {
     print("circular progressing in open_order_list_page");
-    return Center(child: new CircularProgressIndicator());
+    if (!timeOut) {
+      Future.delayed(const Duration(seconds: 10), () {
+        timeOut = true;
+        setState(() {
+
+        });
+      });
+    }
+
+    if (timeOut) {
+      return Expanded(
+        child: Center(
+          child: new Text(
+            '''There probably is no open order available yet. You may want to look for other hawker center. 
+You may also stay on this page and wait. ''',
+            style: new TextStyle(
+              fontSize: 18.0,
+              color: MyColors.mainRed,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      );
+    }
+    return Expanded(child: Center(child: new CircularProgressIndicator()));
+  }
+
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
