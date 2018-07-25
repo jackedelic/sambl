@@ -112,10 +112,9 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                           style: new TextStyle(fontSize: 20.0,
                                               fontWeight: FontWeight.w700),
                                         ),
-                                        new Text("    ${currentOrder.isPresent
+                                        new Text("${currentOrder.isPresent
                                             ? (currentOrder.value.isApproved
-                                            ? 'Approved'
-                                            : 'Awaiting payment')
+                                              ? 'Awaiting payment' : 'Pending')
                                             : 'No order submitted'}",
                                           style: new TextStyle(fontSize: 20.0),
                                         )

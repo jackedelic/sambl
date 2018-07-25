@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   new Container(
                     child: new FlatButton(
                       child: new Container(
-                        child:  new Text("Deliveries",
+                        child:  new Text("Deliver",
                           style: new TextStyle(color: Colors.white),
                         ),
                         color: Colors.transparent,

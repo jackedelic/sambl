@@ -28,9 +28,12 @@ class _MyDrawerState extends State<MyDrawer> {
           child: new Column(
             children: <Widget>[
               new DrawerHeader(
-                  child: new CircleAvatar(
-                    radius: 60.0,
-                    backgroundImage: new NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+                  child: StoreConnector<AppState, String>(
+                    converter: (store) => store.state.currentUser.,
+                    child: new CircleAvatar(
+                      radius: 60.0,
+                      backgroundImage: new NetworkImage("https://i.imgur.com/BoN9kdC.png"),
+                    ),
                   )),
               new Expanded(
                 child: new ListView(
