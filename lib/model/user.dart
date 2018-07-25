@@ -8,6 +8,14 @@ class User {
 
   User(FirebaseUser user, int balance): this.onlineUser = Optional.of(user), this.balance = balance;
 
+  String get name {
+    return onlineUser.transform((user) => user.displayName).or("");
+  }
+
+  String get photoUrl {
+    return onlineUser.transform((user) => user.photoUrl).or('about:blank');
+  }
+
   User.initial(): this.onlineUser = Optional<FirebaseUser>.absent(), this.balance = 0;
 
   String get photoUrl {

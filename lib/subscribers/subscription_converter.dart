@@ -90,7 +90,7 @@ Future<CombinedSubscriber> toCurrentOrderSubscription(DocumentReference order, S
           await orderDetailReader(document.data['orderDetail']),
           isPaid: document.data['isPaid'],
           name: document.data['ordererName'],
-          isApproved: document.data['isPaid'],
+          isApproved: document.data['isApproved'],
           price: document.data['price'])
         ));
   }));
