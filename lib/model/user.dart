@@ -9,4 +9,9 @@ class User {
   User(FirebaseUser user, int balance): this.onlineUser = Optional.of(user), this.balance = balance;
 
   User.initial(): this.onlineUser = Optional<FirebaseUser>.absent(), this.balance = 0;
+
+  String get photoUrl {
+    return onlineUser.transform((user) => user.photoUrl).or("https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2018/03/21/vladimir-putin-satan-2.jpg");
+  }
+
 }

@@ -182,7 +182,7 @@ Info info;
                           converter: (store) => store.state.currentHawkerCenter,
                           builder: (_, currentHawkerCenter) {
                             if (currentHawkerCenter.isPresent) {
-                              return new Text("Delivering from: ${currentHawkerCenter.value.name}",
+                              return new Text("${currentHawkerCenter.isPresent ? 'Delivering from: ${currentHawkerCenter.value.name}' : 'No hawker center selected'}",
                                 textAlign: TextAlign.center,
                                 style: new TextStyle(
                                     fontSize: 15.0

@@ -74,11 +74,17 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                   children: <Widget>[
                     new Padding(
                       padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: new Text("Delivering from",
-                        style: new TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+                      child: StoreConnector<AppState, Optional<HawkerCenter>>(
+                        converter: (store) => store.state.currentHawkerCenter,
+                        builder: (_, currentHawkerCenter) {
+                          return new Text("${currentHawkerCenter.isPresent ? 'Delivering from ${currentHawkerCenter.value.toString()}' : 'No hawker center selected'}",
+                            style: new TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          );
+                        },
+
                       ),
                     ),
                   ],
@@ -108,7 +114,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                     padding: new EdgeInsets.only(left: 20.0),
                                     child: new Row(
                                       children: <Widget>[
-                                        new Text("Status:",
+                                        new Text("Status: ",
                                           style: new TextStyle(fontSize: 20.0,
                                               fontWeight: FontWeight.w700),
                                         ),
@@ -202,7 +208,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                     child: new Column(
                                       children: <Widget>[
                                         new Text("Pick-up location",
-                                          style: new TextStyle(fontSize: 25.0),
+                                          style: new TextStyle(fontSize: 20.0),
                                         ),
                                         new Text(
                                           "${currentOrder.isPresent ? currentOrder
@@ -210,7 +216,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                               .toString() : 'unspecified'}",
                                           style: new TextStyle(
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 30.0),
+                                              fontSize: 24.0),
                                           textAlign: TextAlign.center,
                                         ),
                                       ],
@@ -296,57 +302,60 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
 
               // Authorise Payment
               new Center(
-                child: new Container(
-                  color: Colors.white,
-                  // TRIGGER OpenChat Action
-                  child: new StoreConnector<AppState, Store<AppState>>(
-                    converter: (store) => store,
-                    builder: (_, store) {
-                      return new FlatButton(
-                        padding: new EdgeInsets.all(10.0),
-                        onPressed: () {
-                          //TRIGGER SubmitOrderAction.
-                          Optional<Order> newOrder = store.state.currentOrder;
-                          // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                          //store.dispatch(new OrderAction(order: newOrder));
-                          print("Authorise Payment.");
+                child: StoreConnector<AppState, Store<AppState>>(
+                  converter: (store) => store,
+                  builder: (_, store) {
+                    return new Container(
+                      color: store.state.currentOrder.isPresent ? (store.state.currentOrder.value.isApproved ? Colors.white : Colors.grey) : Colors.grey,
+                      // TRIGGER AuthorisePayment Action
+                          child: new FlatButton(
+                            padding: new EdgeInsets.all(10.0),
+                            onPressed: () {
+                              if (store.state.currentOrder.isPresent && store.state.currentOrder.value.isApproved) {
 
-                          // Navigate to a page to chat page
-                          /*Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) {
-                                                return new ScopedModelDescendant<OrderModel>(
-                                                  builder: (context, child, orderModel) {
-                                                    return new PlacedOrderSummaryPage(orderModel);
-                                                  },
+                                //TRIGGER SubmitOrderAction.
+                                Optional<Order> newOrder = store.state.currentOrder;
+                                // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                                //store.dispatch(new OrderAction(order: newOrder));
+                                print("Authorise Payment.");
 
-                                                );
-                                              }
-                                          )
-                                      );*/
+                                // Navigate to a page to chat page
+                                /*Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) {
+                                                  return new ScopedModelDescendant<OrderModel>(
+                                                    builder: (context, child, orderModel) {
+                                                      return new PlacedOrderSummaryPage(orderModel);
+                                                    },
 
-
-                        },
-                        child: new Container(
-                          width: MediaQuery
-                              .of(context)
-                              .size
-                              .width,
-                          child: new Text("Authorise Payment",
-                            textAlign: TextAlign.center,
-                            style: new TextStyle(
-                                color: MyColors.mainRed,
-                                fontSize: 17.0
+                                                  );
+                                                }
+                                            )
+                                        );*/
+                              }
+                            },
+                            child: new Container(
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              child: new Text("Authorise Payment",
+                                textAlign: TextAlign.center,
+                                style: new TextStyle(
+                                    color: store.state.currentOrder.isPresent ? (store.state.currentOrder.value.isApproved ? MyColors.mainRed : Colors.white) : Colors.white,
+                                    fontSize: 17.0
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
-
-                  ),
 
 
+
+
+
+                    );
+                  },
                 ),
               ),
 
