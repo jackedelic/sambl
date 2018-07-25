@@ -13,13 +13,11 @@ class User {
   }
 
   String get photoUrl {
-    return onlineUser.transform((user) => user.photoUrl).or('about:blank');
+    return onlineUser.transform((user) => user.photoUrl).or('https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2018/03/21/vladimir-putin-satan-2.jpg');
   }
 
   User.initial(): this.onlineUser = Optional<FirebaseUser>.absent(), this.balance = 0;
 
-  String get photoUrl {
-    return onlineUser.transform((user) => user.photoUrl).or("https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2018/03/21/vladimir-putin-satan-2.jpg");
-  }
+
 
 }
