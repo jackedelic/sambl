@@ -19,7 +19,7 @@ class OrderLayout extends StatefulWidget {
 
 
 class _OrderLayoutState extends State<OrderLayout> {
-  GeoPoint _geoPoint;
+  GeoPoint geoPoint;
   MapView mapView;
 
 
@@ -32,7 +32,7 @@ class _OrderLayoutState extends State<OrderLayout> {
 
   // assigns _geoPoint to the user's current location.
   void _getCurrentLocation() async {
-    _geoPoint = await getCurrentLocation();
+    geoPoint = await getCurrentLocation();
     setState(() {
 
     });
@@ -61,7 +61,7 @@ class _OrderLayoutState extends State<OrderLayout> {
         mapView.dismiss();
       } else if (id == 2) {
         if (mapView.markers.isNotEmpty){
-          _geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
+          geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
           mapView.dismiss();
           setState(() {
 
@@ -171,7 +171,7 @@ center you want to order from? ''',
                           onTap:(){
                             _showMap();
                           },
-                          child: new Text("${_geoPoint == null ? 'Tap to select your location' : '${_geoPoint.latitude.toStringAsFixed(4)}E    ${_geoPoint.longitude.toStringAsFixed(4)}N'}",
+                          child: new Text("${geoPoint == null ? 'Tap to select your location' : '${geoPoint.latitude.toStringAsFixed(4)}E    ${geoPoint.longitude.toStringAsFixed(4)}N'}",
                               style: new TextStyle(
                                   fontSize: 13.0,
                                   fontWeight: FontWeight.bold,

@@ -53,13 +53,13 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
   void _getCurrentLocation() async {
     geoPoint = await getCurrentLocation();
     setState(() {
-      staticMapUri = _getStaticUri(geoPoint);
+      staticMapUri = _getStaticUriWithMarkers(geoPoint, [new Marker("1","my location", geoPoint.latitude, geoPoint.longitude)]);
     });
   }
 
-  Uri _getStaticUri(GeoPoint geoPoint) {
-    return staticMapProvider.getStaticUri(geoPoint != null ? new Location(geoPoint.latitude, geoPoint.longitude) : Locations.centerOfUSA, 15,
-        width: 900, height: 400, mapType: StaticMapViewType.roadmap);
+  Uri _getStaticUriWithMarkers(GeoPoint geoPoint, List<Marker> markers) {
+    return staticMapProvider.getStaticUriWithMarkers(markers ,center: geoPoint != null ? new Location(geoPoint.latitude, geoPoint.longitude) : Locations.centerOfUSA,
+        width: 900, height: 400, maptype: StaticMapViewType.roadmap);
   }
 
   // opens a page to show the map
@@ -77,8 +77,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
     mapView.onMapTapped.listen((location) {
       print("tapped location is $location");
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
-      //mapView.addMarker(new Marker("1", "selected",location.latitude, location.longitude));
-      //mapView.removeMarker(marker);
+
     });
 
     mapView.onToolbarAction.listen((id) {
@@ -88,7 +87,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
         if (mapView.markers.isNotEmpty){
           geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
           setState(() {
-            staticMapUri = _getStaticUri(geoPoint);
+            staticMapUri = _getStaticUriWithMarkers(geoPoint, mapView.markers);
           });
           mapView.dismiss();
         }
