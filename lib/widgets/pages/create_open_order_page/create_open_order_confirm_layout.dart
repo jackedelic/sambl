@@ -75,7 +75,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                             future: reverseGeocode(info.pickupPoint),
                             builder: (_, AsyncSnapshot<String> snapshot) {
                               String pickUpPointName;
-
+                              print("snapshot(pickup pt) is $snapshot");
                               if (snapshot.hasError)
                                 pickUpPointName = "...";
                               else
