@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/main.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/quantity_display.dart';
-
+import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
 
 /// This class constructs the layout for confirmation page for creating open order. This layout
@@ -27,6 +28,8 @@ class CreateOpenOrderConfirmLayout extends StatefulWidget {
 }
 
 class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLayout> {
+
+
   @override
   Widget build(BuildContext context) {
     return new StoreProvider(
@@ -53,7 +56,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
             // The summary body
 
             new ScopedModelDescendant<Info>(
-              builder: (context, child, info){
+              builder: (context, child, info) {
                 return new Container(
                   height: 270.0,
                   margin: new EdgeInsets.symmetric(horizontal: 20.0),
@@ -65,19 +68,37 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                     children: <Widget>[
                       // This row shows the pickup point.
                       // Borderless container.
-                      new Container(
-                        child: new Row(
-                          children: <Widget>[
-                            new Expanded(
-                              child: new Text("Picking up at Changi Prison lobby",
-                                style: new TextStyle(
-                                  fontSize: 20.0,
+                      ScopedModelDescendant<Info>(
+                        builder: (_, child, info) {
+
+                          return FutureBuilder<String>(
+                            future: reverseGeocode(info.pickupPoint),
+                            builder: (_, AsyncSnapshot<String> snapshot) {
+                              String pickUpPointName;
+
+                              if (snapshot.hasError)
+                                pickUpPointName = "...";
+                              else
+                                pickUpPointName = "${snapshot.data}";
+
+
+                              return new Container(
+                                child: new Row(
+                                  children: <Widget>[
+                                    new Expanded(
+                                      child: new Text("Picking up at $pickUpPointName",
+                                        style: new TextStyle(
+                                          fontSize: 20.0,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        ),
+                              );
+                            },
+                          );
+                        },
                       ),
 
 

@@ -77,9 +77,10 @@ class _OrdererListPageState extends State<OrdererListPage> {
                     itemCount: pendingDeliveryList.orders.length,
                       itemBuilder: (_, int n) {
                         return new ExpansionTile(
-                          title: new Text("hei"),
-                          trailing: new Text("Pending"),
+                          title: new Text("${pendingDeliveryList.orders[n]}"),
+                          trailing: new Text("pending"),
                           children: <Widget>[
+                            //recompile the order with the new prices, then approve/reject the recompiled order
                             new Text("hi there i am jack")
                           ],
                         );
@@ -89,6 +90,8 @@ class _OrdererListPageState extends State<OrdererListPage> {
               );
             },
           ),
+
+
 
           // approved delivery list
           StoreConnector<AppState, DeliveryList>(
