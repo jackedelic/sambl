@@ -4,6 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:haversine/haversine.dart';
 import 'package:location/location.dart';
 
+import 'package:geocoder/geocoder.dart';
+
+Future<String> reverseGeocode(GeoPoint point) {
+  return Geocoder.local.findAddressesFromCoordinates(new Coordinates(point.latitude, point.longitude)).then((list) {
+    return list.first.addressLine;
+  });
+}
+
 Map<String,dynamic> geoPointToMap(GeoPoint point) {
   return {
   'latitude': point.latitude,
