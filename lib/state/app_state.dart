@@ -36,7 +36,7 @@ class AppState {
   final List<OrderDetail> openOrderList;
   final Optional<Order> currentOrder;
   final CombinedDeliveryList currentDeliveryList; // needed for deliverer
-  final Map<String,Conversation> chats; 
+  final Map<String,Conversation> chats; // orderid as
 
   AppState copyWith({
     User currentUser,

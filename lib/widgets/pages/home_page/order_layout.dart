@@ -48,15 +48,28 @@ class _OrderLayoutState extends State<OrderLayout> {
             initialCameraPosition: new CameraPosition(
                 new Location(currentLocation.latitude, currentLocation.longitude), 14.0),
             title: "Your location"),
-        toolbarActions: [new ToolbarAction("Close", 1)]);
+        toolbarActions: [new ToolbarAction("Close", 1), new ToolbarAction("Confirm", 2)]);
 
     mapView.onMapTapped.listen((location) {
       print("tapped location is $location");
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
-      _geoPoint = new GeoPoint(location.latitude, location.longitude);
-      setState(() {
 
-      });
+    });
+    
+    mapView.onToolbarAction.listen((id) {
+      if (id == 1) {
+        mapView.dismiss();
+      } else if (id == 2) {
+        if (mapView.markers.isNotEmpty){
+          _geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
+          mapView.dismiss();
+          setState(() {
+
+          });
+
+        }
+
+      }
     });
   }
 
