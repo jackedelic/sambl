@@ -72,15 +72,28 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
             initialCameraPosition: new CameraPosition(
                 new Location(currentLocation.latitude, currentLocation.longitude), 14.0),
             title: "Your location"),
-        toolbarActions: [new ToolbarAction("Close", 1)]);
+        toolbarActions: [new ToolbarAction("Close", 1), new ToolbarAction("Confirm", 2)]);
 
     mapView.onMapTapped.listen((location) {
       print("tapped location is $location");
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
-      geoPoint = new GeoPoint(location.latitude, location.longitude);
-      setState(() {
-        staticMapUri = _getStaticUri(geoPoint);
-      });
+      //mapView.addMarker(new Marker("1", "selected",location.latitude, location.longitude));
+      //mapView.removeMarker(marker);
+    });
+
+    mapView.onToolbarAction.listen((id) {
+      if (id == 1) {
+        mapView.dismiss();
+      } else if (id == 2) {
+        if (mapView.markers.isNotEmpty){
+          geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
+          setState(() {
+            staticMapUri = _getStaticUri(geoPoint);
+          });
+          mapView.dismiss();
+        }
+
+      }
     });
   }
 
