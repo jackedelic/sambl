@@ -47,13 +47,13 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
     MapView.setApiKey(API_KEY);
     mapView = new MapView();
     _getCurrentLocation();
-    staticMapUri = _getStaticUri(geoPoint);
   }
 
+  // set geoPoint then set staticMapUri which requires geoPoint.
   void _getCurrentLocation() async {
     geoPoint = await getCurrentLocation();
     setState(() {
-
+      staticMapUri = _getStaticUri(geoPoint);
     });
   }
 
@@ -79,7 +79,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
       geoPoint = new GeoPoint(location.latitude, location.longitude);
       setState(() {
-
+        staticMapUri = _getStaticUri(geoPoint);
       });
     });
   }
@@ -88,7 +88,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
   @override
   Widget build(BuildContext context) {
 
-    staticMapUri = _getStaticUri(geoPoint); // updated when setstate() is called by _getCurrentLocation().
+
 
     return new ListView(
       children: <Widget>[

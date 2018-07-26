@@ -158,7 +158,7 @@ center you want to order from? ''',
                           onTap:(){
                             _showMap();
                           },
-                          child: new Text("${_geoPoint == null ? 'Tap to select your location' : '${_geoPoint.latitude}E ${_geoPoint.longitude}N'}",
+                          child: new Text("${_geoPoint == null ? 'Tap to select your location' : '${_geoPoint.latitude.toStringAsFixed(4)}E    ${_geoPoint.longitude.toStringAsFixed(4)}N'}",
                               style: new TextStyle(
                                   fontSize: 13.0,
                                   fontWeight: FontWeight.bold,
