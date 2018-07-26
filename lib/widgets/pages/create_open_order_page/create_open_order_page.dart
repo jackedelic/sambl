@@ -4,6 +4,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:quiver/core.dart';
+import 'package:map_view/map_view.dart';
 import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
@@ -279,6 +280,14 @@ class Info extends Model {
   int maxNumberofDishes = 3;
   int remainingNumberofDishes;
   String openOrderUid;
+
+  Info() {
+    _initializePickupPoint(); // default pickuppoint is user's current location.
+  }
+
+  void _initializePickupPoint() async{
+    this.pickupPoint =  await getCurrentLocation();
+  }
 
   /// create and return an OrderDetail object based on this info's attributes.
   OrderDetail getOrderDetail() {

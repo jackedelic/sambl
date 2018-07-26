@@ -6,7 +6,9 @@ buildscript {
 
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.1'
+
         classpath 'com.google.gms:google-services:4.0.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.1.2-4'
     }
 }
 
@@ -15,6 +17,7 @@ allprojects {
         google()
         jcenter()
     }
+
 }
 
 rootProject.buildDir = '../build'
@@ -23,8 +26,18 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if (details.requested.group == 'com.android.support'
+                    && !details.requested.name.contains('multidex') ) {
+                details.useVersion "27.1.1"
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

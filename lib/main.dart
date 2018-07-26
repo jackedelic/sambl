@@ -22,7 +22,7 @@ import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:sambl/middleware/write_logger_middleware.dart';
 
-
+const String API_KEY = "AIzaSyAlB2rNmjXhQUycJAjfQU4aVPmCvqFy1yc"; // for MapView
 
 // store is made global since there is only one store in our entire app. We can thus access this
 // store by importing this main.dart file.

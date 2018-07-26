@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:haversine/haversine.dart';
+import 'package:location/location.dart';
 
 Map<String,dynamic> geoPointToMap(GeoPoint point) {
   return {
@@ -20,4 +23,9 @@ double getDistance(GeoPoint p1, GeoPoint p2) {
     latitude2: p2.latitude,
     longitude2: p2.longitude)
     .distance();
+}
+
+Future<GeoPoint> getCurrentLocation() {
+  return Location().getLocation
+      .then((here) => new GeoPoint(here['latitude'],here['longitude']));
 }

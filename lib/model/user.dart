@@ -13,6 +13,7 @@ class User {
   }
 
   String get photoUrl {
+
     return onlineUser.transform((user) => user.photoUrl).or('https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2018/03/21/vladimir-putin-satan-2.jpg');
   }
 

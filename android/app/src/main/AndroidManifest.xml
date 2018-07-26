@@ -35,5 +35,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!--The three lines below are for Map View-->
+        <activity android:name="com.apptreesoftware.mapview.MapActivity" android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAlB2rNmjXhQUycJAjfQU4aVPmCvqFy1yc"/>
+        <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version"/>
     </application>
 </manifest>

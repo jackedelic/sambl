@@ -74,10 +74,10 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                   children: <Widget>[
                     new Padding(
                       padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child: StoreConnector<AppState, Optional<HawkerCenter>>(
-                        converter: (store) => store.state.currentHawkerCenter,
-                        builder: (_, currentHawkerCenter) {
-                          return new Text("${currentHawkerCenter.isPresent ? 'Delivering from ${currentHawkerCenter.value.toString()}' : 'No hawker center selected'}",
+                      child: StoreConnector<AppState, Optional<Order>>(
+                        converter: (store) => store.state.currentOrder,
+                        builder: (_, currentOrder) {
+                          return new Text("${currentOrder.isPresent ? 'Delivering from ${currentOrder.value.orderDetail.hawkerCenter.name}' : 'Loading your order detail'}",
                             style: new TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,
@@ -96,6 +96,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                 child: StoreConnector<AppState, Optional<Order>>(
                   converter: (store) => store.state.currentOrder,
                   builder: (_, currentOrder) {
+                    print("currentOrder is $currentOrder");
                     return new Container(
                       color: Colors.white,
                       margin: new EdgeInsets.only(top: 5.0, bottom: 5.0),
@@ -114,13 +115,13 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                     padding: new EdgeInsets.only(left: 20.0),
                                     child: new Row(
                                       children: <Widget>[
-                                        new Text("Status: ",
+                                        new Text("Status:  ",
                                           style: new TextStyle(fontSize: 20.0,
                                               fontWeight: FontWeight.w700),
                                         ),
                                         new Text("${currentOrder.isPresent
                                             ? (currentOrder.value.isApproved
-                                              ? 'Awaiting payment' : 'Pending')
+                                            ? 'Awaiting payment' : 'Pending')
                                             : 'No order submitted'}",
                                           style: new TextStyle(fontSize: 20.0),
                                         )
@@ -131,7 +132,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
 
                                 // 'view order' button
                                 new Expanded(
-                                  flex: 2,
+                                  flex: 3,
                                   child: new Container(
                                     margin: new EdgeInsets.only(
                                         top: 15.0, bottom: 15.0, right: 20.0),
@@ -158,7 +159,9 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                         );
                                       },
                                       child: new Center(
-                                          child: new Text("View order")),
+                                          child: new Text("View order",
+                                            style: const TextStyle(fontSize: 15.0),
+                                          )),
                                     ),
                                   ),
                                 )
@@ -308,47 +311,48 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                     return new Container(
                       color: store.state.currentOrder.isPresent ? (store.state.currentOrder.value.isApproved ? Colors.white : Colors.grey) : Colors.grey,
                       // TRIGGER AuthorisePayment Action
-                          child: new FlatButton(
-                            padding: new EdgeInsets.all(10.0),
-                            onPressed: () {
-                              if (store.state.currentOrder.isPresent && store.state.currentOrder.value.isApproved) {
+                      child: new FlatButton(
+                        padding: new EdgeInsets.all(10.0),
+                        onPressed: () {
+                          print(store.state.currentOrder.value.isApproved);
+                          if (store.state.currentOrder.isPresent && store.state.currentOrder.value.isApproved) {
 
-                                //TRIGGER SubmitOrderAction.
-                                Optional<Order> newOrder = store.state.currentOrder;
-                                // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                                //store.dispatch(new OrderAction(order: newOrder));
-                                print("Authorise Payment.");
+                            //TRIGGER SubmitOrderAction.
+                            //Optional<Order> newOrder = store.state.currentOrder;
+                            // The reducer shd create a new state w new Order. Then inform Firebase (async).
+                            //store.dispatch(new OrderAction(order: newOrder));
+                            print("Authorise Payment.");
 
-                                // Navigate to a page to chat page
-                                /*Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) {
-                                                  return new ScopedModelDescendant<OrderModel>(
-                                                    builder: (context, child, orderModel) {
-                                                      return new PlacedOrderSummaryPage(orderModel);
-                                                    },
+                            // Navigate to a page to chat page
+                            /*Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) {
+                                              return new ScopedModelDescendant<OrderModel>(
+                                                builder: (context, child, orderModel) {
+                                                  return new PlacedOrderSummaryPage(orderModel);
+                                                },
 
-                                                  );
-                                                }
-                                            )
-                                        );*/
-                              }
-                            },
-                            child: new Container(
-                              width: MediaQuery
-                                  .of(context)
-                                  .size
-                                  .width,
-                              child: new Text("Authorise Payment",
-                                textAlign: TextAlign.center,
-                                style: new TextStyle(
-                                    color: store.state.currentOrder.isPresent ? (store.state.currentOrder.value.isApproved ? MyColors.mainRed : Colors.white) : Colors.white,
-                                    fontSize: 17.0
-                                ),
-                              ),
+                                              );
+                                            }
+                                        )
+                                    );*/
+                          }
+                        },
+                        child: new Container(
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          child: new Text("Authorise Payment",
+                            textAlign: TextAlign.center,
+                            style: new TextStyle(
+                                color: store.state.currentOrder.isPresent ? (store.state.currentOrder.value.isApproved ? MyColors.mainRed : Colors.white) : Colors.white,
+                                fontSize: 17.0
                             ),
                           ),
+                        ),
+                      ),
 
 
 

@@ -42,10 +42,10 @@ class _ViewOrderPageState extends State<ViewOrderPage> {
                   children: <Widget>[
                     new Padding(
                       padding: new EdgeInsets.only(top: 10.0, bottom: 10.0),
-                      child:  StoreConnector<AppState, Optional<HawkerCenter>>(
-                        converter: (store) => store.state.currentHawkerCenter,
-                        builder: (_, currentHawkerCenter) {
-                          return new Text(currentHawkerCenter.isPresent ? "Delivering from ${currentHawkerCenter.value.name}" : "unspecified",
+                      child:  StoreConnector<AppState, Optional<Order>>(
+                        converter: (store) => store.state.currentOrder,
+                        builder: (_, currentOrder) {
+                          return new Text(currentOrder.isPresent ? "Delivering from ${currentOrder.value.orderDetail.hawkerCenter.name}" : "Loading order detail",
                             style: new TextStyle(
                               fontSize: 20.0,
                               fontWeight: FontWeight.bold,

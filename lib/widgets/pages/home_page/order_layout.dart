@@ -2,11 +2,63 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiver/core.dart';
+import 'package:map_view/map_view.dart';
 import 'package:sambl/widgets/pages/available_hawker_center_page/available_hawker_center_page.dart';
 import 'package:sambl/state/app_state.dart';
+import 'package:sambl/utility/geo_point_utilities.dart';
+import 'package:sambl/main.dart';
 
-class OrderLayout extends StatelessWidget {
+class OrderLayout extends StatefulWidget {
+  @override
+  _OrderLayoutState createState() => _OrderLayoutState();
+}
+
+
+
+class _OrderLayoutState extends State<OrderLayout> {
+  GeoPoint _geoPoint;
+  MapView mapView;
+
+
+  @override
+  void initState() {
+    super.initState();
+    MapView.setApiKey(API_KEY);
+    mapView = new MapView();
+  }
+
+  // assigns _geoPoint to the user's current location.
+  void _getCurrentLocation() async {
+    _geoPoint = await getCurrentLocation();
+    setState(() {
+
+    });
+  }
+
+  // opens a page to show the map
+  void _showMap() async {
+    GeoPoint currentLocation = await getCurrentLocation();
+    mapView.show(
+        new MapOptions(
+            mapViewType: MapViewType.normal,
+            showUserLocation: true,
+            initialCameraPosition: new CameraPosition(
+                new Location(currentLocation.latitude, currentLocation.longitude), 14.0),
+            title: "Your location"),
+        toolbarActions: [new ToolbarAction("Close", 1)]);
+
+    mapView.onMapTapped.listen((location) {
+      print("tapped location is $location");
+      mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
+      _geoPoint = new GeoPoint(location.latitude, location.longitude);
+      setState(() {
+
+      });
+    });
+  }
 
   Future<Null> _displayDialog(BuildContext context) {
     return showDialog<Null>(
@@ -103,18 +155,15 @@ center you want to order from? ''',
                       new Expanded(
                         flex: 5,
                         child: new InkWell(
-                          onTap: () {
-
+                          onTap:(){
+                            _showMap();
                           },
-                          child: new GestureDetector(
-                            onTap:(){},
-                            child: new Text("Tap to select your location",
-                                style: new TextStyle(
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.bold,
-                                  color: Colors.white
-                                )
-                            ),
+                          child: new Text("${_geoPoint == null ? 'Tap to select your location' : '${_geoPoint.latitude}E ${_geoPoint.longitude}N'}",
+                              style: new TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.bold,
+                                color: Colors.white
+                              )
                           ),
                         ),
                       ),
@@ -132,6 +181,7 @@ center you want to order from? ''',
                         child: new InkWell(
                           onTap: (){
                             print("you tapped 'use my location'");
+                            _getCurrentLocation();
                           },
                           child: new Row(
                             children: <Widget>[
