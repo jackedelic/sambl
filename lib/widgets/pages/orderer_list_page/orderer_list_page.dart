@@ -13,6 +13,7 @@ import 'package:sambl/widgets/shared/my_app_bar.dart';
 import 'package:sambl/main.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_drawer.dart';
+import 'package:sambl/model/order.dart';
 
 class OrdererListPage extends StatefulWidget {
   @override
@@ -20,9 +21,9 @@ class OrdererListPage extends StatefulWidget {
 }
 
 class _OrdererListPageState extends State<OrdererListPage> {
-  double dishRowHeight = 60.0;
+  double dishRowHeight = 35.0;
   double deliveryChargeHeight = 60.0;
-  double approvalButtonHeight = 40.0;
+  double approvalButtonHeight = 108.0;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -88,7 +89,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
                         });
 
                       });
-                      totalPendingDeliveryListHeight += (deliveryChargeHeight + approvalButtonHeight + 60);
+                      totalPendingDeliveryListHeight += (deliveryChargeHeight + approvalButtonHeight * 2 + 60);
                     });
 
                     // The whole pending delivery list.
@@ -96,6 +97,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
                         height: totalPendingDeliveryListHeight,
                         child: new ListView.builder(
                             itemCount: pendingDeliveryList.orders.length,
+                            // for each order
                             itemBuilder: (_, int n) {
                               print("length is ${pendingDeliveryList.orders.length}");
                               print(pendingDeliveryList.orders.values);
@@ -107,14 +109,22 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                   totalOrderHeight += dishRowHeight;
                                 });
                               });
+
                               // A particular order in this pending delivery list.
+
+                              // Create an exact copy of this order. We'll later set price for the dishes in this order
+                              Order orderWithPrice = pendingDeliveryList.orders.values.toList()[n];
                               return Container(
                                 color: Colors.white,
                                 margin: const EdgeInsets.symmetric(vertical: 5.0),
                                 child: new ExpansionTile(
                                   backgroundColor: Colors.white,
-                                  title: new Text("${pendingDeliveryList.orders.values.toList()[n].ordererName}"),
-                                  trailing: new Text("pending"),
+                                  title: new Text("${pendingDeliveryList.orders.values.toList()[n].ordererName}",
+                                    style: new TextStyle(fontSize: 20.0),
+                                  ),
+                                  trailing: new Text("pending",
+                                    style: new TextStyle(fontSize: 20.0),
+                                  ),
                                   children: <Widget>[
                                     //recompile the order with the new prices, then approve/reject the recompiled order
 
@@ -131,7 +141,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
                                                   print("stalls");
                                                   return Container(
-                                                    height: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length * dishRowHeight,
+                                                    height: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length * dishRowHeight ,
                                                     child: new ListView.builder(
                                                         itemCount: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length,
                                                         itemBuilder: (_, int dishIndex) {
@@ -139,14 +149,26 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                           // we're now inside the dish row.
                                                           // Here we create textController for the price of this dish.
                                                           // Then we set the price of the dish based on this text controller's value
+                                                          TextEditingController priceTextController = new TextEditingController();
+                                                          priceTextController.text = orderWithPrice.stalls[stallIndex].dishes[dishIndex].isPriceSpecified ?
+                                                                                  "${orderWithPrice.stalls[stallIndex].dishes[dishIndex].price}" :
+                                                                                    null;
+                                                          priceTextController.addListener((){
+                                                            if (double.tryParse(priceTextController.text) != null) {
+                                                              print("price is ${priceTextController.text}");
+                                                              orderWithPrice.stalls[stallIndex].dishes[dishIndex] = Dish
+                                                                  .withPrice(orderWithPrice.stalls[stallIndex].dishes[dishIndex].name, double.parse(priceTextController.text));
+                                                              print("now the current dish (${orderWithPrice.stalls[stallIndex].dishes[dishIndex].name}) has price : ${orderWithPrice.stalls[stallIndex].dishes[dishIndex].price}");
+                                                            }
 
+                                                          });
                                                           return new Container(
                                                             // This row is 'stallname dishname      setpricebutton'
                                                             child: new Row(
 
                                                               children: <Widget>[
                                                                 // some space to the left
-                                                                new Padding(padding: const EdgeInsets.all(10.0),),
+                                                                new Padding(padding: const EdgeInsets.all(18.0),),
                                                                 // stall name + dishname
                                                                 new Expanded(
                                                                   flex: 3,
@@ -167,9 +189,13 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                                     child: InkWell(
                                                                         child: Center(
                                                                           child: new TextFormField(
+                                                                            controller: priceTextController,
                                                                             keyboardType: TextInputType.numberWithOptions(),
                                                                             textAlign: TextAlign.center,
-                                                                            decoration: InputDecoration(hintText: "Set Price",border: InputBorder.none),
+                                                                            decoration: InputDecoration(
+                                                                                hintText: "Set Price",border: InputBorder.none,
+                                                                                contentPadding: EdgeInsets.symmetric(vertical: 2.0)
+                                                                            ),
                                                                           ),
                                                                         )
                                                                     ),
@@ -203,7 +229,6 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                 new Expanded(
                                                   flex: 1,
                                                   child: Container(
-                                                    margin: const EdgeInsets.all(3.0),
                                                     padding: const EdgeInsets.all(1.0),
                                                     decoration: new BoxDecoration(
                                                         border: Border.all(color: Colors.grey, width: 2.0),
@@ -213,7 +238,8 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                         child: Center(
                                                           child: new Text("Chat",
                                                             style: new TextStyle(
-                                                                color: Colors.black38
+                                                              fontSize: 18.0,
+                                                                color: Colors.black38,
                                                             ),
                                                             textAlign: TextAlign.center,
                                                           ),
@@ -227,52 +253,71 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                           ),
 
                                           // This is the hori divider separating 'delivery charge' row and 'approve/reject' row
-                                          Container(height: 1.5, width: 350.0, color: Colors.black38,),
+                                          Container(height: 8.0, width: MediaQuery.of(context).size.width, color: MyColors.mainBackground,),
 
-                                          // This is the approve/reject button
+                                          // This is the approve button
 
                                           new Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
                                             child: new Row(
                                               children: <Widget>[
                                                 // approve button.
                                                 Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.all(5.0),
-                                                    child: InkWell(
-                                                      onTap: (){},
-                                                      child: new Text("Approve",
-                                                        textAlign: TextAlign.center,
-                                                        style: const TextStyle(
-                                                            color: Colors.lightGreen,
-                                                            fontSize: 25.0
-                                                        ),
+                                                  child: InkWell(
+                                                    onTap: (){
+
+                                                      bool valid = true;
+                                                      // 1. Make sure that all dishes have prices set
+                                                      for (int i = 0; i < orderWithPrice.stalls.length; i++) {
+                                                        for (int j = 0; j < orderWithPrice.stalls.length; i++) {
+                                                          if (orderWithPrice.stalls[i].dishes[j].isPriceSpecified == false) {
+                                                            valid = false;
+                                                            break;
+                                                          }
+                                                        }
+                                                      }
+                                                      // dispatch recompiled order - orderWithPrice
+                                                      if (valid) {
+
+                                                      } else {
+                                                        print("Please set all prices of all dishes!");
+                                                      }
+
+                                                    },
+                                                    child: new Text("Approve",
+                                                      textAlign: TextAlign.center,
+                                                      style: const TextStyle(
+                                                          color: Colors.lightGreen,
+                                                          fontSize: 25.0
                                                       ),
                                                     ),
                                                   ),
                                                 ),
+                                              ],
+                                            ),
+                                          ),
 
-                                                //vertical divider
-                                                Container(height: 30.0, width: 1.5, color: Colors.black38,),
+                                          // This is the hori divider separating 'reject' row from 'approve' row
+                                          Container(height: 8.0, width: MediaQuery.of(context).size.width, color: MyColors.mainBackground,),
 
+                                          // This s the reject button
+                                          new Container(
+                                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                            child: new Row(
+                                              children: <Widget>[
                                                 // reject button.
                                                 Expanded(
-                                                  flex: 1,
-                                                  child: Container(
-                                                    padding: const EdgeInsets.all(5.0),
-                                                    child: InkWell(
-                                                      onTap: (){},
-                                                      child: new Text("Reject",
-                                                        textAlign: TextAlign.center,
-                                                        style: new TextStyle(
-                                                            color: MyColors.mainRed,
-                                                            fontSize: 25.0
-                                                        ),
+                                                  child: InkWell(
+                                                    onTap: (){},
+                                                    child: new Text("Reject",
+                                                      textAlign: TextAlign.center,
+                                                      style: new TextStyle(
+                                                          color: MyColors.mainRed,
+                                                          fontSize: 25.0
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-
                                               ],
                                             ),
                                           )
