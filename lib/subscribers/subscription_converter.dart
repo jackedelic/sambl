@@ -91,7 +91,7 @@ Future<CombinedSubscriber> toCurrentOrderSubscription(DocumentReference order, S
           isPaid: document.data['isPaid'],
           name: document.data['ordererName'],
           isApproved: document.data['isApproved'],
-          price: document.data['price'])
+          price: document.data['price'].round())
         ));
   }));
   

@@ -62,7 +62,7 @@ Future<Order> orderReader(DocumentReference reference) async {
         isPaid: snapshot.data['isPaid'],
         name: snapshot.data['ordererName'],
         isApproved: snapshot.data['isApproved'],
-        price: snapshot.data['price']);
+        price: snapshot.data['price'].round());
     });
 }
 
@@ -92,6 +92,8 @@ Future<DeliveryList> deliveryListReader(DocumentReference reference, DeliveryLis
             new MapEntry(order.documentID, 
             await orderReader(order['reference'])))
           .where((entry) {
+            print("delivlistreader: " + type.toString());
+            print("delivlistreader: " + entry.value.isPaid.toString());
             return (type == DeliveryListType.pending || 
               ((type == DeliveryListType.approved && !entry.value.isPaid) || 
               (type == DeliveryListType.paid && entry.value.isPaid)));
