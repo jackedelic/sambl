@@ -82,7 +82,13 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
 
                 // approved delivery list
-                new ApprovedDeliveryListLayout(),
+                StoreConnector<AppState, DeliveryList>(
+                  converter: (store) => store.state.currentDeliveryList.approved,
+                    builder: (_, approvedDeliveryList){
+                    print("in store connectore of approved delivery list, in orderer list page, list is ${approvedDeliveryList.orders}");
+                      return new ApprovedDeliveryListLayout();
+                    },
+                ),
 
 
                 // paid delivery list

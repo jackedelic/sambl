@@ -15,62 +15,59 @@ import 'package:sambl/widgets/shared/my_drawer.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
 
-class ApprovedDeliveryListLayout extends StatefulWidget {
-
-
-
+class PaidDeliveryListLayout extends StatefulWidget {
   @override
-  _ApprovedDeliveryListLayoutState createState() => _ApprovedDeliveryListLayoutState();
+  _PaidDeliveryListLayoutState createState() => _PaidDeliveryListLayoutState();
 }
 
-class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout> {
-  double totalApprovedDeliveryListHeight = 0.0;
+class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
+  double totalPaidDeliveryListHeight = 0.0;
   double dishRowHeight = 35.0;
   double deliveryChargeHeight = 60.0;
 
   @override
   void initState() {
     super.initState();
-    print("inside initState of ApprovedDeliveryListLayout State");
+    print("inside initState of PaidDeliveryListLayout State");
 
   }
 
   @override
   Widget build(BuildContext context) {
-    print("inside build of ApprovedDeliveryListLayoutState");
+    print("inside build of PaidDeliveryListLayoutState");
 
 
     // The whole pending delivery list.
     return StoreConnector<AppState, DeliveryList>(
-      converter: (store) => store.state.currentDeliveryList.approved,
-      builder: (_, approvedDeliveryList) {
+      converter: (store) => store.state.currentDeliveryList.paid,
+      builder: (_, paidDeliveryList) {
         // calculate the total height needed for this approved delivery list.
 
-        print("totalApprovedDeliveryListHeight is $totalApprovedDeliveryListHeight");
-        approvedDeliveryList.orders.forEach((_, order) {
-          print("approved order is  $order");
+        print("totalPaidDeliveryListHeight is $totalPaidDeliveryListHeight");
+        paidDeliveryList.orders.forEach((_, order) {
+          print("paid order is  $order");
           order.stalls.forEach((stall){
             stall.dishes.forEach((dish){
-              totalApprovedDeliveryListHeight += dishRowHeight;
+              totalPaidDeliveryListHeight += dishRowHeight;
             });
 
           });
-          totalApprovedDeliveryListHeight += (deliveryChargeHeight + 60);
-          print("totalApprovedDeliveryHeight is currently $totalApprovedDeliveryListHeight");
+          totalPaidDeliveryListHeight += (deliveryChargeHeight + 60);
+          print("totalPaidDeliveryHeight is currently $totalPaidDeliveryListHeight");
         });
 
         return new Container(
-            height: totalApprovedDeliveryListHeight,
+            height: totalPaidDeliveryListHeight,
             child: new ListView.builder(
-                itemCount: approvedDeliveryList.orders.length,
+                itemCount: paidDeliveryList.orders.length,
                 // for each order
                 itemBuilder: (_, int n) {
-                  print("length is ${approvedDeliveryList.orders.length}");
-                  print(approvedDeliveryList.orders.values);
+                  print("length is ${paidDeliveryList.orders.length}");
+                  print(paidDeliveryList.orders.values);
 
                   // calculate the total height needed for ths order.
                   double totalOrderHeight = 0.0;
-                  approvedDeliveryList.orders.values.toList()[n].stalls.forEach((stall) {
+                  paidDeliveryList.orders.values.toList()[n].stalls.forEach((stall) {
                     stall.dishes.forEach((dish) {
                       totalOrderHeight += dishRowHeight;
                     });
@@ -79,13 +76,13 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                   // A particular order in this approved delivery list.
 
                   // Create an exact copy of this order. We'll later set price for the dishes in this order
-                  Order orderWithPrice = approvedDeliveryList.orders.values.toList()[n];
+                  Order orderWithPrice = paidDeliveryList.orders.values.toList()[n];
                   return Container(
                     color: Colors.white,
                     margin: const EdgeInsets.symmetric(vertical: 5.0),
                     child: new ExpansionTile(
                       backgroundColor: Colors.white,
-                      title: new Text("${approvedDeliveryList.orders.values.toList()[n].ordererName}",
+                      title: new Text("${paidDeliveryList.orders.values.toList()[n].ordererName}",
                         style: new TextStyle(fontSize: 20.0),
                       ),
                       trailing: new Text("Approved",
@@ -102,16 +99,16 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                               Expanded(
                                 child: new ListView.builder(
                                     physics: NeverScrollableScrollPhysics(),
-                                    itemCount: approvedDeliveryList.orders.values.toList()[n].stalls.length,
+                                    itemCount: paidDeliveryList.orders.values.toList()[n].stalls.length,
                                     itemBuilder: (_, int stallIndex) {
 
                                       // for each stall, this is the list of dishes
                                       print("stalls");
                                       return Container(
-                                        height: approvedDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length * dishRowHeight ,
+                                        height: paidDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length * dishRowHeight ,
                                         child: new ListView.builder(
                                             physics: NeverScrollableScrollPhysics(),
-                                            itemCount: approvedDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length,
+                                            itemCount: paidDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length,
                                             itemBuilder: (_, int dishIndex) {
 
                                               // we're now inside the dish row.
@@ -140,8 +137,8 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                                                     // stall name + dishname
                                                     new Expanded(
                                                       flex: 3,
-                                                      child: new Text("[${approvedDeliveryList.orders.values.toList()[n].stalls[stallIndex].identifier.name}]"
-                                                          "${approvedDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes[dishIndex].name}"),
+                                                      child: new Text("[${paidDeliveryList.orders.values.toList()[n].stalls[stallIndex].identifier.name}]"
+                                                          "${paidDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes[dishIndex].name}"),
                                                     ),
 
                                                     // setPrice button
@@ -156,8 +153,8 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                                                         ),
                                                         child: InkWell(
                                                             child: Center(
-                                                              child: new Text("${approvedDeliveryList.orders.values.toList()[n]
-                                                                  .stalls[stallIndex].dishes[dishIndex].price.toString()}",
+                                                              child: new Text("${paidDeliveryList.orders.values.toList()[n]
+                                                                    .stalls[stallIndex].dishes[dishIndex].price.toString()}",
 
                                                                 textAlign: TextAlign.center,
                                                                 style: new TextStyle(
@@ -191,7 +188,7 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                                     new Padding(padding: const EdgeInsets.all(10.0),),
                                     new Expanded(
                                         flex: 3,
-                                        child: new Text("Delivery charge: S\$${approvedDeliveryList.orders.values.toList()[n].getDeliveryfee()}")
+                                        child: new Text("Delivery charge: S\$${paidDeliveryList.orders.values.toList()[n].getDeliveryfee()}")
                                     ),
                                     new Expanded(
                                       flex: 1,
