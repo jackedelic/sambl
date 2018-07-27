@@ -49,6 +49,7 @@ Future<OrderDetail> orderDetailReader(DocumentReference reference) async {
       remarks: snapshot['remarks'],
       openOrderUid: snapshot.documentID,
       delivererName: snapshot['delivererName'],
+      isOpen: snapshot['isOpen'],
     )
   );
 }

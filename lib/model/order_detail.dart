@@ -16,6 +16,7 @@ class OrderDetail {
   final int remainingNumberofDishes;
   final String openOrderUid;
   final String delivererName;
+  final bool isOpen;
 
   OrderDetail({
     @required this.pickupPoint,
@@ -27,7 +28,8 @@ class OrderDetail {
     @required this.maxNumberofDishes,
     this.remainingNumberofDishes = 0,
     this.openOrderUid = "",
-    this.delivererName
+    this.delivererName,
+    this.isOpen = true
   });
 
   Map<String,dynamic> toJson() => {
