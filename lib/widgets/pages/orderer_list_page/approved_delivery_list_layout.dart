@@ -77,7 +77,7 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                   });
 
                   // A particular order in this approved delivery list.
-
+                  print("approved orders at n = $n:${approvedDeliveryList.orders.values.toList()[n].ordererName}");
                   // Create an exact copy of this order. We'll later set price for the dishes in this order
                   Order orderWithPrice = approvedDeliveryList.orders.values.toList()[n];
                   return Container(

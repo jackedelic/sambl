@@ -16,6 +16,7 @@ import 'package:sambl/model/order.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
 import 'package:sambl/widgets/pages/orderer_list_page/pending_delivery_list_layout.dart';
 import 'package:sambl/widgets/pages/orderer_list_page/approved_delivery_list_layout.dart';
+import 'package:sambl/widgets/pages/orderer_list_page/paid_delivery_list_layout.dart';
 
 class OrdererListPage extends StatefulWidget {
   @override
@@ -91,28 +92,14 @@ class _OrdererListPageState extends State<OrdererListPage> {
                 ),
 
 
-                // paid delivery list
                 StoreConnector<AppState, DeliveryList>(
                   converter: (store) => store.state.currentDeliveryList.paid,
-                  builder: (_, paidDeliveryList) {
-                    return new Container(
-                      height: 10.0,
-                        child: new ListView.builder(
-                            itemCount: paidDeliveryList.orders.length,
-                            itemBuilder: (_, int n) {
-                              return new ExpansionTile(
-                                title: new Text("${paidDeliveryList.orders[n].ordererName}"),
-                                trailing: new Text("Paid"),
-                                children: <Widget>[
-                                  new Text("")
-                                ],
-                              );
-                            }
-                        )
-
-                    );
+                  builder: (_, paidDeliveryList){
+                    print("in store connectore of paid delivery list, in orderer list page, list is ${paidDeliveryList.orders}");
+                    return new PaidDeliveryListLayout();
                   },
                 ),
+
 
               ],
             ),

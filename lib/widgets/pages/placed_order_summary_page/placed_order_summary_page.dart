@@ -15,6 +15,7 @@ import 'package:sambl/widgets/pages/view_order_page/view_order_page.dart';
 import 'package:sambl/async_action/sign_out.dart';
 import 'package:sambl/widgets/shared/my_drawer.dart';
 import 'package:sambl/utility/geo_point_utilities.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
 
 
 class PlacedOrderSummaryPage extends StatefulWidget {
@@ -348,8 +349,8 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                             // The reducer shd create a new state w new Order. Then inform Firebase (async).
                             //store.dispatch(new OrderAction(order: newOrder));
 
-                            //store.dispatch(action);
-                            print("Authorise Payment.");
+                            store.dispatch(new AuthorizePaymentAction());
+                            print("Authorised Payment.");
 
                             // Navigate to a page to chat page
                             /*Navigator.push(

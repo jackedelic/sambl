@@ -24,6 +24,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
   double totalPaidDeliveryListHeight = 0.0;
   double dishRowHeight = 35.0;
   double deliveryChargeHeight = 60.0;
+  double reportDeliveryButtonHeight = 90.0;
 
   @override
   void initState() {
@@ -52,7 +53,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
             });
 
           });
-          totalPaidDeliveryListHeight += (deliveryChargeHeight + 60);
+          totalPaidDeliveryListHeight += (deliveryChargeHeight + reportDeliveryButtonHeight + 60);
           print("totalPaidDeliveryHeight is currently $totalPaidDeliveryListHeight");
         });
 
@@ -73,6 +74,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
                     });
                   });
 
+                  print("paid orders at n = $n:${paidDeliveryList.orders.values.toList()[n].ordererName}");
                   // A particular order in this approved delivery list.
 
                   // Create an exact copy of this order. We'll later set price for the dishes in this order
@@ -85,7 +87,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
                       title: new Text("${paidDeliveryList.orders.values.toList()[n].ordererName}",
                         style: new TextStyle(fontSize: 20.0),
                       ),
-                      trailing: new Text("Approved",
+                      trailing: new Text("Paid",
                         style: new TextStyle(fontSize: 20.0),
                       ),
                       children: <Widget>[
@@ -212,6 +214,38 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
                                       ),
                                     ),
                                     new Padding(padding: const EdgeInsets.all(10.0),),
+                                  ],
+                                ),
+                              ),
+
+                              // This is the Report Delivery Row
+                              new Container(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: new Row(
+                                  children: <Widget>[
+                                    // Report Delivery button.
+                                    Expanded(
+                                      child: StoreConnector<AppState, Store<AppState>>(
+                                        converter: (store) => store,
+                                        builder: (_, store) {
+                                          return  InkWell(
+                                            onTap: (){
+
+                                              // Report this order
+                                              store.dispatch(new ReportDeliveryAction(paidDeliveryList.orders.keys.toList()[n]));
+
+                                            },
+                                            child: new Text("Report Order",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  color: Colors.blueAccent,
+                                                  fontSize: 25.0
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
