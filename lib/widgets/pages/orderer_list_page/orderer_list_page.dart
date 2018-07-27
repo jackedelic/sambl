@@ -128,12 +128,18 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                 itemCount: pendingDeliveryList.orders.values.toList()[n].stalls.length,
                                                 itemBuilder: (_, int stallIndex) {
                                                   // for each stall, this is the list of dishes
+
                                                   print("stalls");
                                                   return Container(
                                                     height: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length * dishRowHeight,
                                                     child: new ListView.builder(
                                                         itemCount: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length,
                                                         itemBuilder: (_, int dishIndex) {
+
+                                                          // we're now inside the dish row.
+                                                          // Here we create textController for the price of this dish.
+                                                          // Then we set the price of the dish based on this text controller's value
+
                                                           return new Container(
                                                             // This row is 'stallname dishname      setpricebutton'
                                                             child: new Row(
@@ -233,11 +239,14 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                   flex: 1,
                                                   child: Container(
                                                     padding: const EdgeInsets.all(5.0),
-                                                    child: new Text("Approve",
-                                                      textAlign: TextAlign.center,
-                                                      style: const TextStyle(
-                                                          color: Colors.lightGreen,
-                                                          fontSize: 25.0
+                                                    child: InkWell(
+                                                      onTap: (){},
+                                                      child: new Text("Approve",
+                                                        textAlign: TextAlign.center,
+                                                        style: const TextStyle(
+                                                            color: Colors.lightGreen,
+                                                            fontSize: 25.0
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
@@ -251,11 +260,14 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                                   flex: 1,
                                                   child: Container(
                                                     padding: const EdgeInsets.all(5.0),
-                                                    child: new Text("Reject",
-                                                      textAlign: TextAlign.center,
-                                                      style: new TextStyle(
-                                                          color: MyColors.mainRed,
-                                                          fontSize: 25.0
+                                                    child: InkWell(
+                                                      onTap: (){},
+                                                      child: new Text("Reject",
+                                                        textAlign: TextAlign.center,
+                                                        style: new TextStyle(
+                                                            color: MyColors.mainRed,
+                                                            fontSize: 25.0
+                                                        ),
                                                       ),
                                                     ),
                                                   ),

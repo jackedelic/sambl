@@ -71,6 +71,12 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
             title: "Your location"),
         toolbarActions: [new ToolbarAction("Close", 1), new ToolbarAction("Confirm", 2)]);
 
+    mapView.onMapReady.listen((Null _){
+      if (geoPoint != null) {
+        mapView.setMarkers([new Marker("1", "selected",geoPoint.latitude, geoPoint.longitude)]);
+      }
+    });
+
     mapView.onMapTapped.listen((location) {
       print("tapped location is $location");
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);

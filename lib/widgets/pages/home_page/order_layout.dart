@@ -55,6 +55,12 @@ class _OrderLayoutState extends State<OrderLayout> {
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
 
     });
+
+    mapView.onMapReady.listen((Null _){
+      if (geoPoint != null) {
+        mapView.setMarkers([new Marker("1", "selected",geoPoint.latitude, geoPoint.longitude)]);
+      }
+    });
     
     mapView.onToolbarAction.listen((id) {
       if (id == 1) {
