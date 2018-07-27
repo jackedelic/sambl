@@ -16,10 +16,7 @@ import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_pag
 import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 /*
-* TODO: Create Firebase instance to get the HawkerCentreStall name for the title of the page -> 'Delivering
-* TODO: from The Terrace'.
-* TODO: Create three TextEditingController widgets each of which corresponds to pickUpPoint, closingTime,
-* TODO: and eta in the Firebase.
+* TODO: automatically initialize info's geopoint when navigated to this page.
 * */
 
 /// This is the layout that first appear when the user pressed 'Deliver' button on the
@@ -132,7 +129,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                         child: new InkWell(
                           onTap: (){
                             _showMap();
-                            info.pickupPoint = geoPoint;
+                            info.editInfo(pickupPoint: geoPoint);
                           },
                           child: new Text("Tap to select pick up point",
                             style: new TextStyle(

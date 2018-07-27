@@ -6,9 +6,7 @@ import 'package:redux/redux.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/model/order_detail.dart';
 import 'package:sambl/state/app_state.dart';// Action
-import 'package:sambl/main.dart'; // To access our store (which contains our current appState).
 import 'package:sambl/widgets/shared/my_app_bar.dart';
-import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/open_order_list_page/open_order_list_widget.dart';
 import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
@@ -16,6 +14,7 @@ import 'package:sambl/widgets/shared/quantity_display.dart';
 import 'package:sambl/widgets/pages/view_order_page/view_order_page.dart';
 import 'package:sambl/async_action/sign_out.dart';
 import 'package:sambl/widgets/shared/my_drawer.dart';
+import 'package:sambl/utility/geo_point_utilities.dart';
 
 
 class PlacedOrderSummaryPage extends StatefulWidget {
@@ -108,7 +107,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                             // 'status' and 'view order button'
                             new Row(
                               children: <Widget>[
-                                // 'e.g. Status: awaiting payment '
+                                // 'e.g. Status: pending/awaiting payment '
                                 new Expanded(
                                   flex: 5,
                                   child: new Container(
@@ -122,8 +121,8 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                         new Text("${currentOrder.isPresent
                                             ? (currentOrder.value.isApproved
                                             ? 'Awaiting payment' : 'Pending')
-                                            : 'No order submitted'}",
-                                          style: new TextStyle(fontSize: 20.0),
+                                            : 'loading order'}",
+                                          style: new TextStyle(fontSize: 18.0),
                                         )
                                       ],
                                     ),
@@ -213,15 +212,42 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                         new Text("Pick-up location",
                                           style: new TextStyle(fontSize: 20.0),
                                         ),
+
+                                        currentOrder.isPresent ?
+                                          new FutureBuilder<String>(
+                                            future: reverseGeocode(currentOrder.value.orderDetail.pickupPoint),
+                                            builder: (_, AsyncSnapshot<String> snapshot){
+                                              if (snapshot.hasData) {
+                                                return new Text(
+                                                  "${snapshot.data}",
+                                                  style: new TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 24.0),
+                                                  textAlign: TextAlign.center,
+                                                );
+                                              } else {
+                                                return new Text(
+                                                    "loading pick up location",
+                                                    style: new TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 24.0),
+                                                  textAlign: TextAlign.center,
+                                                );
+                                              }
+
+                                            }
+
+                                          )
+                                        :
                                         new Text(
-                                          "${currentOrder.isPresent ? currentOrder
-                                              .value.orderDetail.pickupPoint
-                                              .toString() : 'unspecified'}",
+                                          "loading pick up point",
                                           style: new TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 24.0),
                                           textAlign: TextAlign.center,
                                         ),
+
+
                                       ],
                                     ),
                                   ),
@@ -242,7 +268,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
               // Open Chat
               new Center(
                 child: new Container(
-                  margin: new EdgeInsets.only(top: 130.0),
+                  margin: new EdgeInsets.only(top: 30.0),
                   color: Colors.white,
                   // TRIGGER OpenChat Action
                   child: new StoreConnector<AppState, Store<AppState>>(

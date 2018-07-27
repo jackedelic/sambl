@@ -4,6 +4,7 @@ import 'package:sambl/model/order.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/widgets/pages/place_order_page/place_order_page.dart';
 
 import 'package:sambl/widgets/shared/quantity_display.dart';
@@ -48,7 +49,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                 // This is the left item - the name of deliverer
                 new Expanded(
                   flex: 2,
-                  child: new Text("${widget.orderDetail.delivererUid}",
+                  child: new Text("${widget.orderDetail.delivererName}",
                     style: new TextStyle(
                       fontSize: 20.0,
                     ),
@@ -56,7 +57,7 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                 ),
                 // This is the right items - the closing time, eta, num of dishes
                 new Expanded(
-                  flex: 4,
+                  flex: 3,
                   child: new Row(
                     children: <Widget>[
 
@@ -121,11 +122,29 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
               padding: const EdgeInsets.only(top: 20.0),
               child: new Column(
                 children: <Widget>[
-                  new Text("Pick up location: ${widget.orderDetail.pickupPoint}",
-                    style: const TextStyle(
-                        fontSize: 18.0
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    child: new FutureBuilder<String>(
+                        future: reverseGeocode(widget.orderDetail.pickupPoint),
+                        builder: (_, AsyncSnapshot<String> snapshot){
+
+                          if (snapshot.hasData) {
+                            return new Text("Pick up location: ${snapshot.data}",
+                              style: const TextStyle(
+                                  fontSize: 18.0
+                              ),
+                            );
+                          } else if (snapshot.connectionState == ConnectionState.waiting) {
+                            return new Text("Loading pick up location",
+                              style: const TextStyle(
+                                  fontSize: 18.0
+                              ),
+                            );
+                          }
+                        }
                     ),
                   ),
+
 
                   // This container holds only the place order button
                   new Container(
