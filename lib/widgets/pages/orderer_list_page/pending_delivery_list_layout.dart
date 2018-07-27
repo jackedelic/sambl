@@ -282,15 +282,22 @@ class _PendingDeliveryListLayoutState extends State<PendingDeliveryListLayout> {
                                   children: <Widget>[
                                     // reject button.
                                     Expanded(
-                                      child: InkWell(
-                                        onTap: (){},
-                                        child: new Text("Reject",
-                                          textAlign: TextAlign.center,
-                                          style: new TextStyle(
-                                              color: MyColors.mainRed,
-                                              fontSize: 25.0
-                                          ),
-                                        ),
+                                      child: StoreConnector<AppState, Store<AppState>>(
+                                      converter: (store) => store,
+                                        builder: (_, store) {
+                                          return InkWell(
+                                            onTap: (){
+                                              store.dispatch(RejectOrderAction(pendingDeliveryList.orders.keys.toList()[n]));
+                                            },
+                                            child: new Text("Reject",
+                                              textAlign: TextAlign.center,
+                                              style: new TextStyle(
+                                                  color: MyColors.mainRed,
+                                                  fontSize: 25.0
+                                              ),
+                                            ),
+                                          );
+                                        }
                                       ),
                                     ),
                                   ],
