@@ -347,6 +347,8 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                             //Optional<Order> newOrder = store.state.currentOrder;
                             // The reducer shd create a new state w new Order. Then inform Firebase (async).
                             //store.dispatch(new OrderAction(order: newOrder));
+
+                            //store.dispatch(action);
                             print("Authorise Payment.");
 
                             // Navigate to a page to chat page
