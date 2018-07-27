@@ -20,6 +20,9 @@ class OrdererListPage extends StatefulWidget {
 }
 
 class _OrdererListPageState extends State<OrdererListPage> {
+  double dishRowHeight = 60.0;
+  double deliveryChargeHeight = 60.0;
+  double approvalButtonHeight = 40.0;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -51,7 +54,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
                   child:  StoreConnector<AppState, Optional<HawkerCenter>>(
                     converter: (store) => store.state.currentHawkerCenter,
                     builder: (_, currentHawkerCenter){
-                      return new Text("Delivering from ${currentHawkerCenter.value.name}",
+                      return new Text("${currentHawkerCenter.isPresent ? 'Delivering from ${currentHawkerCenter.value.name}' : 'loading hawker center...'}",
                         style: new TextStyle(
                           fontSize: 15.0,
                           fontWeight: FontWeight.bold,
@@ -67,75 +70,268 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
 
           // This is the list of users who subscribe to the deliverer's delivery.
+          Expanded(
+            child: new ListView(
+              children: <Widget>[
 
-          // pending delivery list
-          StoreConnector<AppState, DeliveryList>(
-            converter: (store) => store.state.currentDeliveryList.pending,
-            builder: (_, pendingDeliveryList) {
-              return new Expanded(
-                  child: new ListView.builder(
-                    itemCount: pendingDeliveryList.orders.length,
-                      itemBuilder: (_, int n) {
-                        return new ExpansionTile(
-                          title: new Text("${pendingDeliveryList.orders[n]}"),
-                          trailing: new Text("pending"),
-                          children: <Widget>[
-                            //recompile the order with the new prices, then approve/reject the recompiled order
-                            new Text("hi there i am jack")
-                          ],
-                        );
-                      }
-                  )
+                // pending delivery list
+                StoreConnector<AppState, DeliveryList>(
+                  converter: (store) => store.state.currentDeliveryList.pending,
+                  builder: (_, pendingDeliveryList) {
 
-              );
-            },
+                    // calculate the total height needed for this pending delivery list.
+                    double totalPendingDeliveryListHeight = 0.0;
+                    pendingDeliveryList.orders.forEach((_, order) {
+                      order.stalls.forEach((stall){
+                        stall.dishes.forEach((dish){
+                          totalPendingDeliveryListHeight += dishRowHeight;
+                        });
+
+                      });
+                      totalPendingDeliveryListHeight += (deliveryChargeHeight + approvalButtonHeight + 60);
+                    });
+
+                    // The whole pending delivery list.
+                    return new Container(
+                        height: totalPendingDeliveryListHeight,
+                        child: new ListView.builder(
+                            itemCount: pendingDeliveryList.orders.length,
+                            itemBuilder: (_, int n) {
+                              print("length is ${pendingDeliveryList.orders.length}");
+                              print(pendingDeliveryList.orders.values);
+
+                              // calculate the total height needed for ths order.
+                              double totalOrderHeight = 0.0;
+                              pendingDeliveryList.orders.values.toList()[n].stalls.forEach((stall) {
+                                stall.dishes.forEach((dish) {
+                                  totalOrderHeight += dishRowHeight;
+                                });
+                              });
+                              // A particular order in this pending delivery list.
+                              return Container(
+                                color: Colors.white,
+                                margin: const EdgeInsets.symmetric(vertical: 5.0),
+                                child: new ExpansionTile(
+                                  backgroundColor: Colors.white,
+                                  title: new Text("${pendingDeliveryList.orders.values.toList()[n].ordererName}"),
+                                  trailing: new Text("pending"),
+                                  children: <Widget>[
+                                    //recompile the order with the new prices, then approve/reject the recompiled order
+
+                                    Container(
+                                      height: totalOrderHeight + deliveryChargeHeight + approvalButtonHeight,
+                                      child: Column(
+                                        children: <Widget>[
+                                          // one order
+                                          Expanded(
+                                            child: new ListView.builder(
+                                                itemCount: pendingDeliveryList.orders.values.toList()[n].stalls.length,
+                                                itemBuilder: (_, int stallIndex) {
+                                                  // for each stall, this is the list of dishes
+                                                  print("stalls");
+                                                  return Container(
+                                                    height: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length * dishRowHeight,
+                                                    child: new ListView.builder(
+                                                        itemCount: pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes.length,
+                                                        itemBuilder: (_, int dishIndex) {
+                                                          return new Container(
+                                                            // This row is 'stallname dishname      setpricebutton'
+                                                            child: new Row(
+
+                                                              children: <Widget>[
+                                                                // some space to the left
+                                                                new Padding(padding: const EdgeInsets.all(10.0),),
+                                                                // stall name + dishname
+                                                                new Expanded(
+                                                                  flex: 3,
+                                                                  child: new Text("[${pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].identifier.name}]"
+                                                                      "${pendingDeliveryList.orders.values.toList()[n].stalls[stallIndex].dishes[dishIndex].name}"),
+                                                                ),
+
+                                                                // setPrice button
+                                                                new Expanded(
+                                                                  flex: 1,
+                                                                  child: Container(
+                                                                    margin: const EdgeInsets.all(3.0),
+                                                                    padding: const EdgeInsets.all(1.0),
+                                                                    decoration: new BoxDecoration(
+                                                                        border: Border.all(color: Colors.grey, width: 2.0),
+                                                                        borderRadius: BorderRadius.circular(10.0)
+                                                                    ),
+                                                                    child: InkWell(
+                                                                        child: Center(
+                                                                          child: new TextFormField(
+                                                                            keyboardType: TextInputType.numberWithOptions(),
+                                                                            textAlign: TextAlign.center,
+                                                                            decoration: InputDecoration(hintText: "Set Price",border: InputBorder.none),
+                                                                          ),
+                                                                        )
+                                                                    ),
+                                                                  ),
+                                                                ),
+
+                                                                // some space to the right
+                                                                new Padding(padding: const EdgeInsets.all(10.0),),
+
+                                                              ],
+
+                                                            ),
+                                                          );
+                                                        }
+                                                    ),
+                                                  );
+                                                }
+                                            ),
+                                          ),
+
+                                          // This is the 'delivery charge' row
+                                          Container(
+                                            padding: const EdgeInsets.all(5.0),
+                                            child: new Row(
+                                              children: <Widget>[
+                                                new Padding(padding: const EdgeInsets.all(10.0),),
+                                                new Expanded(
+                                                    flex: 3,
+                                                    child: new Text("Delivery charge: S\$${pendingDeliveryList.orders.values.toList()[n].getDeliveryfee()}")
+                                                ),
+                                                new Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    margin: const EdgeInsets.all(3.0),
+                                                    padding: const EdgeInsets.all(1.0),
+                                                    decoration: new BoxDecoration(
+                                                        border: Border.all(color: Colors.grey, width: 2.0),
+                                                        borderRadius: BorderRadius.circular(10.0)
+                                                    ),
+                                                    child: InkWell(
+                                                        child: Center(
+                                                          child: new Text("Chat",
+                                                            style: new TextStyle(
+                                                                color: Colors.black38
+                                                            ),
+                                                            textAlign: TextAlign.center,
+                                                          ),
+                                                        )
+                                                    ),
+                                                  ),
+                                                ),
+                                                new Padding(padding: const EdgeInsets.all(10.0),),
+                                              ],
+                                            ),
+                                          ),
+
+                                          // This is the hori divider separating 'delivery charge' row and 'approve/reject' row
+                                          Container(height: 1.5, width: 350.0, color: Colors.black38,),
+
+                                          // This is the approve/reject button
+
+                                          new Container(
+                                            child: new Row(
+                                              children: <Widget>[
+                                                // approve button.
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    padding: const EdgeInsets.all(5.0),
+                                                    child: new Text("Approve",
+                                                      textAlign: TextAlign.center,
+                                                      style: const TextStyle(
+                                                          color: Colors.lightGreen,
+                                                          fontSize: 25.0
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                                //vertical divider
+                                                Container(height: 30.0, width: 1.5, color: Colors.black38,),
+
+                                                // reject button.
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    padding: const EdgeInsets.all(5.0),
+                                                    child: new Text("Reject",
+                                                      textAlign: TextAlign.center,
+                                                      style: new TextStyle(
+                                                          color: MyColors.mainRed,
+                                                          fontSize: 25.0
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+
+                                              ],
+                                            ),
+                                          )
+
+                                        ],
+                                      ),
+                                    ),
+
+
+                                  ],
+                                ),
+                              );
+                            }
+                        )
+
+                    );
+                  },
+                ),
+
+
+
+                // approved delivery list
+                StoreConnector<AppState, DeliveryList>(
+                  converter: (store) => store.state.currentDeliveryList.approved,
+                  builder: (_, approvedDeliveryList) {
+                    return new Container(
+                      height: 10.0,
+                        child: new ListView.builder(
+                            itemCount: approvedDeliveryList.orders.length,
+                            itemBuilder: (_, int n) {
+                              return new ExpansionTile(
+                                title: new Text("${approvedDeliveryList.orders[n].ordererName}"),
+                                trailing: new Text("approved"),
+                                children: <Widget>[
+                                  new Text("hi there i am jack")
+                                ],
+                              );
+                            }
+                        )
+
+                    );
+                  },
+                ),
+
+                // paid delivery list
+                StoreConnector<AppState, DeliveryList>(
+                  converter: (store) => store.state.currentDeliveryList.paid,
+                  builder: (_, paidDeliveryList) {
+                    return new Container(
+                      height: 10.0,
+                        child: new ListView.builder(
+                            itemCount: paidDeliveryList.orders.length,
+                            itemBuilder: (_, int n) {
+                              return new ExpansionTile(
+                                title: new Text("${paidDeliveryList.orders[n].ordererName}"),
+                                trailing: new Text("Paid"),
+                                children: <Widget>[
+                                  new Text("")
+                                ],
+                              );
+                            }
+                        )
+
+                    );
+                  },
+                ),
+
+              ],
+            ),
           ),
 
-
-
-          // approved delivery list
-          StoreConnector<AppState, DeliveryList>(
-            converter: (store) => store.state.currentDeliveryList.approved,
-            builder: (_, approvedDeliveryList) {
-              return new Expanded(
-                  child: new ListView.builder(
-                      itemCount: approvedDeliveryList.orders.length,
-                      itemBuilder: (_, int n) {
-                        return new ExpansionTile(
-                          title: new Text("hei"),
-                          trailing: new Text("Approved"),
-                          children: <Widget>[
-                            new Text("hi there i am jack")
-                          ],
-                        );
-                      }
-                  )
-
-              );
-            },
-          ),
-
-          // paid delivery list
-          StoreConnector<AppState, DeliveryList>(
-            converter: (store) => store.state.currentDeliveryList.paid,
-            builder: (_, paidDeliveryList) {
-              return new Expanded(
-                  child: new ListView.builder(
-                      itemCount: paidDeliveryList.orders.length,
-                      itemBuilder: (_, int n) {
-                        return new ExpansionTile(
-                          title: new Text("hello"),
-                          trailing: new Text("Paid"),
-                          children: <Widget>[
-                            new Text("")
-                          ],
-                        );
-                      }
-                  )
-
-              );
-            },
-          ),
 
 
         ],

@@ -7,6 +7,9 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/pages/start_page.dart';
 
+
+import 'package:sambl/async_action/firestore_write_action.dart';
+
 class SignInPage extends StatelessWidget {
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -25,7 +28,10 @@ class SignInPage extends StatelessWidget {
         print("in sign in page, delivering. ");
 
         return defaultPage(status);
-      } else {
+      } else if(status == AppStatusFlags.awaitingSignup) {
+        print("in sign in page, awaiting sign up, going to other page");
+        return defaultPage(status);
+      }else {
         return new Scaffold(
           key: _formKey,
           body: new Stack(

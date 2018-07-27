@@ -129,7 +129,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                         child: new InkWell(
                           onTap: (){
                             _showMap();
-                            info.pickupPoint = geoPoint;
+                            info.editInfo(pickupPoint: geoPoint);
                           },
                           child: new Text("Tap to select pick up point",
                             style: new TextStyle(
