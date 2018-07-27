@@ -14,6 +14,7 @@ import 'package:sambl/main.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_drawer.dart';
 import 'package:sambl/model/order.dart';
+import 'package:sambl/async_action/firestore_write_action.dart';
 
 class OrdererListPage extends StatefulWidget {
   @override
@@ -263,34 +264,39 @@ class _OrdererListPageState extends State<OrdererListPage> {
                                               children: <Widget>[
                                                 // approve button.
                                                 Expanded(
-                                                  child: InkWell(
-                                                    onTap: (){
+                                                  child: StoreConnector<AppState, Store<AppState>>(
+                                                    converter: (store) => store,
+                                                    builder: (_, store) {
+                                                      return  InkWell(
+                                                        onTap: (){
 
-                                                      bool valid = true;
-                                                      // 1. Make sure that all dishes have prices set
-                                                      for (int i = 0; i < orderWithPrice.stalls.length; i++) {
-                                                        for (int j = 0; j < orderWithPrice.stalls.length; i++) {
-                                                          if (orderWithPrice.stalls[i].dishes[j].isPriceSpecified == false) {
-                                                            valid = false;
-                                                            break;
+                                                          bool valid = true;
+                                                          // 1. Make sure that all dishes have prices set
+                                                          for (int i = 0; i < orderWithPrice.stalls.length; i++) {
+                                                            for (int j = 0; j < orderWithPrice.stalls[i].dishes.length; j++) {
+                                                              if (orderWithPrice.stalls[i].dishes[j].isPriceSpecified == false) {
+                                                                valid = false;
+                                                                break;
+                                                              }
+                                                            }
                                                           }
-                                                        }
-                                                      }
-                                                      // dispatch recompiled order - orderWithPrice
-                                                      if (valid) {
+                                                          // dispatch recompiled order - orderWithPrice
+                                                          if (valid) {
+                                                            store.dispatch(new ApproveOrderAction(pendingDeliveryList.orders.keys.toList()[n], orderWithPrice));
+                                                          } else {
+                                                            print("Please set all prices of all dishes!");
+                                                          }
 
-                                                      } else {
-                                                        print("Please set all prices of all dishes!");
-                                                      }
-
+                                                        },
+                                                        child: new Text("Approve",
+                                                          textAlign: TextAlign.center,
+                                                          style: const TextStyle(
+                                                              color: Colors.lightGreen,
+                                                              fontSize: 25.0
+                                                          ),
+                                                        ),
+                                                      );
                                                     },
-                                                    child: new Text("Approve",
-                                                      textAlign: TextAlign.center,
-                                                      style: const TextStyle(
-                                                          color: Colors.lightGreen,
-                                                          fontSize: 25.0
-                                                      ),
-                                                    ),
                                                   ),
                                                 ),
                                               ],
