@@ -6,6 +6,8 @@ import 'package:sambl/widgets/pages/placed_order_summary_page/placed_order_summa
 import 'package:sambl/widgets/pages/sign_up_page.dart';
 import 'package:sambl/widgets/pages/orderer_list_page/orderer_list_page.dart';
 
+import 'package:sambl/widgets/pages/chat_screen.dart';
+
 Widget defaultPage(AppStatusFlags flag) {
   switch (flag) {
     case AppStatusFlags.delivering:

@@ -16,5 +16,5 @@ final Reducer<AppState> authenticationReducer = combineReducers([
 
 final Reducer<AppState> loginReducer = combineReducers([
   TypedReducer<AppState,LoginAction>((state,action) => 
-      new AppState.initial().copyWith(currentAppStatus: AppStatusFlags.authenticated)),
+      new AppState.initial().copyWith(currentAppStatus: AppStatusFlags.authenticated, currentUser: action.user)),
 ]);

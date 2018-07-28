@@ -142,6 +142,7 @@ StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store
               'delivererChatSubscription'].contains(name));
           } else if (store.state.currentAppStatus == AppStatusFlags.ordering) {
             CombinedSubscriber.instance().remove(name: 'currentOrderSubscription');
+            CombinedSubscriber.instance().remove(name: 'ordererChatSubscription');
           }
           store.dispatch(new LoginAction(new User(user,snapshot.data['balance'])));
           CombinedSubscriber.instance().add(
