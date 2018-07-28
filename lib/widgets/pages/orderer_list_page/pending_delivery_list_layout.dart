@@ -47,10 +47,10 @@ class _PendingDeliveryListLayoutState extends State<PendingDeliveryListLayout> {
       converter: (store) => store.state.currentDeliveryList.pending,
       builder: (_, pendingDeliveryList) {
         // calculate the total height needed for this pending delivery list.
-
+        totalPendingDeliveryListHeight = 0.0;
         print("totalPendingDeliveryListHeight is $totalPendingDeliveryListHeight");
         pendingDeliveryList.orders.forEach((_, order) {
-          print("jiji $order}");
+          print("jiji $order");
           order.stalls.forEach((stall){
             stall.dishes.forEach((dish){
               totalPendingDeliveryListHeight += dishRowHeight;
@@ -63,7 +63,7 @@ class _PendingDeliveryListLayoutState extends State<PendingDeliveryListLayout> {
 
         return new Container(
             height: totalPendingDeliveryListHeight,
-            child: new ListView.builder(
+            child: new ListView.builder( // build a list of expansion tiles.
                 itemCount: pendingDeliveryList.orders.length,
                 // for each order
                 itemBuilder: (_, int n) {

@@ -22,9 +22,9 @@ class PaidDeliveryListLayout extends StatefulWidget {
 
 class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
   double totalPaidDeliveryListHeight = 0.0;
-  double dishRowHeight = 35.0;
-  double deliveryChargeHeight = 60.0;
-  double reportDeliveryButtonHeight = 90.0;
+  double dishRowHeight = 37.0;
+  double deliveryChargeHeight = 37.0;
+  double reportOrderButtonHeight = 30.0;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
       converter: (store) => store.state.currentDeliveryList.paid,
       builder: (_, paidDeliveryList) {
         // calculate the total height needed for this approved delivery list.
-
+        totalPaidDeliveryListHeight = 0.0;
         print("totalPaidDeliveryListHeight is $totalPaidDeliveryListHeight");
         paidDeliveryList.orders.forEach((_, order) {
           print("paid order is  $order");
@@ -53,13 +53,13 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
             });
 
           });
-          totalPaidDeliveryListHeight += (deliveryChargeHeight + reportDeliveryButtonHeight + 60);
+          totalPaidDeliveryListHeight += (deliveryChargeHeight + reportOrderButtonHeight + 60);
           print("totalPaidDeliveryHeight is currently $totalPaidDeliveryListHeight");
         });
 
         return new Container(
             height: totalPaidDeliveryListHeight,
-            child: new ListView.builder(
+            child: new ListView.builder( // build a list of expansion tiles.
                 itemCount: paidDeliveryList.orders.length,
                 // for each order
                 itemBuilder: (_, int n) {
@@ -92,9 +92,9 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
                       ),
                       children: <Widget>[
 
-                        // The entire pending delivery list
+                        // The entire paid delivery list
                         Container(
-                          height: totalOrderHeight + deliveryChargeHeight,
+                          height: totalOrderHeight + deliveryChargeHeight + reportOrderButtonHeight,
                           child: Column(
                             children: <Widget>[
                               // one order
@@ -184,6 +184,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
 
                               // This is the 'delivery charge' row
                               Container(
+                                height: deliveryChargeHeight,
                                 padding: const EdgeInsets.all(5.0),
                                 child: new Row(
                                   children: <Widget>[
@@ -218,8 +219,9 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
                                 ),
                               ),
 
-                              // This is the Report Delivery Row
+                              // This is the Report Order Row
                               new Container(
+                                height: reportOrderButtonHeight,
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: new Row(
                                   children: <Widget>[

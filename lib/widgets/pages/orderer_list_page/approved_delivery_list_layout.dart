@@ -26,7 +26,7 @@ class ApprovedDeliveryListLayout extends StatefulWidget {
 class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout> {
   double totalApprovedDeliveryListHeight = 0.0;
   double dishRowHeight = 35.0;
-  double deliveryChargeHeight = 60.0;
+  double deliveryChargeHeight = 37.0;
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
       converter: (store) => store.state.currentDeliveryList.approved,
       builder: (_, approvedDeliveryList) {
         // calculate the total height needed for this approved delivery list.
-
+        totalApprovedDeliveryListHeight = 0.0;
         print("totalApprovedDeliveryListHeight is $totalApprovedDeliveryListHeight");
         approvedDeliveryList.orders.forEach((_, order) {
           print("approved order is  $order");
@@ -61,7 +61,7 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
 
         return new Container(
             height: totalApprovedDeliveryListHeight,
-            child: new ListView.builder(
+            child: new ListView.builder( // build a list of expansion tiles.
                 itemCount: approvedDeliveryList.orders.length,
                 // for each order
                 itemBuilder: (_, int n) {
@@ -93,7 +93,7 @@ class _ApprovedDeliveryListLayoutState extends State<ApprovedDeliveryListLayout>
                       ),
                       children: <Widget>[
 
-                        // The entire pending delivery list
+                        // The entire approved delivery list
                         Container(
                           height: totalOrderHeight + deliveryChargeHeight,
                           child: Column(
