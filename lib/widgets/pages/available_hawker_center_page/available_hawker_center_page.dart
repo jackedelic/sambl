@@ -93,7 +93,9 @@ You may also stay on this page and wait. ''',
 
 class _HawkerCenterTile extends StatelessWidget {
   final HawkerCenter hawkerCenter;
-  _HawkerCenterTile(this.hawkerCenter);
+  _HawkerCenterTile(this.hawkerCenter) ;
+
+
   @override
   Widget build(BuildContext context) {
     return new Container(
@@ -135,10 +137,15 @@ class _HawkerCenterTile extends StatelessWidget {
                     new Expanded(
                       flex: 1,
                       child: new Center(
-                        child: new Text(" KM",
-                          style: const TextStyle(
-                              fontSize: 20.0
-                          ),
+                        child: FutureBuilder<double>(
+                          future: this.hawkerCenter.distance(),
+                          builder: (_, snapshot){
+                            return new Text("${snapshot.data != null ? '${snapshot.data.toStringAsFixed(2)}KM' : 'loading distance'}",
+                              style: const TextStyle(
+                                  fontSize: 20.0
+                              ),
+                            );
+                          },
                         ),
                       ),
                     )

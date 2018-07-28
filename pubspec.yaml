@@ -43,6 +43,8 @@ dependencies:
 
   geocoder: ^0.0.1
 
+  flutter_webview_plugin: ^0.1.6
+
 
 dev_dependencies:
   flutter_test:

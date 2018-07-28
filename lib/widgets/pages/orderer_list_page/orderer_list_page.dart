@@ -74,52 +74,24 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
 
           // This is the list of users who subscribe to the deliverer's delivery.
-          Container(
-            height: 390.0,
-            child: new CustomScrollView(
-              slivers: <Widget>[
+          Expanded(
+            //height: 400.0,
+            child: StoreConnector<AppState, Store<AppState>>(
+              converter: (store) => store,
+              builder: (_, store){
+                return new CustomScrollView(
+                  slivers: new List  .from(store.state.currentDeliveryList.pending.orders.isNotEmpty ? new PendingDeliveryListLayout(store).build(context) : [])
+                                    ..addAll(store.state.currentDeliveryList.approved.orders.isNotEmpty ? new ApprovedDeliveryListLayout(store).build(context) : [])
+                                    ..addAll(store.state.currentDeliveryList.paid.orders.isNotEmpty ? new PaidDeliveryListLayout(store).build(context) : []),
 
-                // pending delivery list
-               // new PendingDeliveryListLayout(),
-
-
-                // approved delivery list
-//                StoreConnector<AppState, DeliveryList>(
-//                  converter: (store) => store.state.currentDeliveryList.approved,
-//                    builder: (_, approvedDeliveryList){
-//                    print("in store connectore of approved delivery list, in orderer list page, list is ${approvedDeliveryList.orders}");
-//                      return new ApprovedDeliveryListLayout();
-//                    },
-//                ),
-                  SliverList(
-                    delegate: SliverChildListDelegate([new ApprovedDeliveryListLayout()]),
-                  ),
-
-
-//                StoreConnector<AppState, DeliveryList>(
-//                  converter: (store) => store.state.currentDeliveryList.paid,
-//                  builder: (_, paidDeliveryList){
-//                    print("in store connectore of paid delivery list, in orderer list page, list is ${paidDeliveryList.orders}");
-//
-//                  },
-//                ),
-                SliverList(
-                  delegate: SliverChildListDelegate([new PaidDeliveryListLayout()]),
-                ),
-                //,
-
-//                new Container(
-//                  color: Colors.orange,
-//                  height: 80.0,
-//                )
-
-              ],
+                );
+              },
             ),
           ),
 
           // This is the close delivery button
           new Container(
-            height: 70.0,
+            height: 60.0,
             child: new Column(
               children: <Widget>[
                 // grey padding above the close delivery button
@@ -127,39 +99,46 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
                 // the button itself
                 Expanded(
-                  child: new Container(
-                    color: Colors.white,
-                    child: StoreConnector<AppState, Store<AppState>>(
-                      rebuildOnChange: false,
-                      converter: (store) => store,
-                      builder: (_, store){
-                        return Material(
-                          child: InkWell(
-                            onTap: (){
-                              // dispatch close order action
-                              store.dispatch(new CloseOpenOrderAction());
-                              print("Inside orderer list page: CloseOpenOrderAction dispatched.");
-                            },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Center(
-                                  child: new Text("Close Order",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 20.0),
-                                  ),
+                  child: StoreConnector<AppState, Store<AppState>>(
+                    rebuildOnChange: false,
+                    converter: (store) => store,
+                    builder: (_, store){
+
+                      bool safeToClose = store.state.currentDeliveryList.pending.orders.isNotEmpty && store.state.currentDeliveryList.approved.orders.isNotEmpty;
+
+                      return new Container(
+                        child: Material(
+                          color: safeToClose ? Colors.white : Colors.grey,
+                              child: InkWell(
+                                onTap: (){
+                                  // dispatch close order action
+                                  // make sure all orders are paid before closing order
+                                  if (safeToClose) {
+                                    store.dispatch(new CloseOpenOrderAction());
+                                    print("Inside orderer list page: CloseOpenOrderAction dispatched.");
+                                  } else {
+                                    print("Orders not closed. Please make sure all orders are paid!");
+                                  }
+
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Center(
+                                      child: new Text("Close Order",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(fontSize: 20.0, color: safeToClose ? Colors.green : Colors.white),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                      );
+                    },
                   ),
                 ),
 
-                // grey padding below the close delivery button
-                new Padding(padding: const EdgeInsets.symmetric(vertical: 5.0),),
               ],
             ),
           )

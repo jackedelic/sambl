@@ -33,4 +33,7 @@ class MyColors {
   /// This is the color of border of some of the buttons like the in openOrderListPage page
   static Color borderGrey = new Color(0xFFEBEBEB);
 
+  /// This is the orange used in top_up_page
+  static Color orange = new Color(0xFFFFE401);
+
 }

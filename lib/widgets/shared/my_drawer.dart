@@ -7,6 +7,7 @@ import 'package:redux_thunk/redux_thunk.dart';
 import 'package:sambl/async_action/sign_out.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
+import 'package:sambl/widgets/pages/top_up_page/top_up_page.dart';
 
 class MyDrawer extends StatefulWidget {
 
@@ -21,41 +22,31 @@ class _MyDrawerState extends State<MyDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return StoreConnector<AppState, SignOutCallback>(
-      converter: (store) => (action) => store.dispatch(action),
-      builder: (_, callback){
+    return StoreConnector<AppState, Store<AppState>>(
+      converter: (store) => store,
+      builder: (_, store){
         return new Drawer(
           child: new Column(
             children: <Widget>[
               new DrawerHeader(
-                  child: StoreConnector<AppState, String>(
-                    converter: (store) => store.state.currentUser.photoUrl,
-                    builder: (_, photoUrl) {
-                      return new CircleAvatar(
+                  child: new CircleAvatar(
                         radius: 60.0,
-                        backgroundImage: new NetworkImage(photoUrl),
-                      );
-                    },
-                  )),
+                        backgroundImage: new NetworkImage(store.state.currentUser.photoUrl),
+                      ),
+                  ),
               new Expanded(
                 child: new ListView(
                   children: <Widget>[
                     new ListTile(
-                      leading: new Text("Balance: 143,123,990"),
+                      leading: new Text("Balance: ${store.state.currentUser.balance}"),
                     ),
                     Center(child: new Container(height: 1.0, width: 270.0, color: Colors.grey,)),
                     new ListTile(
                       leading: new Text("Top up "),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (_) => new TopUpPage()));
+                      },
                     ),
-                    Center(child: new Container(height: 1.0, width: 270.0, color: Colors.grey,)),
-                    new ListTile(
-                      leading: new Text("Donate "),
-                    ),
-                    Center(child: new Container(height: 1.0, width: 270.0, color: Colors.grey,)),
-                    new ListTile(
-                      leading: new Text("Detonate "),
-                    ),
-                    Center(child: new Container(height: 1.0, width: 270.0, color: Colors.grey,)),
 
                   ],
                 )
@@ -68,7 +59,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   ),
                 ),
                 onTap: () {
-                  callback(signOutAction);
+                  store.dispatch(signOutAction);
                   Navigator.popAndPushNamed(context, '/');
                 },
               ),

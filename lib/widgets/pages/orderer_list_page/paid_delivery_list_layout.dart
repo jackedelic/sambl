@@ -15,51 +15,38 @@ import 'package:sambl/widgets/shared/my_drawer.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
 
-class PaidDeliveryListLayout extends StatefulWidget {
-  @override
-  _PaidDeliveryListLayoutState createState() => _PaidDeliveryListLayoutState();
-}
-
-class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
+class PaidDeliveryListLayout {
+ 
   double totalPaidDeliveryListHeight = 0.0;
   double dishRowHeight = 37.0;
   double deliveryChargeHeight = 37.0;
   double reportOrderButtonHeight = 30.0;
+  DeliveryList paidDeliveryList;
 
-  @override
-  void initState() {
-    super.initState();
-    print("inside initState of PaidDeliveryListLayout State");
-
+  PaidDeliveryListLayout(Store<AppState> store) {
+    paidDeliveryList = store.state.currentDeliveryList.paid;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    print("inside build of PaidDeliveryListLayoutState");
+  List<Widget> build(BuildContext context) {
+    print("inside build of PaidDeliveryListLayout");
 
-
-    // The whole pending delivery list.
-    return StoreConnector<AppState, DeliveryList>(
-      converter: (store) => store.state.currentDeliveryList.paid,
-      builder: (_, paidDeliveryList) {
-        // calculate the total height needed for this approved delivery list.
-        totalPaidDeliveryListHeight = 0.0;
-        print("totalPaidDeliveryListHeight is $totalPaidDeliveryListHeight");
-        paidDeliveryList.orders.forEach((_, order) {
-          print("paid order is  $order");
-          order.stalls.forEach((stall){
-            stall.dishes.forEach((dish){
-              totalPaidDeliveryListHeight += dishRowHeight;
-            });
-
-          });
-          totalPaidDeliveryListHeight += (deliveryChargeHeight + reportOrderButtonHeight + 60);
-          print("totalPaidDeliveryHeight is currently $totalPaidDeliveryListHeight");
+    // calculate the total height needed for this approved delivery list.
+    totalPaidDeliveryListHeight = 0.0;
+    print("totalPaidDeliveryListHeight is $totalPaidDeliveryListHeight");
+    paidDeliveryList.orders.forEach((_, order) {
+      print("paid order is  $order");
+      order.stalls.forEach((stall){
+        stall.dishes.forEach((dish){
+          totalPaidDeliveryListHeight += dishRowHeight;
         });
 
-        return new Container(
-            height: totalPaidDeliveryListHeight,
-            child: new ListView.builder( // build a list of expansion tiles.
+      });
+      totalPaidDeliveryListHeight += (deliveryChargeHeight + reportOrderButtonHeight + 60);
+      print("totalPaidDeliveryHeight is currently $totalPaidDeliveryListHeight");
+    });
+
+    // The whole paid delivery list.
+    return new ListView.builder( // build a list of expansion tiles.
                 itemCount: paidDeliveryList.orders.length,
                 // for each order
                 itemBuilder: (_, int n) {
@@ -261,10 +248,7 @@ class _PaidDeliveryListLayoutState extends State<PaidDeliveryListLayout> {
                     ),
                   );
                 }
-            )
+            ).buildSlivers(context);
 
-        );
-      },
-    );
   }
 }

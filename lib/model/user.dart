@@ -19,6 +19,8 @@ class User {
 
   User.initial(): this.onlineUser = Optional<FirebaseUser>.absent(), this.balance = 0;
 
-
+  String get uid {
+    return onlineUser.transform((user) => user.uid).orNull;
+  }
 
 }

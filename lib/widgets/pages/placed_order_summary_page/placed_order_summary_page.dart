@@ -341,7 +341,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                       child: new FlatButton(
                         padding: new EdgeInsets.all(10.0),
                         onPressed: () {
-                          print(store.state.currentOrder.value.isApproved);
+                          print("on pressed, currentOrder present ? : ${store.state.currentOrder.isPresent}");
                           if (store.state.currentOrder.isPresent && store.state.currentOrder.value.isApproved) {
 
                             //TRIGGER SubmitOrderAction.
