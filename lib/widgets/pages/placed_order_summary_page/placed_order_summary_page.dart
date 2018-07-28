@@ -17,6 +17,8 @@ import 'package:sambl/widgets/shared/my_drawer.dart';
 import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
 
+import 'package:sambl/widgets/pages/chat_screen.dart';
+
 
 class PlacedOrderSummaryPage extends StatefulWidget {
   OrderModel orderModel; // when first navigated to this page, we use the orderModel
@@ -283,6 +285,11 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                           // The reducer shd create a new state w new Order. Then inform Firebase (async).
                           //store.dispatch(new OrderAction(order: newOrder));
                           print("Opening Chat.");
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return new ChatScreen();
+                            }
+                          ));
 
                           // Navigate to a page to chat page
                           /*Navigator.push(
