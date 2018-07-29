@@ -179,7 +179,7 @@ center you want to order from? ''',
                           },
                           child: new Text("${geoPoint == null ? 'Tap to select your location' : '${geoPoint.latitude.toStringAsFixed(4)}E    ${geoPoint.longitude.toStringAsFixed(4)}N'}",
                               style: new TextStyle(
-                                  fontSize: 13.0,
+                                  fontSize: 12.5,
                                   fontWeight: FontWeight.bold,
                                 color: Colors.white
                               )
@@ -209,7 +209,7 @@ center you want to order from? ''',
                                 child: new Text("Use my location",
                                   style: new TextStyle(
                                     color: Colors.white,
-                                    fontSize: 13.0
+                                    fontSize: 12.0
                                   ),
                                 ),
                               )
