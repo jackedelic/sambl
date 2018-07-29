@@ -5,7 +5,8 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/async_action/send_message_action.dart';
-
+import 'package:sambl/widgets/shared/my_app_bar.dart';
+import 'package:sambl/widgets/shared/my_color.dart';
 
 class ChatScreen extends StatefulWidget {
   final orderUid;
@@ -91,10 +92,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: new AppBar(
+        appBar: new MyAppBar(
+          backgroundColor: MyColors.mainRed,
           title: new Text("Sambl Chat"),
+          leading: new IconButton(
+            icon: new Icon(Icons.chevron_left),
+            color: Colors.white,
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
           elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-        ),
+        ).build(context),
         body: new Container(
           child: new Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
