@@ -122,8 +122,8 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                               fontWeight: FontWeight.w700),
                                         ),
                                         new Text("${currentOrder.isPresent
-                                            ? (currentOrder.value.isApproved
-                                            ? 'Awaiting payment' : (currentOrder.value.isPaid ? 'Paid' : 'Pending'))
+                                            ? (currentOrder.value.isPaid
+                                            ? ' Paid' : (currentOrder.value.isApproved ? ' Awaiting Payment' : ' Pending'))
                                             : 'loading order'}",
                                           style: new TextStyle(fontSize: 18.0),
                                         )
@@ -323,6 +323,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                 child: StoreConnector<AppState, Store<AppState>>(
                   converter: (store) => store,
                   builder: (_, store) {
+                    if (!store.state.currentOrder.isPresent || store.state.currentOrder.value.isPaid) return new Container();
                     return new Container(
                       color: store.state.currentOrder.isPresent ? (store.state.currentOrder.value.isApproved ? Colors.white : Colors.grey) : Colors.grey,
                       // TRIGGER AuthorisePayment Action

@@ -194,7 +194,7 @@ class PaidDeliveryListLayout {
                                             // open chat window
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(builder: (_) {
-                                                  new ChatScreen(orderUid: paidDeliveryList.orders.keys.toList()[n]);
+                                                  return new ChatScreen(orderUid: paidDeliveryList.orders.keys.toList()[n]);
                                                 }
                                                 )
                                             );
@@ -234,11 +234,11 @@ class PaidDeliveryListLayout {
                                               store.dispatch(new ReportDeliveryAction(paidDeliveryList.orders.keys.toList()[n]));
 
                                             },
-                                            child: new Text("Report Order",
+                                            child: new Text("Report Delivery",
                                               textAlign: TextAlign.center,
                                               style: const TextStyle(
                                                   color: Colors.blueAccent,
-                                                  fontSize: 25.0
+                                                  fontSize: 20.0
                                               ),
                                             ),
                                           );

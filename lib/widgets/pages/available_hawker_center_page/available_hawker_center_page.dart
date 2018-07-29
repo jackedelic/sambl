@@ -139,7 +139,7 @@ class _HawkerCenterTile extends StatelessWidget {
                       child: new Container(
                         margin: const EdgeInsets.only(right: 20.0),
                         child: FutureBuilder<double>(
-                          future: this.hawkerCenter.distance(),
+                          future: this.hawkerCenter.distance().then((distance) => distance / 1000.0),
                           builder: (_, snapshot){
                             return new Text("${snapshot.data != null ? '${snapshot.data.toStringAsFixed(2)}KM' : 'loading distance'}",
                               style: const TextStyle(

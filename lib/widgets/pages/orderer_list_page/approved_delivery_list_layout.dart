@@ -194,7 +194,7 @@ class ApprovedDeliveryListLayout {
                                         // open chat window
                                         Navigator.of(context).push(
                                             MaterialPageRoute(builder: (_) {
-                                              new ChatScreen(orderUid: approvedDeliveryList.orders.keys.toList()[n]);
+                                              return new ChatScreen(orderUid: approvedDeliveryList.orders.keys.toList()[n]);
                                             }
                                             )
                                         );

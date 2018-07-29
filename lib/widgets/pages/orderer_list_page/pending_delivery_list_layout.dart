@@ -16,6 +16,8 @@ import 'package:sambl/model/order.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
 import 'package:sambl/widgets/pages/chat_screen.dart';
 
+import 'package:sambl/subscribers/combined_subscriber.dart';
+
 class PendingDeliveryListLayout  {
 
   double totalPendingDeliveryListHeight = 0.0;
@@ -25,7 +27,7 @@ class PendingDeliveryListLayout  {
   DeliveryList pendingDeliveryList;
 
   PendingDeliveryListLayout(Store<AppState> store) {
-    pendingDeliveryList = store.state.currentDeliveryList.paid;
+    pendingDeliveryList = store.state.currentDeliveryList.pending;
     print("pendingDeliveryList is ${pendingDeliveryList.orders}");
   }
 
@@ -195,7 +197,7 @@ class PendingDeliveryListLayout  {
                                         // open chat window
                                         Navigator.of(context).push(
                                             MaterialPageRoute(builder: (_) {
-                                              new ChatScreen(orderUid: pendingDeliveryList.orders.keys.toList()[n]);
+                                              return new ChatScreen(orderUid: pendingDeliveryList.orders.keys.toList()[n]);
                                             }
                                           )
                                         );

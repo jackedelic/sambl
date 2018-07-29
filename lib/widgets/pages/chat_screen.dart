@@ -33,7 +33,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             new Flexible(
               child: new StoreConnector<AppState, Function>(
                 converter: (store) {
-                  return (String text) => store.dispatch(new SendMessageAction(text));
+                  return (String text) => store.dispatch(new SendMessageAction(text,targetUid: orderUid));
                 },
                 builder: (context, callback) {
                   return new TextField(
@@ -61,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         child: new Text("Send"),
                         onPressed: () {
                           if (_textController.text.length != 0) {
-                            store.dispatch(SendMessageAction(_textController.text));
+                            store.dispatch(SendMessageAction(_textController.text,targetUid: orderUid));
                             _textController.clear(); // clear the textfield
                           }
                         }

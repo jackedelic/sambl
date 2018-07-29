@@ -81,6 +81,8 @@ PODS:
     - GoogleToolboxForMac/Logger (~> 2.1)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
+  - flutter_webview_plugin (0.0.1):
+    - Flutter
   - geocoder (0.0.1):
     - Flutter
   - google_sign_in (0.0.1):
@@ -154,6 +156,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_webview_plugin (from `.symlinks/plugins/flutter_webview_plugin/ios`)
   - geocoder (from `.symlinks/plugins/geocoder/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - location (from `.symlinks/plugins/location/ios`)
@@ -197,6 +200,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_webview_plugin:
+    :path: ".symlinks/plugins/flutter_webview_plugin/ios"
   geocoder:
     :path: ".symlinks/plugins/geocoder/ios"
   google_sign_in:
@@ -223,6 +228,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 05d779cbb97bd5bd5c51a38a903fc9cfe1b2454a
   FirebaseMessaging: 6894b8fe0a0cf26c3b13dad729f1131654ae0bdb
   Flutter: 9d0fac939486c9aba2809b7982dfdbb47a7b0296
+  flutter_webview_plugin: 116575b48572029304775b768e9f15ebfc316274
   geocoder: 333b5c474623c8223f367b6ac4846b5f9ea72e85
   google_sign_in: cbeb57b96679823d14df6b2240b629b983a42d79
   GoogleMaps: f79af95cb24d869457b1f961c93d3ce8b2f3b848

@@ -3,13 +3,15 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_app_bar.dart';
+import 'package:sambl/state/app_state.dart';
+import 'package:flutter_redux/flutter_redux.dart';
 
 final flutterWebviewPlugin = new FlutterWebviewPlugin();
 
-const topUpUrl1000 = "https://sambl-1093.firebaseapp.com/?amount=1000&uid=2uaFyuY2P8TMgBfBO2IspiqmUV82";
-const topUpUrl2000 = "https://sambl-1093.firebaseapp.com/?amount=2000&uid=2uaFyuY2P8TMgBfBO2IspiqmUV82";
-const topUpUrl5000 = "https://sambl-1093.firebaseapp.com/?amount=5000&uid=2uaFyuY2P8TMgBfBO2IspiqmUV82";
-const topUpUrl10000 = "https://sambl-1093.firebaseapp.com/?amount=10000&uid=2uaFyuY2P8TMgBfBO2IspiqmUV82";
+const topUpUrl1000 = "https://sambl-1093.firebaseapp.com/?amount=1000&uid=";
+const topUpUrl2000 = "https://sambl-1093.firebaseapp.com/?amount=2000&uid=";
+const topUpUrl5000 = "https://sambl-1093.firebaseapp.com/?amount=5000&uid=";
+const topUpUrl10000 = "https://sambl-1093.firebaseapp.com/?amount=10000&uid=";
 
 enum Amount {
   // $5, $20, $50, $100
@@ -64,14 +66,14 @@ class _TopUpPageState extends State<TopUpPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       ),
 
-                      new TopUpRadioButton(Amount.TIER1, "5"),
+                      new TopUpRadioButton(Amount.TIER1, "5.99"),
 
                       // vertical space
                       new Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       ),
 
-                      new TopUpRadioButton(Amount.TIER2, "10"),
+                      new TopUpRadioButton(Amount.TIER2, "11.99"),
 
                       // vertical space to the right of the button
                       new Container(
@@ -93,14 +95,14 @@ class _TopUpPageState extends State<TopUpPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       ),
 
-                      new TopUpRadioButton(Amount.TIER3, "15"),
+                      new TopUpRadioButton(Amount.TIER3, "29.99"),
 
                       // vertical space
                       new Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
                       ),
 
-                      new TopUpRadioButton(Amount.TIER4, "20"),
+                      new TopUpRadioButton(Amount.TIER4, "59.99"),
 
                       // vertical space to the right of the button
                       new Container(
@@ -120,54 +122,53 @@ class _TopUpPageState extends State<TopUpPage> {
                 return new Container(
                   height: 50.0,
                   child: Material(
-                    color: model.isWebViewOpened ? new Color(0xff009cde): MyColors.orange,
-                    child: InkWell(
-                      onTap: () {
-                        // show web view
-                        if (model.isWebViewOpened) {
-                          model.toggleIsWebViewOpened();
-                          flutterWebviewPlugin.close();
-
-                        } else {
-                          model.toggleIsWebViewOpened();
-                          String url;
-                          switch(model.amount) {
-                            case Amount.TIER1:
-                              url = topUpUrl1000;
-                              break;
-                            case Amount.TIER2:
-                              url = topUpUrl2000;
-                              break;
-                            case Amount.TIER3:
-                              url = topUpUrl5000;
-                              break;
-                            case Amount.TIER4:
-                              url = topUpUrl10000;
-                              break;
-                          }
-                          flutterWebviewPlugin.launch(url,
-                              rect: new Rect.fromLTWH(
-                                  0.0,
-                                  0.0,
-                                  MediaQuery.of(context).size.width,
-                                  MediaQuery.of(context).size.height - 50));
-                        }
-
-                      },
-                      child: new Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Center(
-                            child: new Text("${model.isWebViewOpened ? 'Back To Top Up Page' : 'Top Up'}",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 20.0,
-                                color: model.isWebViewOpened ? Colors.white : Colors.black,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
+                    color: model.isWebViewOpened ? new Color(0xff009cde): MyColors.mainRed,
+                    child: new StoreConnector<AppState,String>(
+                      converter: (store) => store.state.currentUser.uid,
+                      builder: (context,uid) => new InkWell(
+                        onTap: () {
+                          // show web view
+                          if (model.isWebViewOpened) {
+                            model.toggleIsWebViewOpened();
+                            flutterWebviewPlugin.close();
+                          } else {
+                            model.toggleIsWebViewOpened();
+                            String url;
+                            switch(model.amount) {
+                              case Amount.TIER1:
+                                url = topUpUrl1000 + uid;
+                                break;
+                              case Amount.TIER2:
+                                url = topUpUrl2000 + uid;
+                                break;
+                              case Amount.TIER3:
+                                url = topUpUrl5000 + uid;
+                                break;
+                              case Amount.TIER4:
+                                url = topUpUrl10000 + uid;
+                                break;
+                            }   
+                            flutterWebviewPlugin.launch(url, rect: new Rect.fromLTWH(
+                              0.0,
+                              0.0,
+                              MediaQuery.of(context).size.width,
+                              MediaQuery.of(context).size.height - 50));
+                            }
+                          },
+                          child: new Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Center(
+                                child: new Text(
+                                  "${model.isWebViewOpened ? 'Back To Top Up Page' : 'Top Up'}",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 20.0, color: Colors.white),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                    )
                   ),
                 );
               },
@@ -209,7 +210,7 @@ class _TopUpRadioButtonState extends State<TopUpRadioButton>{
               child: Center(
                 child: new Text("\$${widget.text}",
                   style: new TextStyle(
-                      fontSize: 35.0
+                      fontSize: 25.0
                   ),
                 ),
               ),
@@ -217,7 +218,7 @@ class _TopUpRadioButtonState extends State<TopUpRadioButton>{
 
                   border: new Border.all(
                     width: 2.5,
-                    color: widget.selectedAmount == model.amount ? MyColors.orange : Colors.grey,
+                    color: widget.selectedAmount == model.amount ? MyColors.mainRed : Colors.grey,
                   ),
                   borderRadius: new BorderRadius.circular(12.0)
               ),

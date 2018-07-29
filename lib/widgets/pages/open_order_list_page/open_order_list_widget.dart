@@ -140,6 +140,12 @@ class _OpenOrderListWidgetState extends State<OpenOrderListWidget> {
                                   fontSize: 18.0
                               ),
                             );
+                          } else {
+                              return new Text("Error",
+                              style: const TextStyle(
+                                  fontSize: 18.0
+                              ),
+                            );
                           }
                         }
                     ),

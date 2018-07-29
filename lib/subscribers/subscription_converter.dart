@@ -118,6 +118,7 @@ StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store
   return Firestore.instance.collection('users').document(user.uid).snapshots()
     .listen((snapshot) async {
       if (snapshot.exists) {
+        store.dispatch(new LoginAction(new User(user,snapshot.data['balance'])));
         if (snapshot.data['isOrdering']) {
           store.dispatch(new ChangeAppStatusAction(AppStatusFlags.ordering));
           CombinedSubscriber.instance().removeWhere((name,sub) => [
@@ -144,7 +145,6 @@ StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store
             CombinedSubscriber.instance().remove(name: 'currentOrderSubscription');
             CombinedSubscriber.instance().remove(name: 'ordererChatSubscription');
           }
-          store.dispatch(new LoginAction(new User(user,snapshot.data['balance'])));
           CombinedSubscriber.instance().add(
             name: 'availableHawkerCenterSubscription',
             subscription: toAvailableHawkerCenterSubscription(store),

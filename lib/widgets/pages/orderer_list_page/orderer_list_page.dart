@@ -79,6 +79,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
             child: StoreConnector<AppState, Store<AppState>>(
               converter: (store) => store,
               builder: (_, store){
+                print('test');
                 return new CustomScrollView(
                   slivers: new List  .from(store.state.currentDeliveryList.pending.orders.isNotEmpty ? new PendingDeliveryListLayout(store).build(context) : [])
                                     ..addAll(store.state.currentDeliveryList.approved.orders.isNotEmpty ? new ApprovedDeliveryListLayout(store).build(context) : [])
@@ -103,31 +104,20 @@ class _OrdererListPageState extends State<OrdererListPage> {
                     rebuildOnChange: false,
                     converter: (store) => store,
                     builder: (_, store){
-
-                      bool safeToClose = store.state.currentDeliveryList.pending.orders.isNotEmpty && store.state.currentDeliveryList.approved.orders.isNotEmpty;
-
                       return new Container(
                         child: Material(
-                          color: safeToClose ? Colors.white : Colors.grey,
+                          color: Colors.white,
                               child: InkWell(
                                 onTap: (){
-                                  // dispatch close order action
-                                  // make sure all orders are paid before closing order
-                                  if (safeToClose) {
-                                    store.dispatch(new CloseOpenOrderAction());
-                                    print("Inside orderer list page: CloseOpenOrderAction dispatched.");
-                                  } else {
-                                    print("Orders not closed. Please make sure all orders are paid!");
-                                  }
-
+                                  store.dispatch(new CloseOpenOrderAction());
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
                                     Center(
-                                      child: new Text("Close Order",
+                                      child: new Text("Close Open Order",
                                         textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 20.0, color: safeToClose ? Colors.green : Colors.white),
+                                        style: TextStyle(fontSize: 20.0, color: Colors.red),
                                       ),
                                     ),
                                   ],

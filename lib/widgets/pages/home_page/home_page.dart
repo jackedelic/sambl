@@ -11,6 +11,7 @@ import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/async_action/sign_out.dart';
+import 'package:sambl/widgets/shared/my_drawer.dart';
 
 /*
 * This is the first page a signed in user sees when opening the app.
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
+      drawer: new MyDrawer(),
       backgroundColor: MyColors.mainBackground,
       body: new Container(
           decoration: new BoxDecoration(

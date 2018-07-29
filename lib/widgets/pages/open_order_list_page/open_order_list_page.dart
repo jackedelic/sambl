@@ -107,7 +107,7 @@ You may also stay on this page and wait. ''',
 
                 // These are the list of open orders/ order details for this particular hawker center
                 StoreConnector<AppState, List<OrderDetail>>(
-                  converter: (store) => store.state.openOrderList,
+                  converter: (store) => store.state.openOrderList.where((detail) => detail.closingTime.difference(DateTime.now()).inSeconds >= 0).toList(),
                   builder: (_, openOrderList) {
                     if (openOrderList.length > 0) {
                       return new Expanded(
