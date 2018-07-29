@@ -30,13 +30,15 @@ class _MyDrawerState extends State<MyDrawer> {
           child: new Column(
             children: <Widget>[
               new DrawerHeader(
-                  child: new CircleAvatar(
-                        radius: 60.0,
-                        backgroundImage: new NetworkImage(store.state.currentUser.photoUrl),
-                      ),
+                  child: Center(
+                    child: new CircleAvatar(
+                          radius: 65.0,
+                          backgroundImage: new NetworkImage(store.state.currentUser.photoUrl),
+                        ),
+                  ),
                   ),
               new Expanded(
-                child: new ListView(
+                child: new Column(
                   children: <Widget>[
                     new ListTile(
                       leading: new Text("Balance: ${store.state.currentUser.balance}"),

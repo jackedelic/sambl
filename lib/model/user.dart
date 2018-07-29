@@ -14,7 +14,7 @@ class User {
 
   String get photoUrl {
 
-    return onlineUser.transform((user) => user.photoUrl).or('https://s.newsweek.com/sites/www.newsweek.com/files/styles/full/public/2018/03/21/vladimir-putin-satan-2.jpg');
+    return onlineUser.transform((user) => user.photoUrl).or('https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png');
   }
 
   User.initial(): this.onlineUser = Optional<FirebaseUser>.absent(), this.balance = 0;
