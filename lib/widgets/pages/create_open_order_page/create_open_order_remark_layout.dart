@@ -51,10 +51,13 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                   // This is the label 'Number of dishes to deliver'.
                   new Expanded(
                     flex: 2,
-                      child: new Text("Number of dishes to deliver:",
-                        style: new TextStyle(
-                          fontSize: 16.0,
-                          height: 1.0
+                      child: Container(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: new Text("Number of dishes to deliver:",
+                          style: new TextStyle(
+                            fontSize: 16.0,
+                            height: 1.0
+                          ),
                         ),
                       ),
                   ),
@@ -149,8 +152,9 @@ class _CreateOpenOrderRemarkLayoutState extends State<CreateOpenOrderRemarkLayou
                       keyboardType: TextInputType.multiline,
                       maxLines: 10,
                       decoration: new InputDecoration(
-                          hintText: 'I never underdeliver.',
-                          labelText: "Additional remarks"
+                          hintText: 'My pleasure to deliver for you.',
+                          labelText: "Additional remarks",
+                          border: InputBorder.none
                       ),
                       onChanged: (text) {
                         info.editInfo(remarks: text);

@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/async_action/send_message_action.dart';
 
+
 class ChatScreen extends StatefulWidget {
   final orderUid;
 
@@ -60,6 +61,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         onPressed: () {
                           if (_textController.text.length != 0) {
                             store.dispatch(SendMessageAction(_textController.text));
+                            _textController.clear(); // clear the textfield
                           }
                         }
                       ) :
@@ -68,6 +70,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         onPressed: () {
                           if (_textController.text.length != 0) {
                             store.dispatch(SendMessageAction(_textController.text));
+                            _textController.clear(); // clear the textfield
                           }
                         }
                       );

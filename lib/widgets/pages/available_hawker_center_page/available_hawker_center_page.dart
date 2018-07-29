@@ -136,7 +136,8 @@ class _HawkerCenterTile extends StatelessWidget {
                     // distance from user
                     new Expanded(
                       flex: 1,
-                      child: new Center(
+                      child: new Container(
+                        margin: const EdgeInsets.only(right: 20.0),
                         child: FutureBuilder<double>(
                           future: this.hawkerCenter.distance(),
                           builder: (_, snapshot){

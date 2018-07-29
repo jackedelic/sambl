@@ -14,6 +14,7 @@ import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/my_drawer.dart';
 import 'package:sambl/model/order.dart';
 import 'package:sambl/async_action/firestore_write_action.dart';
+import 'package:sambl/widgets/pages/chat_screen.dart';
 
 class PendingDeliveryListLayout  {
 
@@ -25,6 +26,7 @@ class PendingDeliveryListLayout  {
 
   PendingDeliveryListLayout(Store<AppState> store) {
     pendingDeliveryList = store.state.currentDeliveryList.paid;
+    print("pendingDeliveryList is ${pendingDeliveryList.orders}");
   }
 
 
@@ -189,6 +191,15 @@ class PendingDeliveryListLayout  {
                                         borderRadius: BorderRadius.circular(10.0)
                                     ),
                                     child: InkWell(
+                                      onTap: () {
+                                        // open chat window
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(builder: (_) {
+                                              new ChatScreen(orderUid: pendingDeliveryList.orders.keys.toList()[n]);
+                                            }
+                                          )
+                                        );
+                                      },
                                         child: Center(
                                           child: new Text("Chat",
                                             style: new TextStyle(

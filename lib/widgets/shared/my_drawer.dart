@@ -25,6 +25,7 @@ class _MyDrawerState extends State<MyDrawer> {
     return StoreConnector<AppState, Store<AppState>>(
       converter: (store) => store,
       builder: (_, store){
+        print("Inside drawer, current user is ${store.state.currentUser.name}");
         return new Drawer(
           child: new Column(
             children: <Widget>[
