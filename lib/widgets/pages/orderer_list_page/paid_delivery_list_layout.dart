@@ -21,7 +21,7 @@ class PaidDeliveryListLayout {
   double totalPaidDeliveryListHeight = 0.0;
   double dishRowHeight = 37.0;
   double deliveryChargeHeight = 37.0;
-  double reportOrderButtonHeight = 30.0;
+  double reportOrderButtonHeight = 45.0;
   DeliveryList paidDeliveryList;
 
   PaidDeliveryListLayout(Store<AppState> store) {
