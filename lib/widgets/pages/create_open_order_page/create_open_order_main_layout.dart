@@ -140,6 +140,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                             onTap: (){
                               _showMap();
                               info.editInfo(pickupPoint: geoPoint);
+                  
                               store.dispatch(new SetLocationAction(toWrite: geoPoint));
                             },
                             child: new Text("Tap to select pick up point",

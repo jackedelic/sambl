@@ -42,10 +42,8 @@ class HawkerCenter {
     'stalls': this.stallList.map<Map<String,dynamic>>((stall) => stall.toJson()).toList()
   };
 
-  Future<double> distance() async {
-    return Location().getLocation
-      .then(mapToGeoPoint)
-      .then((here) => getDistance(here,this.location));
+  Future<double> distance(Future<GeoPoint> here) async {
+    return here.then((loc) => getDistance(loc, this.location));
   }
   
   @override

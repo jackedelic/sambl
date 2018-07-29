@@ -12,6 +12,8 @@ import 'package:sambl/main.dart'; // to use the store created in main.dart.
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/action/write_action.dart';
 
+import 'package:sambl/utility/sort_hawker_center.dart';
+
 class AvailableHawkerCenterPage extends StatefulWidget {
   @override
   _AvailableHawkerCenterPageState createState() => _AvailableHawkerCenterPageState();
@@ -57,29 +59,34 @@ You may also stay on this page and wait. ''',
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: new MyAppBar().build(context),
-        backgroundColor: MyColors.mainBackground,
-        body: new StoreConnector<AppState, List<HawkerCenter>>(
-          converter: (store) => store.state.availableHawkerCenter,
-          builder: (_, availableHawkerCenter) {
-            print("currently app state's hawker center list is $availableHawkerCenter");
-            if (availableHawkerCenter.length > 0) {
-              return RefreshIndicator(
-                onRefresh: _refreshList,
-                child: ListView.builder(
+      appBar: new MyAppBar().build(context),
+      backgroundColor: MyColors.mainBackground,
+      body: new StoreConnector<AppState, Future<List<HawkerCenter>>>(
+        converter: (store) => sortHawkerCenter(store.state.availableHawkerCenter,store.state.currentLocation),
+        builder: (_, availableHawkerCenter) {
+          return new FutureBuilder(
+            future: availableHawkerCenter,
+            initialData: new List<HawkerCenter>(),
+            builder: (context,snapshot) {
+              print("currently app state's hawker center list is $availableHawkerCenter");
+              if (snapshot.data.length > 0) {
+                return RefreshIndicator(
+                  onRefresh: _refreshList,
+                  child: ListView.builder(
                     padding: const EdgeInsets.only(top: 5.0),
-                    itemCount: availableHawkerCenter.length,
-                    itemBuilder:  (_, index) {
-                      return _HawkerCenterTile(availableHawkerCenter[index]);
-                    }
-                )
-              );
-            } else {
-              return _displayCircularProgressIndicator();
+                    itemCount: snapshot.data.length,
+                      itemBuilder:  (_, index) {
+                        return _HawkerCenterTile(snapshot.data[index]);
+                      }
+                    )
+                  );
+              } else {
+                return _displayCircularProgressIndicator();
+              }
             }
-
-          },
-        )
+          );
+        } 
+      )
     );
   }
 
@@ -139,7 +146,7 @@ class _HawkerCenterTile extends StatelessWidget {
                       child: new Container(
                         margin: const EdgeInsets.only(right: 20.0),
                         child: FutureBuilder<double>(
-                          future: this.hawkerCenter.distance().then((distance) => distance / 1000.0),
+                          future: this.hawkerCenter.distance(store.state.currentLocation).then((distance) => distance / 1000.0),
                           builder: (_, snapshot){
                             return new Text("${snapshot.data != null ? '${snapshot.data.toStringAsFixed(2)}KM' : 'loading distance'}",
                               style: const TextStyle(

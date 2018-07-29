@@ -69,12 +69,10 @@ class _OrderLayoutState extends State<OrderLayout> {
         mapView.dismiss();
       } else if (id == 2) {
         if (mapView.markers.isNotEmpty){
-          geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
-          mapView.dismiss();
           setState(() {
-
+            geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
           });
-
+          mapView.dismiss();
         }
 
       }
@@ -201,10 +199,9 @@ center you want to order from? ''',
                       new Expanded(
                         flex: 2,
                         child: new InkWell(
-                          onTap: (){
+                          onTap: () async {
                             print("you tapped 'use my location'");
-                            
-                            _getCurrentLocation();
+                            store.dispatch(new SetLocationAction(toWrite: await getCurrentLocation()));
                           },
                           child: new Row(
                             children: <Widget>[
