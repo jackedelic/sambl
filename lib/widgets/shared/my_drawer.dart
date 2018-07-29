@@ -9,6 +9,8 @@ import 'package:sambl/state/app_state.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/pages/top_up_page/top_up_page.dart';
 
+import 'package:sambl/async_action/firestore_write_action.dart';
+
 class MyDrawer extends StatefulWidget {
 
 
@@ -49,7 +51,14 @@ class _MyDrawerState extends State<MyDrawer> {
                       onTap: () {
                         Navigator.of(context).push(MaterialPageRoute(builder: (_) => new TopUpPage()));
                       },
-                    ),
+                    ), 
+                    new StoreConnector<AppState,Store<AppState>>(
+                      converter: (store) => store,
+                      builder: (context,store) => new ListTile(
+                        leading: new Text("Convert balance"),
+                        onTap: () => store.dispatch(new RequestPayoutAction(store.state.currentUser.balance)),
+                      ),
+                    )
 
                   ],
                 )
