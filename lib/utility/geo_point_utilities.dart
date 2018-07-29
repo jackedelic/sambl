@@ -6,6 +6,10 @@ import 'package:location/location.dart';
 
 import 'package:geocoder/geocoder.dart';
 
+Future<String> reverseGeocodeFuture(Future<GeoPoint> point) {
+  return point.then((point) async => await reverseGeocode(point));
+}
+
 Future<String> reverseGeocode(GeoPoint point) {
   return Geocoder.local.findAddressesFromCoordinates(new Coordinates(point.latitude, point.longitude)).then((list) {
     return list.first.addressLine;

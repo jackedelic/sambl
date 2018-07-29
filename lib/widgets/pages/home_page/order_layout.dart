@@ -10,6 +10,8 @@ import 'package:sambl/widgets/pages/available_hawker_center_page/available_hawke
 import 'package:sambl/state/app_state.dart';
 import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/main.dart';
+import 'package:redux/redux.dart';
+import 'package:sambl/action/write_action.dart';
 
 class OrderLayout extends StatefulWidget {
   @override
@@ -132,20 +134,21 @@ center you want to order from? ''',
                   new Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      StoreConnector<AppState, AppState>( //
-                        converter: (store) => store.state,
+                      StoreConnector<AppState, Store<AppState>>( //
+                        converter: (store) => store,
 
-                        builder: (_, appState) {
+                        builder: (_, store) {
                           return new Expanded(
                             child: new GestureDetector(
                               onTap:() {
                                 print("You tapped 'From: ... ' box");
-                                print("in order layout, openOrderList is ${appState.openOrderList}");
+                                print("in order layout, openOrderList is ${store.state.openOrderList}");
+                                store.dispatch(new SetLocationAction(toWrite: geoPoint));
                                 Navigator.push(context,
                                     new MaterialPageRoute(builder: (context) => new AvailableHawkerCenterPage())
                                 );
                               },
-                              child: new Text("${appState.currentHawkerCenter.isPresent ? 'Ordering from: ${appState.currentHawkerCenter.value.name}' : "Press to select a hawker center"}",
+                              child: new Text("${store.state.currentHawkerCenter.isPresent ? 'Ordering from: ${store.state.currentHawkerCenter.value.name}' : "Press to select a hawker center"}",
                                 style: new TextStyle(
                                     fontSize: 17.0,
                                     fontWeight: FontWeight.bold,
@@ -179,7 +182,7 @@ center you want to order from? ''',
                           },
                           child: new Text("${geoPoint == null ? 'Tap to select your location' : '${geoPoint.latitude.toStringAsFixed(4)}E    ${geoPoint.longitude.toStringAsFixed(4)}N'}",
                               style: new TextStyle(
-                                  fontSize: 13.0,
+                                  fontSize: 12.5,
                                   fontWeight: FontWeight.bold,
                                 color: Colors.white
                               )
@@ -200,6 +203,7 @@ center you want to order from? ''',
                         child: new InkWell(
                           onTap: (){
                             print("you tapped 'use my location'");
+                            
                             _getCurrentLocation();
                           },
                           child: new Row(
@@ -209,7 +213,7 @@ center you want to order from? ''',
                                 child: new Text("Use my location",
                                   style: new TextStyle(
                                     color: Colors.white,
-                                    fontSize: 13.0
+                                    fontSize: 12.0
                                   ),
                                 ),
                               )

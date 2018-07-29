@@ -77,3 +77,9 @@ class ChangeAppStatusAction implements WriteAction {
 class ClearPendingOrderAction implements WriteAction {
   void toWrite;
 }
+
+class SetLocationAction implements WriteAction {
+  final GeoPoint toWrite;
+
+  SetLocationAction({this.toWrite});
+}

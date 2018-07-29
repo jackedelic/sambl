@@ -15,6 +15,8 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
 import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
+
+import 'package:sambl/action/write_action.dart';
 /*
 * TODO: automatically initialize info's geopoint when navigated to this page.
 * */
@@ -132,18 +134,22 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                     child: Container(
                       color: new Color(0x78000000),
                       child: Center(
-                        child: new InkWell(
-                          onTap: (){
-                            _showMap();
-                            info.editInfo(pickupPoint: geoPoint);
-                          },
-                          child: new Text("Tap to select pick up point",
-                            style: new TextStyle(
-                              fontSize: 15.0,
-                              color: Colors.white,
+                        child: new StoreConnector<AppState,Store<AppState>>(
+                          converter: (store) => store,
+                          builder: (context,store) => new InkWell(
+                            onTap: (){
+                              _showMap();
+                              info.editInfo(pickupPoint: geoPoint);
+                              store.dispatch(new SetLocationAction(toWrite: geoPoint));
+                            },
+                            child: new Text("Tap to select pick up point",
+                              style: new TextStyle(
+                                fontSize: 15.0,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
+                        ) 
                       ),
                     ),
                   );
