@@ -72,7 +72,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                         builder: (_, child, info) {
 
                           return FutureBuilder<String>(
-                            future: reverseGeocode(info.pickupPoint),
+                            future: reverseGeocodeFuture(store.state.currentLocation),
                             builder: (_, AsyncSnapshot<String> snapshot) {
                               String pickUpPointName;
                               print("snapshot(pickup pt) is $snapshot");

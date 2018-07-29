@@ -78,7 +78,7 @@ Info info;
           new FlatButton(
               onPressed: (){
                 _tabController.animateTo((_tabController.index + 1) % 3);
-
+                
               },
               child: new Icon(Icons.arrow_forward_ios, color: MyColors.mainRed,)
 
@@ -119,7 +119,7 @@ Info info;
                         maxNumberofDishes: info.maxNumberofDishes,
                         closingTime: info.closingTime,
                         eta: info.eta,
-                        pickupPoint: info.pickupPoint,
+                        pickupPoint: await store.state.currentLocation,
                         remarks: "${info.remarks}",
                         hawkerCenter: currentHawkerCenter.value
                     )));
@@ -279,7 +279,7 @@ Info info;
 class Info extends Model {
 
 
-  GeoPoint pickupPoint = new GeoPoint(1.2869369, 103.8437092);
+  GeoPoint pickupPoint = new GeoPoint(0.0, 0.0);
   HawkerCenter hawkerCenter;
   String delivererUid;
   DateTime closingTime;
@@ -293,7 +293,7 @@ class Info extends Model {
     _initializePickupPoint(); // default pickuppoint is user's current location.
   }
 
-  void _initializePickupPoint() async{
+  void _initializePickupPoint() async {
     this.pickupPoint =  await getCurrentLocation();
   }
 
@@ -323,6 +323,8 @@ class Info extends Model {
     this.maxNumberofDishes = maxNumberofDishes ?? this.maxNumberofDishes;
     this.remainingNumberofDishes = remainingNumberofDishes ?? this.remainingNumberofDishes;
     this.openOrderUid = openOrderUid ?? this.openOrderUid;
+
+
 
     notifyListeners();
   }

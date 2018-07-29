@@ -62,11 +62,12 @@ Future<CombinedSubscriber> toCurrentDeliverySubscription(DocumentReference deliv
 StreamSubscription toAvailableHawkerCenterSubscription(Store<AppState> store) {
   return Firestore.instance.collection('hawker_centers').snapshots()
     .listen((querySnapshot) async {
-      store.dispatch(new WriteAvailableHawkerCenterAction(await sortHawkerCenter( 
+      store.dispatch(new WriteAvailableHawkerCenterAction(sortHawkerCenter( 
         await Stream.fromIterable(querySnapshot.documents
           .where((document) => true))
           .asyncMap<HawkerCenter>((hawkerCenter) async => await hawkerCenterReader(hawkerCenter.reference))
-          .toList()
+          .toList(),
+        await store.state.currentLocation
       )));
     });
 }

@@ -15,7 +15,8 @@ final Reducer<AppState> writeActionReducer = combineReducers([
     state.copyWith(currentDeliveryList: state.currentDeliveryList
       .copyWith(pending: new DeliveryList.absent()))),
   TypedReducer<AppState,WriteChatMessagesAction>((state,action) => 
-    state.copyWith(chats: action.toWrite))
+    state.copyWith(chats: action.toWrite)),
+  TypedReducer<AppState,SetLocationAction>((state,action) => state.copyWith(location: action.toWrite))
 ]);
 
 final Reducer<AppState> _writeAvailableHawkerCenterReducer = (state,action) {

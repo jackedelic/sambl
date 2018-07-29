@@ -200,6 +200,7 @@ center you want to order from? ''',
                         child: new InkWell(
                           onTap: (){
                             print("you tapped 'use my location'");
+                            
                             _getCurrentLocation();
                           },
                           child: new Row(
