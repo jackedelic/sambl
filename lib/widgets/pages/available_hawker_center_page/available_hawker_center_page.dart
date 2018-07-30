@@ -33,9 +33,12 @@ class _AvailableHawkerCenterPageState extends State<AvailableHawkerCenterPage> {
     if (!timeOut) {
       Future.delayed(const Duration(seconds: 10), () {
         timeOut = true;
-        setState(() {
+        if (this.mounted){
+          setState(() {
 
-        });
+          });
+        }
+
       });
     }
     if (timeOut) {
