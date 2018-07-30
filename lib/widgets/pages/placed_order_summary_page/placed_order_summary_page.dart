@@ -123,7 +123,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                         ),
                                         new Text("${currentOrder.isPresent
                                             ? (currentOrder.value.isPaid
-                                            ? ' Paid' : (currentOrder.value.isApproved ? ' Awaiting Payment' : ' Pending'))
+                                            ? ' Paid' : (currentOrder.value.isApproved ? ' Awaiting\nPayment' : ' Pending'))
                                             : 'loading order'}",
                                           style: new TextStyle(fontSize: 18.0),
                                         )

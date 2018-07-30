@@ -109,6 +109,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
                           color: Colors.white,
                               child: InkWell(
                                 onTap: (){
+                                  print(store.state.currentAppStatus);
                                   store.dispatch(new CloseOpenOrderAction());
                                   Navigator.of(context).popUntil(ModalRoute.withName('/'));
                                 },
