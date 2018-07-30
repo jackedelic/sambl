@@ -9,6 +9,8 @@ import 'package:sambl/widgets/shared/my_color.dart';
 import 'package:sambl/widgets/shared/quantity_display.dart';
 import 'package:sambl/utility/geo_point_utilities.dart';
 import 'package:sambl/widgets/pages/create_open_order_page/create_open_order_page.dart';
+import 'package:sambl/state/app_state.dart';
+import 'package:redux/redux.dart';
 
 /// This class constructs the layout for confirmation page for creating open order. This layout
 /// would be the last tabbarview child in the 'create open order page'.
@@ -32,11 +34,10 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
 
   @override
   Widget build(BuildContext context) {
-    return new StoreProvider(
-        store: store,
-        child: new Column(
+    return new StoreConnector<AppState,Store<AppState>>(
+        converter: (store) => store,
+        builder: (context,store) => new Column(
           children: <Widget>[
-
             // Title: Delivery Summary
             new Container(
               margin: new EdgeInsets.symmetric(horizontal: 20.0),
@@ -72,21 +73,14 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                         builder: (_, child, info) {
 
                           return FutureBuilder<String>(
+                            initialData: "...",
                             future: reverseGeocodeFuture(store.state.currentLocation),
                             builder: (_, AsyncSnapshot<String> snapshot) {
-                              String pickUpPointName;
-                              print("snapshot(pickup pt) is $snapshot");
-                              if (snapshot.hasError)
-                                pickUpPointName = "...";
-                              else
-                                pickUpPointName = "${snapshot.data}";
-
-
                               return new Container(
                                 child: new Row(
                                   children: <Widget>[
                                     new Expanded(
-                                      child: new Text("Picking up at $pickUpPointName",
+                                      child: new Text("Picking up at " + snapshot.data,
                                         style: new TextStyle(
                                           fontSize: 20.0,
                                         ),

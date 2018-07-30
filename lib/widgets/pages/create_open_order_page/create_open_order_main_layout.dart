@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:sambl/widgets/shared/my_color.dart';
@@ -45,15 +47,20 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
     super.initState();
     MapView.setApiKey(API_KEY);
     mapView = new MapView();
+    staticMapUri = staticMapProvider.getStaticUri(new Location(1.35,103.8), 6);
     _getCurrentLocation();
+    print(staticMapUri.toString());
   }
 
   // set geoPoint then set staticMapUri which requires geoPoint.
-  void _getCurrentLocation() async {
+  Future<Uri> _getCurrentLocation() async {
     geoPoint = await getCurrentLocation();
     setState(() {
       staticMapUri = _getStaticUriWithMarkers(geoPoint, [new Marker("1","my location", geoPoint.latitude, geoPoint.longitude)]);
     });
+    print('test');
+    print(staticMapUri.toString());
+    return staticMapUri;
   }
 
   Uri _getStaticUriWithMarkers(GeoPoint geoPoint, List<Marker> markers) {
@@ -62,7 +69,7 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
   }
 
   // opens a page to show the map
-  void _showMap() async {
+  void _showMap(Function callback) async {
     GeoPoint currentLocation = await getCurrentLocation();
     mapView.show(
         new MapOptions(
@@ -82,17 +89,20 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
     mapView.onMapTapped.listen((location) {
       print("tapped location is $location");
       mapView.setMarkers([new Marker("1", "selected",location.latitude, location.longitude)]);
-
+      print(mapView.markers.length);
     });
 
     mapView.onToolbarAction.listen((id) {
       if (id == 1) {
         mapView.dismiss();
       } else if (id == 2) {
+        print("len is: " + mapView.markers.length.toString());
         if (mapView.markers.isNotEmpty){
+          callback(new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude));
+          staticMapUri = _getStaticUriWithMarkers(geoPoint, mapView.markers);
           geoPoint = new GeoPoint(mapView.markers[0].latitude, mapView.markers[0].longitude);
           setState(() {
-            staticMapUri = _getStaticUriWithMarkers(geoPoint, mapView.markers);
+
           });
           mapView.dismiss();
         }
@@ -104,9 +114,6 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return new ListView(
       children: <Widget>[
         // This is the static map.
@@ -134,14 +141,12 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
                     child: Container(
                       color: new Color(0x78000000),
                       child: Center(
-                        child: new StoreConnector<AppState,Store<AppState>>(
-                          converter: (store) => store,
-                          builder: (context,store) => new InkWell(
+                        child: new StoreConnector<AppState,Function>(
+                          converter: (store) => (GeoPoint location) => store.dispatch(new SetLocationAction(toWrite: location)),
+                          builder: (context,callback) => new InkWell(
                             onTap: (){
-                              _showMap();
+                              _showMap(callback);
                               info.editInfo(pickupPoint: geoPoint);
-                  
-                              store.dispatch(new SetLocationAction(toWrite: geoPoint));
                             },
                             child: new Text("Tap to select pick up point",
                               style: new TextStyle(
@@ -160,27 +165,41 @@ class _CreateOpenOrderMainLayoutState extends State<CreateOpenOrderMainLayout> {
           ),
         ),
 
+        new StoreConnector<AppState,Store<AppState>>(
+          converter: (store) => store,
+          builder: (context,store){
+            return new Container(
+              margin: const EdgeInsets.symmetric(vertical: 5.0),
+              child: new FutureBuilder<GeoPoint>(
+                future: store.state.currentLocation,
+                initialData: new GeoPoint(0.0, 0.0),
+                builder: (context,snapshot) { 
+                  print(snapshot.data.latitude);
+                  print(snapshot.data.longitude);
+                  return new Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      new Text("latitude: " + snapshot.data.latitude.toStringAsFixed(4),
+                        style: new TextStyle(color: Colors.black54),
+                      ),
+                      new Container(width: 1.5, height: 20.0,color: Colors.grey,margin: const EdgeInsets.symmetric(horizontal: 7.0),), // vertical divider
+                      new Text("longitude: " + snapshot.data.longitude.toStringAsFixed(4),
+                        style: new TextStyle(color: Colors.black54),
+                      ),
+                    ],
+                  );
+                }
+              )
+            );
+          } ,
+        ), 
         //latitude and longitude
-        new Container(
-          margin: const EdgeInsets.symmetric(vertical: 5.0),
-          child: new Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new Text("latitude: ${geoPoint != null ? geoPoint.latitude.toStringAsFixed(4) : 'loading..'}",
-                style: new TextStyle(color: Colors.black54),
-              ),
-              new Container(width: 1.5, height: 20.0,color: Colors.grey,margin: const EdgeInsets.symmetric(horizontal: 7.0),), // vertical divider
-              new Text("longitude: ${geoPoint != null ? geoPoint.longitude.toStringAsFixed(4) : 'loading..'}",
-                style: new TextStyle(color: Colors.black54),
-              ),
-            ],
-          ),
-        ),
 
         // Just some space in btwn the two rows.
         new Padding(padding: new EdgeInsets.all(5.0)),
 
         // Second row: 'closing time' and 'eta'
+
         new Container(
           margin: new EdgeInsets.symmetric(horizontal: 20.0),
           child: new Row(

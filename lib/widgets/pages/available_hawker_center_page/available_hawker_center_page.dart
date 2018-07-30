@@ -68,7 +68,6 @@ You may also stay on this page and wait. ''',
             future: availableHawkerCenter,
             initialData: new List<HawkerCenter>(),
             builder: (context,snapshot) {
-              print("currently app state's hawker center list is ${snapshot.data}");
               if (snapshot.data.length > 0) {
                 return RefreshIndicator(
                   onRefresh: _refreshList,
