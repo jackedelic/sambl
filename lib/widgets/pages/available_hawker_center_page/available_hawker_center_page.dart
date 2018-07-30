@@ -81,7 +81,7 @@ You may also stay on this page and wait. ''',
                     )
                   );
               } else {
-                return _displayCircularProgressIndicator();
+                return Column(children: <Widget>[_displayCircularProgressIndicator()]);
               }
             }
           );
