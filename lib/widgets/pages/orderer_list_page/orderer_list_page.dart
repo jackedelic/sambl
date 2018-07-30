@@ -33,6 +33,13 @@ class _OrdererListPageState extends State<OrdererListPage> {
 
   bool timeOut = false;
 
+  /// Used by refreshIndicator.onRefresh()
+  Future<Null> _refreshList() async {
+    setState((){});
+    timeOut = false;
+    return null;
+  }
+
   Widget _displayCircularProgressIndicator() {
     print("circular progressing in available_hawker_center_page");
     if (!timeOut) {
@@ -118,11 +125,14 @@ class _OrdererListPageState extends State<OrdererListPage> {
                     store.state.currentDeliveryList.approved.orders.isNotEmpty ||
                     store.state.currentDeliveryList.paid.orders.isNotEmpty) {
 
-                  return new CustomScrollView(
-                    slivers: new List  .from(store.state.currentDeliveryList.pending.orders.isNotEmpty ? new PendingDeliveryListLayout(store).build(context) : [])
-                      ..addAll(store.state.currentDeliveryList.approved.orders.isNotEmpty ? new ApprovedDeliveryListLayout(store).build(context) : [])
-                      ..addAll(store.state.currentDeliveryList.paid.orders.isNotEmpty ? new PaidDeliveryListLayout(store).build(context) : []),
+                  return RefreshIndicator(
+                    onRefresh: _refreshList,
+                    child: new CustomScrollView(
+                      slivers: new List  .from(store.state.currentDeliveryList.pending.orders.isNotEmpty ? new PendingDeliveryListLayout(store).build(context) : [])
+                        ..addAll(store.state.currentDeliveryList.approved.orders.isNotEmpty ? new ApprovedDeliveryListLayout(store).build(context) : [])
+                        ..addAll(store.state.currentDeliveryList.paid.orders.isNotEmpty ? new PaidDeliveryListLayout(store).build(context) : []),
 
+                    ),
                   );
 
                 } else {
