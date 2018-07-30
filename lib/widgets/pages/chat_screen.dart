@@ -169,12 +169,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       } else {
                         return store.state.chats.entries.first.value.list
                           .map<ChatMessage>((msg) => getMapper(SenderRole.orderer).call(msg))
-                          .toList();
+                          .toList().reversed.toList();
                       }
                     } else if (store.state.currentAppStatus ==AppStatusFlags.delivering) {
                       return store.state.chats[orderUid].list
                         .map<ChatMessage>((msg) => getMapper(SenderRole.deliverer).call(msg))
-                        .toList();
+                        .toList().reversed.toList();
                     } else {
                       return new List<ChatMessage>();
                     }
