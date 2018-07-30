@@ -121,6 +121,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                           style: new TextStyle(fontSize: 20.0,
                                               fontWeight: FontWeight.w700),
                                         ),
+
                                         Expanded(
                                           child: new Text("${currentOrder.isPresent
                                               ? (currentOrder.value.isPaid
@@ -133,6 +134,7 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
 
                                         // some padding after the status pending/awaitingpayment
                                         const Padding(padding: const EdgeInsets.all(15.0))
+
                                       ],
                                     ),
                                   ),

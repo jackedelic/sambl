@@ -249,11 +249,10 @@ class _PlaceOrderPageState extends State<PlaceOrderPage> {
                             //TRIGGER SubmitOrderAction.
                             Optional<Order> newOrder = store.state.currentOrder;
                             // The reducer shd create a new state w new Order. Then inform Firebase (async).
-
                             store.dispatch(PlaceOrderAction(orderModel.order));
                             print("Order placed. appstate's currentorder is ${store.state.currentOrder}");
 
-
+                            Navigator.of(context).popUntil(ModalRoute.withName('/'));
                             // Navigate to a page to view ur order
 
                             print("orderModel in placeorderpage is ${widget.orderModel}");

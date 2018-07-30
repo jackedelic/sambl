@@ -118,7 +118,7 @@ StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store
   return Firestore.instance.collection('users').document(user.uid).snapshots()
     .listen((snapshot) async {
       if (snapshot.exists) {
-        store.dispatch(new LoginAction(new User(user,snapshot.data['balance'])));
+        store.dispatch(new LoginAction(new User(user,snapshot.data['balance'].round())));
         if (snapshot.data['isOrdering']) {
           store.dispatch(new ChangeAppStatusAction(AppStatusFlags.ordering));
           CombinedSubscriber.instance().removeWhere((name,sub) => [
@@ -135,6 +135,7 @@ StreamSubscription<DocumentSnapshot> toUserSubscription(FirebaseUser user, Store
           CombinedSubscriber.instance().addAll(subscriptions: 
             await toCurrentDeliverySubscription(snapshot.data['currentDelivery'], store));
         } else {
+          store.dispatch(new ChangeAppStatusAction(AppStatusFlags.authenticated));
           if (store.state.currentAppStatus == AppStatusFlags.delivering) {
             CombinedSubscriber.instance().removeWhere((name,sub) => [
               'pendingDeliverySubscription',
