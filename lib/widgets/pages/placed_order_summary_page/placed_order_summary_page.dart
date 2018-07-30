@@ -333,28 +333,10 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                           print("on pressed, currentOrder present ? : ${store.state.currentOrder.isPresent}");
                           if (store.state.currentOrder.isPresent && store.state.currentOrder.value.isApproved) {
 
-                            //TRIGGER SubmitOrderAction.
-                            //Optional<Order> newOrder = store.state.currentOrder;
-                            // The reducer shd create a new state w new Order. Then inform Firebase (async).
-                            //store.dispatch(new OrderAction(order: newOrder));
 
                             store.dispatch(new AuthorizePaymentAction());
                             print("Authorised Payment.");
 
-                            // Navigate to a page to chat page
-                            /*Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) {
-                                              return new ScopedModelDescendant<OrderModel>(
-                                                builder: (context, child, orderModel) {
-                                                  return new PlacedOrderSummaryPage(orderModel);
-                                                },
-
-                                              );
-                                            }
-                                        )
-                                    );*/
                           }
                         },
                         child: new Container(

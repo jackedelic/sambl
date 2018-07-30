@@ -172,9 +172,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                           .toList().reversed.toList();
                       }
                     } else if (store.state.currentAppStatus ==AppStatusFlags.delivering) {
-                      return store.state.chats[orderUid].list
-                        .map<ChatMessage>((msg) => getMapper(SenderRole.deliverer).call(msg))
-                        .toList().reversed.toList();
+                      print("chats.isNotEmpty: ${store.state.chats.isNotEmpty}");
+                      if (store.state.chats.isEmpty) {
+                        return new List<ChatMessage>();
+                      } else {
+                        return store.state.chats[orderUid].list
+                            .map<ChatMessage>((msg) => getMapper(SenderRole.deliverer).call(msg))
+                            .toList().reversed.toList();
+                      }
+
                     } else {
                       return new List<ChatMessage>();
                     }

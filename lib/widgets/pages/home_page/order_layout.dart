@@ -33,7 +33,7 @@ class _OrderLayoutState extends State<OrderLayout> {
   }
 
   // assigns _geoPoint to the user's current location.
-  void _getCurrentLocation() async {
+  void _setCurrentLocation() async {
     geoPoint = await getCurrentLocation();
     setState(() {
 
@@ -202,6 +202,7 @@ center you want to order from? ''',
                           onTap: () async {
                             print("you tapped 'use my location'");
                             store.dispatch(new SetLocationAction(toWrite: await getCurrentLocation()));
+                            _setCurrentLocation();
                           },
                           child: new Row(
                             children: <Widget>[

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:quiver/core.dart';
 
 import 'package:flutter/material.dart';
@@ -28,6 +30,46 @@ class _OrdererListPageState extends State<OrdererListPage> {
   double deliveryChargeHeight = 60.0;
   double approvalButtonHeight = 108.0;
   GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  bool timeOut = false;
+
+  /// Used by refreshIndicator.onRefresh()
+  Future<Null> _refreshList() async {
+    setState((){});
+    timeOut = false;
+    return null;
+  }
+
+  Widget _displayCircularProgressIndicator() {
+    print("circular progressing in available_hawker_center_page");
+    if (!timeOut) {
+      Future.delayed(const Duration(seconds: 4), () {
+        timeOut = true;
+        setState(() {
+
+        });
+      });
+    }
+    if (timeOut) {
+      return Expanded(
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+          child: Center(
+            child: new Text(
+              '''No orders yet. We'll display them once we've found any. ''',
+              style: new TextStyle(
+                fontSize: 18.0,
+                color: MyColors.mainRed,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
+    return Expanded(child: Center(child: new CircularProgressIndicator()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,13 +121,26 @@ class _OrdererListPageState extends State<OrdererListPage> {
             child: StoreConnector<AppState, Store<AppState>>(
               converter: (store) => store,
               builder: (_, store){
-                print('test');
-                return new CustomScrollView(
-                  slivers: new List  .from(store.state.currentDeliveryList.pending.orders.isNotEmpty ? new PendingDeliveryListLayout(store).build(context) : [])
-                                    ..addAll(store.state.currentDeliveryList.approved.orders.isNotEmpty ? new ApprovedDeliveryListLayout(store).build(context) : [])
-                                    ..addAll(store.state.currentDeliveryList.paid.orders.isNotEmpty ? new PaidDeliveryListLayout(store).build(context) : []),
+                if (store.state.currentDeliveryList.pending.orders.isNotEmpty ||
+                    store.state.currentDeliveryList.approved.orders.isNotEmpty ||
+                    store.state.currentDeliveryList.paid.orders.isNotEmpty) {
 
-                );
+                  return RefreshIndicator(
+                    onRefresh: _refreshList,
+                    child: new CustomScrollView(
+                      slivers: new List  .from(store.state.currentDeliveryList.pending.orders.isNotEmpty ? new PendingDeliveryListLayout(store).build(context) : [])
+                        ..addAll(store.state.currentDeliveryList.approved.orders.isNotEmpty ? new ApprovedDeliveryListLayout(store).build(context) : [])
+                        ..addAll(store.state.currentDeliveryList.paid.orders.isNotEmpty ? new PaidDeliveryListLayout(store).build(context) : []),
+
+                    ),
+                  );
+
+                } else {
+                  return new Column(
+                    children: <Widget>[_displayCircularProgressIndicator()],
+                  );
+                }
+
               },
             ),
           ),
