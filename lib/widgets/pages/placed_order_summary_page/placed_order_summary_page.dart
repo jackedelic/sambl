@@ -121,12 +121,18 @@ class _PlacedOrderSummaryPageState extends State<PlacedOrderSummaryPage> {
                                           style: new TextStyle(fontSize: 20.0,
                                               fontWeight: FontWeight.w700),
                                         ),
-                                        new Text("${currentOrder.isPresent
-                                            ? (currentOrder.value.isPaid
-                                            ? ' Paid' : (currentOrder.value.isApproved ? ' Awaiting Payment' : ' Pending'))
-                                            : 'loading order'}",
-                                          style: new TextStyle(fontSize: 18.0),
-                                        )
+                                        Expanded(
+                                          child: new Text("${currentOrder.isPresent
+                                              ? (currentOrder.value.isPaid
+                                              ? ' Paid' : (currentOrder.value.isApproved ? ' Awaiting Payment' : ' Pending'))
+                                              : 'loading order'}",
+                                            textAlign: TextAlign.center,
+                                            style: new TextStyle(fontSize: 18.0),
+                                          ),
+                                        ),
+
+                                        // some padding after the status pending/awaitingpayment
+                                        const Padding(padding: const EdgeInsets.all(15.0))
                                       ],
                                     ),
                                   ),
