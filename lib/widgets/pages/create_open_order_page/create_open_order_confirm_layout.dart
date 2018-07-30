@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:scoped_model/scoped_model.dart';
@@ -32,6 +34,12 @@ class CreateOpenOrderConfirmLayout extends StatefulWidget {
 class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLayout> {
 
 
+  //
+  Future<Null> _refreshPickupPoint() async {
+    setState((){});
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return new StoreConnector<AppState,Store<AppState>>(
@@ -65,129 +73,133 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                   decoration: new BoxDecoration(
                       border: new Border.all(color: MyColors.borderGrey, width: 1.8),
                       borderRadius: new BorderRadius.all(new Radius.circular(15.0))),
-                  child: new ListView(
-                    children: <Widget>[
-                      // This row shows the pickup point.
-                      // Borderless container.
-                      ScopedModelDescendant<Info>(
-                        builder: (_, child, info) {
+                  child: RefreshIndicator(
+                    onRefresh: _refreshPickupPoint,
+                    child: new ListView(
+                      children: <Widget>[
+                        // This row shows the pickup point.
+                        // Borderless container.
+                        ScopedModelDescendant<Info>(
+                          builder: (_, child, info) {
 
-                          return FutureBuilder<String>(
-                            initialData: "...",
-                            future: reverseGeocodeFuture(store.state.currentLocation),
-                            builder: (_, AsyncSnapshot<String> snapshot) {
-                              return new Container(
-                                child: new Row(
-                                  children: <Widget>[
-                                    new Expanded(
-                                      child: new Text("Picking up at " + snapshot.data,
-                                        style: new TextStyle(
-                                          fontSize: 20.0,
+                            return FutureBuilder<String>(
+                              initialData: "...",
+                              future: reverseGeocodeFuture(store.state.currentLocation),
+                              builder: (_, AsyncSnapshot<String> snapshot) {
+
+                                return new Container(
+                                  child: new Row(
+                                    children: <Widget>[
+                                      new Expanded(
+                                        child: new Text("${snapshot.hasData ? 'Picking up at  +${snapshot.data}' : 'loading pickup point...'}",
+                                          style: new TextStyle(
+                                            fontSize: 20.0,
+                                          ),
+                                          textAlign: TextAlign.center,
                                         ),
-                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+
+
+                        // some space between 'pickup pt' row and 'other details' row
+                        new Padding(
+                          padding: new EdgeInsets.symmetric(vertical: 10.0),
+                        ),
+
+                        // This row shows the 'order closing time', 'eta' and 'num of dishes to deliver'.
+                        // Borderless container
+                        new Container(
+                          child: new Row(
+                            children: <Widget>[
+                              // This wid rep closing time
+                              new QuantityDisplay(
+                                head: new QuantityDisplayElement(
+                                  content: "closing in",
+                                ),
+                                quantity: new QuantityDisplayElement(
+                                    content: "${info.closingTime?.difference(DateTime.now())?.inMinutes ?? 'X'}"
+                                ),
+                                tail: new QuantityDisplayElement(
+                                    content: "min"
+                                ),
+                              ),
+
+
+
+                              // This wid rep eta
+                              new QuantityDisplay(
+                                head: new QuantityDisplayElement(
+                                  content: "ETA",
+                                ),
+                                quantity: new QuantityDisplayElement(
+                                    content: "${info.eta?.difference(DateTime.now())?.inMinutes ?? 'X'}"
+                                ),
+                                tail: new QuantityDisplayElement(
+                                    content: "min"
+                                ),
+                              ),
+
+
+                              // This wid rep number of dishes to deliver.
+                              new QuantityDisplay(
+                                head: new QuantityDisplayElement(
+                                  content: "Delivering",
+                                ),
+                                quantity: new QuantityDisplayElement(
+                                    content: "${info.maxNumberofDishes}"
+                                ),
+                                tail: new QuantityDisplayElement(
+                                    content: "dishes"
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+
+                        // Some space btwn 'additional detail' and the prev 'quantity display' row.
+                        new Padding(
+                            padding: new EdgeInsets.symmetric(vertical: 10.0)
+                        ),
+                        // This last part shows the additional remark
+                        new Container(
+                          child: new Column(
+                            children: <Widget>[
+                              new Row(
+                                children: <Widget>[
+                                  new Text("Additional Remarks: ",
+                                    style: new TextStyle(
+                                        fontSize: 18.0
+                                    ),
+                                  )
+                                ],
+                              ),
+                              new Padding(padding: new EdgeInsets.symmetric(vertical: 10.0),),
+                              new Row(
+                                children: <Widget>[
+                                  new Expanded(
+                                    child: new Text("${info.remarks}",
+                                      style: new TextStyle(
+                                          fontSize: 16.0
                                       ),
                                     ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-
-
-                      // some space between 'pickup pt' row and 'other details' row
-                      new Padding(
-                        padding: new EdgeInsets.symmetric(vertical: 10.0),
-                      ),
-
-                      // This row shows the 'order closing time', 'eta' and 'num of dishes to deliver'.
-                      // Borderless container
-                      new Container(
-                        child: new Row(
-                          children: <Widget>[
-                            // This wid rep closing time
-                            new QuantityDisplay(
-                              head: new QuantityDisplayElement(
-                                content: "closing in",
+                                  )
+                                ],
                               ),
-                              quantity: new QuantityDisplayElement(
-                                  content: "${info.closingTime?.difference(DateTime.now())?.inMinutes ?? 'X'}"
-                              ),
-                              tail: new QuantityDisplayElement(
-                                  content: "min"
-                              ),
-                            ),
-
-
-
-                            // This wid rep eta
-                            new QuantityDisplay(
-                              head: new QuantityDisplayElement(
-                                content: "ETA",
-                              ),
-                              quantity: new QuantityDisplayElement(
-                                  content: "${info.eta?.difference(DateTime.now())?.inMinutes ?? 'X'}"
-                              ),
-                              tail: new QuantityDisplayElement(
-                                  content: "min"
-                              ),
-                            ),
-
-
-                            // This wid rep number of dishes to deliver.
-                            new QuantityDisplay(
-                              head: new QuantityDisplayElement(
-                                content: "Delivering",
-                              ),
-                              quantity: new QuantityDisplayElement(
-                                  content: "${info.maxNumberofDishes}"
-                              ),
-                              tail: new QuantityDisplayElement(
-                                  content: "dishes"
-                              ),
-                            ),
-
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-
-                      // Some space btwn 'additional detail' and the prev 'quantity display' row.
-                      new Padding(
-                          padding: new EdgeInsets.symmetric(vertical: 10.0)
-                      ),
-                      // This last part shows the additional remark
-                      new Container(
-                        child: new Column(
-                          children: <Widget>[
-                            new Row(
-                              children: <Widget>[
-                                new Text("Additional Remarks: ",
-                                  style: new TextStyle(
-                                      fontSize: 18.0
-                                  ),
-                                )
-                              ],
-                            ),
-                            new Padding(padding: new EdgeInsets.symmetric(vertical: 10.0),),
-                            new Row(
-                              children: <Widget>[
-                                new Expanded(
-                                  child: new Text("${info.remarks}",
-                                    style: new TextStyle(
-                                        fontSize: 16.0
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
 
 
 
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
