@@ -121,7 +121,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       fit: FlexFit.tight,
                       child: new ListView.builder(
                         itemBuilder: (_, int index) => messages[index],
-                        reverse: false,
+                        reverse: true,
                         padding: new EdgeInsets.all(8.0),
                         itemCount: messages?.length == null ? 0 : messages.length,
                       ),

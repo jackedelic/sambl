@@ -48,6 +48,7 @@ class PaidDeliveryListLayout {
 
     // The whole paid delivery list.
     return new ListView.builder( // build a list of expansion tiles.
+                padding: const EdgeInsets.all(0.0),
                 itemCount: paidDeliveryList.orders.length,
                 // for each order
                 itemBuilder: (_, int n) {

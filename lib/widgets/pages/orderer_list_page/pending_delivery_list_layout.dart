@@ -52,6 +52,7 @@ class PendingDeliveryListLayout  {
 
     // The whole pending delivery list.
     return new ListView.builder( // build a list of expansion tiles.
+            padding: const EdgeInsets.all(0.0),
             itemCount: pendingDeliveryList.orders.length,
             // for each order
             itemBuilder: (_, int n) {

@@ -49,6 +49,7 @@ class ApprovedDeliveryListLayout {
     // The whole approved delivery list.
 
         return new ListView.builder( // build a list of expansion tiles.
+            padding: const EdgeInsets.all(0.0),
             itemCount: approvedDeliveryList.orders.length,
             // for each order
             itemBuilder: (_, int n) {
