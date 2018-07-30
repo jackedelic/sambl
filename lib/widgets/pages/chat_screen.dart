@@ -11,7 +11,9 @@ import 'package:sambl/widgets/shared/my_color.dart';
 class ChatScreen extends StatefulWidget {
   final orderUid;
 
-  ChatScreen({this.orderUid});
+  ChatScreen({this.orderUid}){
+    print("orderUid is $orderUid");
+  }
 
   @override
   _ChatScreenState createState() => _ChatScreenState(orderUid: this.orderUid);
@@ -19,9 +21,11 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _textController = new TextEditingController();
-  final orderUid;
+  final String orderUid;
 
-  _ChatScreenState({this.orderUid});
+  _ChatScreenState({this.orderUid}){
+    print("inside _chatscreenstate, orderUid is $orderUid");
+  }
 
   Widget _buildTextComposer() {
     return new IconTheme(
@@ -33,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             new Flexible(
               child: new StoreConnector<AppState, Function>(
                 converter: (store) {
-                  return (String text) => store.dispatch(new SendMessageAction(text,targetUid: orderUid));
+                  return (String text) => store.dispatch(new SendMessageAction(text,targetUid: this.orderUid));
                 },
                 builder: (context, callback) {
                   return new TextField(
@@ -70,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         icon: new Icon(Icons.send),
                         onPressed: () {
                           if (_textController.text.length != 0) {
-                            store.dispatch(SendMessageAction(_textController.text));
+                            store.dispatch(SendMessageAction(_textController.text, targetUid: orderUid));
                             _textController.clear(); // clear the textfield
                           }
                         }

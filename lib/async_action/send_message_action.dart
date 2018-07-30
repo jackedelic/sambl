@@ -9,22 +9,24 @@ import 'package:sambl/state/app_state.dart';
 class SendMessageAction implements RunnableAction {
   final bool reduceable = false;
   final String message;
-  final Optional<String> targetUid;
+  Optional<String> targetUid;
 
-  SendMessageAction(this.message,{String targetUid}): this.targetUid = Optional.fromNullable(targetUid);
+  SendMessageAction(this.message,{String targetUid}){
+    this.targetUid = Optional.fromNullable(targetUid);
+  }
 
   void run(Store<AppState> store) async {
     if (store.state.currentAppStatus == AppStatusFlags.delivering) {
       assert(targetUid.isPresent);
-      CloudFunctions.instance.call(functionName: 'sendMessageAsDeliverer', 
+      CloudFunctions.instance.call(functionName: 'sendMessageAsDeliverer',
         parameters: {"message": message, "targetUid": targetUid.value});
       Map<String,Conversation> modifiedChat = store.state.chats;
       Conversation conv = modifiedChat.remove(targetUid.value) ?? new Conversation.empty();
       modifiedChat.putIfAbsent(targetUid.value, () => conv.append(new Message.fromDeliverer(message)));
       store.dispatch(new WriteChatMessagesAction(modifiedChat));
-      
+
     } else if (store.state.currentAppStatus == AppStatusFlags.ordering) {
-      CloudFunctions.instance.call(functionName: 'sendMessageAsOrderer', 
+      CloudFunctions.instance.call(functionName: 'sendMessageAsOrderer',
         parameters: {"message": message});
       Map<String,Conversation> modifiedChat = store.state.chats;
       Conversation conv = (modifiedChat.length != 0) ? modifiedChat.values.first : new Conversation.empty();

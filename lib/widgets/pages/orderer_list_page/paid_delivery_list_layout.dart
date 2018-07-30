@@ -194,7 +194,9 @@ class PaidDeliveryListLayout {
                                             // open chat window
                                             Navigator.of(context).push(
                                                 MaterialPageRoute(builder: (_) {
+                                                  print("in paid deli list layout, orderUid is ${paidDeliveryList.orders.keys.toList()[n]}");
                                                   return new ChatScreen(orderUid: paidDeliveryList.orders.keys.toList()[n]);
+
                                                 }
                                                 )
                                             );
