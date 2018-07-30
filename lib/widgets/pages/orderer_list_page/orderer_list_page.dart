@@ -110,6 +110,7 @@ class _OrdererListPageState extends State<OrdererListPage> {
                               child: InkWell(
                                 onTap: (){
                                   store.dispatch(new CloseOpenOrderAction());
+                                  Navigator.of(context).popUntil(ModalRoute.withName('/'));
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

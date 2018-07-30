@@ -94,9 +94,9 @@ Info info;
 
   Widget _buildConfirmButton() {
     if (_tabController.index == 2) {
-      return StoreConnector<AppState, Optional<HawkerCenter>>(
-        converter: (store) => store.state.currentHawkerCenter,
-        builder: (_, currentHawkerCenter) {
+      return StoreConnector<AppState, Store<AppState>>(
+        converter: (store) => store,
+        builder: (_, store) {
           return new ScopedModelDescendant<Info>(
             builder: (context, child , info){
               return new GestureDetector(
@@ -121,7 +121,7 @@ Info info;
                         eta: info.eta,
                         pickupPoint: await store.state.currentLocation,
                         remarks: "${info.remarks}",
-                        hawkerCenter: currentHawkerCenter.value
+                        hawkerCenter: store.state.currentHawkerCenter.value
                     )));
                     print("inside create_open_order_page, pressed confirm already. ");
                     Navigator.popAndPushNamed(context, '/OrdererListPage');

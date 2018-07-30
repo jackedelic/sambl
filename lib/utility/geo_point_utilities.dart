@@ -7,7 +7,12 @@ import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 
 Future<String> reverseGeocodeFuture(Future<GeoPoint> point) {
-  return point.then((point) async => await reverseGeocode(point));
+  return point.then((point){
+    print("reversegeocoderinput:");
+    print(point.latitude);
+    print(point.longitude);
+    return reverseGeocode(point);
+  });
 }
 
 Future<String> reverseGeocode(GeoPoint point) {
