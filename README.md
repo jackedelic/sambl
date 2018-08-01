@@ -17,6 +17,9 @@ deliver food to neighbours in return for a small charge. Put simply, it is a pee
 * Automatic hawker centre selection by location
 * Instant messaging between orderer and deliverer
 
+**Use cases**
+(The animated demo is done in emulator, hence it appears jerky)**:**
+
 **Sign in**
 
 <img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/sign_in.gif" width="250" height="380" />
