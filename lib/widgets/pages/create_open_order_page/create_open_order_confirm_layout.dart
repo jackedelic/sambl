@@ -91,7 +91,7 @@ class _CreateOpenOrderConfirmLayoutState extends State<CreateOpenOrderConfirmLay
                                   child: new Row(
                                     children: <Widget>[
                                       new Expanded(
-                                        child: new Text("${snapshot.hasData ? 'Picking up at  +${snapshot.data}' : 'loading pickup point...'}",
+                                        child: new Text("${snapshot.hasData ? 'Delivering to ${snapshot.data}' : 'loading pickup point...'}",
                                           style: new TextStyle(
                                             fontSize: 20.0,
                                           ),
