@@ -44,3 +44,11 @@ deliver food to neighbours in return for a small charge. Put simply, it is a pee
 **Back to the orderer, once his order is approved, he can proceed to make the payment**
 
 <img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/authorize_payment.gif" width="250" height="380" />
+<br>
+<br>
+
+**Deliver and orderer can now chat with one another!**
+
+<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.mp4" width="250" height="380" />
+<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.1.mp4" width="250" height="380" />
+
