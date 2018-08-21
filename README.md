@@ -49,6 +49,6 @@ deliver food to neighbours in return for a small charge. Put simply, it is a pee
 
 **Deliver and orderer can now chat with one another!**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.mp4" width="250" height="380" />
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.1.mp4" width="250" height="380" />
+<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.gif" width="250" height="380" />
+<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.1.gif" width="250" height="380" />
 
