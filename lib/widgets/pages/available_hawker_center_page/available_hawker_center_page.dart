@@ -71,7 +71,7 @@ You may also stay on this page and wait. ''',
             future: availableHawkerCenter,
             initialData: new List<HawkerCenter>(),
             builder: (context,snapshot) {
-              if (snapshot.data.length > 0) {
+              if (snapshot.hasData) {
                 return RefreshIndicator(
                   onRefresh: _refreshList,
                   child: ListView.builder(
