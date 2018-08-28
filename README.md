@@ -2,6 +2,10 @@
 SamBl is a neighbourhood level food delivery service that allows its user to offer to
 deliver food to neighbours in return for a small charge. Put simply, it is a peer-to-peer food delivery app. The goal of our service / app is to be a cheaper and fairer alternative to traditional online food delivery services. Our main focus is on small orders from food places near the user. Moreover, we aim to incorporate fairness into our service / app with features such as having the delivery charge scale with the difficulty of the order. This would reduce the problem where a user who orders only one or two dish must pay a disproportionately high delivery charge. Furthermore, by having members of the same community deliver to one another, this app promotes interactions in the community which leads to a happier community in general.
 
+**TLDR:**
+You want to order take-away food from an outlet across the street? Order from Sambl! It gives you a list of people going to the outlet.
+You are going to the food outlet? Tell others using Sambl! (You receive a small fee for every order you deliver).
+
 **Core features of Sambl:** 
 * Authentication system using Firebase authentication
 * Order placement system using Cloud Firestore + Cloud functions
