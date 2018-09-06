@@ -27,35 +27,35 @@ You are going to the food outlet? Tell others using Sambl! (You receive a small 
 
 **Sign in**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/sign_in.gif" width="250" height="380" />
+<img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/sign_in.gif" width="250" height="380" />
 <br>
 <br>
 
 **Say you want to deliver food, this is how you would create an open order**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/create_open_order.gif" width="250" height="380" />
+<img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/create_open_order.gif" width="250" height="380" />
 <br>
 <br>
 
 **On the other hand, if you want to order, this is how you would place one(ordering via the deliverer above)**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/place_order.gif" width="250" height="380" />
+<img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/place_order.gif" width="250" height="380" />
 <br>
 <br>
 
 **On the deliverer's side, you would see the order placed by the orderer above. You then approve it by setting the prices**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/approve_order.gif" width="250" height="380" />
+<img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/approve_order.gif" width="250" height="380" />
 <br>
 <br>
 
 **Back to the orderer, once his order is approved, he can proceed to make the payment**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/authorize_payment.gif" width="250" height="380" />
+<img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/authorize_payment.gif" width="250" height="380" />
 <br>
 <br>
 
 **Deliver and orderer can now chat with one another!**
 
-<img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.gif" width="250" height="380" /><img src="https://github.com/iamjackslayer/Media-for-Sambl/blob/master/chat0.1.gif" width="250" height="380" />
+<img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/chat0.gif" width="250" height="380" /><img src="https://raw.githubusercontent.com/iamjackslayer/Media-for-Sambl/master/chat0.1.gif" width="250" height="380" />
 
